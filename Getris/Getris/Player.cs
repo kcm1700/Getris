@@ -1,0 +1,7 @@
+﻿namespace Getris
+{
+    class Player
+    {
+
+    }
+}
