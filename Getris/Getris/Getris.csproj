@@ -34,7 +34,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Blocks.cs" />
+    <Compile Include="Block.cs" />
+    <Compile Include="Brick.cs" />
+    <Compile Include="Keyboard.cs" />
+    <Compile Include="Network.cs" />
+    <Compile Include="Pile.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Player.cs" />
   </ItemGroup>

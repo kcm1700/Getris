@@ -1,14 +1,16 @@
 ﻿namespace Getris
 {
-    interface Game
+    abstract class Game
     {
-        public static const int col = 21;
-        public static const int row = 10;
+        public static const int COLUMN = 10;
+        public static const int ROW = 21;
+        protected Brick brick;
+        protected Pile pile;
         private void Start();
+        protected System.Threading.Thread thread;
     }
     class RunGame : Game
     {
-        private System.Threading.Thread thread;
         public void RunGame()
         {
             this.thread = new System.Threading.Thread(Start);
@@ -17,10 +19,22 @@
         {
             // TODO: keyboard를 받아서 게임을 하고, 네트워크로 보낸다.
         }
+        // TODO: move전에 validation 검사를 하도록 하자.
+        private void MoveDown()
+        {
+            this.brick.MoveDown();
+        }
+        private void MoveLeft()
+        {
+            this.brick.MoveLeft();
+        }
+        private void MoveRight()
+        {
+            this.brick.MoveRight();
+        }
     }
     class DisplayGame : Game
     {
-        private System.Threading.Thread thread;
         public void DisplayGame()
         {
             this.thread = new System.Threading.Thread(Start);
@@ -29,15 +43,10 @@
         {
             //TODO: network으로 입력을 받아서 결과를 출력하는 일을 한다.
         }
-    }
-    class Pile
-    {
-        private Block[,] blocks = new Block[Game.row, Game.col];
-        public Pile()
+        // TODO: move전에 validation 검사를 하도록 하자.
+        private void GotoMatrix(int x, int y)
         {
-            for (int i = 0; i < Game.row; i++)
-                for (int j = 0; j < Game.col; j++)
-                    blocks[i, j] = new Block(Color.EMPTY);
+            this.brick.GotoMatrix(x, y);
         }
     }
 }
