@@ -9,7 +9,7 @@ namespace getris.Core
     {
         static private Object thisLock = new Object();
         static private Keyboard instance;
-        static private KeyboardSingleton()
+        static KeyboardSingleton()
         {
         }
         static Keyboard Instance

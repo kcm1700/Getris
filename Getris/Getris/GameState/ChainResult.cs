@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Drawing;
 
 namespace getris.GameState
 {
-    interface IPile
+    struct ChainResult
     {
-        Color GetCellColor(int row, int col);
-        bool IsCellEmpty(int row, int col);
+        public List<Animation.EraseDropPair> animation;
+        public Decimal score;
     }
 }

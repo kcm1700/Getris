@@ -30,9 +30,12 @@ namespace getris.GameState
 
     class BlockCell : Cell
     {
-        public BlockCell()
+        private BlockCell()
         {
-            maskColor = Color.Red;
+        }
+        public BlockCell(Color color)
+        {
+            maskColor = color;
         }
 
     }
@@ -41,7 +44,12 @@ namespace getris.GameState
     {
         public BlankCell()
         {
-            maskColor = Color.Black;
+            //default: invisible color mask
+            maskColor = Color.Transparent;
+        }
+        public BlankCell(Color color)
+        {
+            maskColor = color;
         }
 
         public override bool IsEmpty()

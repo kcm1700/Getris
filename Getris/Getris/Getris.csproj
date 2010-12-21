@@ -48,7 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Chat.cs" />
+    <Compile Include="GameState\ChainResult.cs" />
+    <Compile Include="UI\Chat.cs" />
     <Compile Include="GameState\Battle.cs" />
     <Compile Include="GameState\BlockList.cs" />
     <Compile Include="Core\Keyboard.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="GameState\Pile.cs" />
     <Compile Include="GameState\IPile.cs" />
     <Compile Include="GameState\RunGame.cs" />
+    <Compile Include="Animation\AnimationStructs.cs" />
     <Compile Include="UI\MainDlg.cs">
       <SubType>Form</SubType>
     </Compile>

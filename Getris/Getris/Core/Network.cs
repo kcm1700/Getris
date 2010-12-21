@@ -9,7 +9,7 @@ namespace getris.Core
     {
         static private Network instance;
         static private Object thisLock = new Object();
-        static private NetworkSingleton()
+        static NetworkSingleton()
         {
         }
         static Network Instance
