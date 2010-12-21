@@ -1,6 +1,0 @@
-﻿namespace Getris
-{
-    class Player
-    {
-    }
-}

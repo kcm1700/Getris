@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{09A22CB8-4A4B-4FF4-B294-611314D6CDDA}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{6C036F3E-944C-44C5-B3C1-ED76BDF01AE0}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Getris</RootNamespace>
-    <AssemblyName>Getris</AssemblyName>
+    <RootNamespace>getris</RootNamespace>
+    <AssemblyName>getris</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -34,16 +34,62 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Block.cs" />
-    <Compile Include="Brick.cs" />
-    <Compile Include="Keyboard.cs" />
-    <Compile Include="Network.cs" />
-    <Compile Include="Pile.cs" />
-    <Compile Include="Game.cs" />
-    <Compile Include="Player.cs" />
+    <Reference Include="OpenTK, Version=1.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL" />
+    <Reference Include="OpenTK.GLControl, Version=1.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System" />
+    <Compile Include="Chat.cs" />
+    <Compile Include="GameState\Battle.cs" />
+    <Compile Include="GameState\BlockList.cs" />
+    <Compile Include="Core\Keyboard.cs" />
+    <Compile Include="Core\Network.cs" />
+    <Compile Include="GameState\Block.cs" />
+    <Compile Include="GameState\Cell.cs" />
+    <Compile Include="GameState\DisplayGame.cs" />
+    <Compile Include="GameState\Game.cs" />
+    <Compile Include="GameState\Pile.cs" />
+    <Compile Include="GameState\IPile.cs" />
+    <Compile Include="GameState\RunGame.cs" />
+    <Compile Include="UI\MainDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\MainDlg.Designer.cs">
+      <DependentUpon>MainDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Core\Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="UI\MainDlg.resx">
+      <DependentUpon>MainDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="Game.cd" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

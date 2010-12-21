@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="Block&#xD;&#xA;rotate,move,block생성">
+    <Position X="1.578" Y="5.125" Height="0.566" Width="1.608" />
+  </Comment>
+  <Comment CommentText="Pile&#xD;&#xA;블럭놓기,체인시뮬(점수도)">
+    <Position X="6.539" Y="5.145" Height="0.732" Width="1.608" />
+  </Comment>
+  <Comment CommentText="">
+    <Position X="0.546" Y="0.83" Height="0.75" Width="1.7" />
+  </Comment>
+  <Class Name="getris.Program" Collapsed="true">
+    <Position X="5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAgIAAAAAAAAgAAAgIABAAAABAABAIIAAA=</HashCode>
+      <FileName>Core\Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="getris.GameState.Block" Collapsed="true">
+    <Position X="3.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameState\Block.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="cells" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="getris.GameState.Cell" Collapsed="true">
+    <Position X="4" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AADAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameState\Cell.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="getris.GameState.BlockCell" Collapsed="true">
+    <Position X="5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameState\Cell.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="getris.GameState.BlankCell" Collapsed="true">
+    <Position X="3" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameState\Cell.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="getris.GameState.Pile" Collapsed="true">
+    <Position X="5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAQAAAEAAgBAIAAAAABAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>GameState\Pile.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="board" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="getris.GameState.DisplayGame" Collapsed="true">
+    <Position X="2.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameState\DisplayGame.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="getris.GameState.Game" Collapsed="true">
+    <Position X="2.5" Y="4.25" Width="4" />
+    <AssociationLine Name="pile" Type="getris.GameState.Pile">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.588" Y="0.143" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>GameState\Game.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="pile" />
+      <Field Name="block" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="getris.GameState.RunGame" Collapsed="true">
+    <Position X="4.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameState\RunGame.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="getris.Core.KeyboardSingleton" Collapsed="true">
+    <Position X="9" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQCAAAAAAAAA=</HashCode>
+      <FileName>Core\Keyboard.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Instance" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="getris.Core.Keyboard" Collapsed="true">
+    <Position X="9" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Keyboard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="getris.Core.NetworkSingleton" Collapsed="true">
+    <Position X="10.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQCAAAAAAAAA=</HashCode>
+      <FileName>Core\Network.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Instance" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="getris.Core.Network" Collapsed="true">
+    <Position X="10.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Network.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="getris.GameState.BlockList" Collapsed="true">
+    <Position X="0.75" Y="3.25" Width="1.5" />
+    <AssociationLine Name="blocks" Type="getris.GameState.Block">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.085" Y="-0.254" Height="0.182" Width="0.887" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>GameState\BlockList.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="blocks" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="getris.GameState.Battle" Collapsed="true">
+    <Position X="1.5" Y="2.25" Width="5" />
+    <AssociationLine Name="rightGame" Type="getris.GameState.Game" FixedToPoint="true">
+      <Path>
+        <Point X="6.35" Y="2.812" />
+        <Point X="6.35" Y="4.25" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.024" Y="0.06" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAEAABAA=</HashCode>
+      <FileName>GameState\Battle.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="blocks" />
+      <Field Name="leftGame" />
+      <Field Name="rightGame" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="getris.Chat" Collapsed="true">
+    <Position X="8.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Chat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Malgun Gothic" Size="9" />
+</ClassDiagram>
