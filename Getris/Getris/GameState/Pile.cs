@@ -11,8 +11,8 @@ namespace getris.GameState
         //bottom index is 0
         private Cell[,] board;
 
-        public const int ROW = 21;
-        public const int COL = 10;
+        public static const int ROW = 21;
+        public static const int COL = 10;
 
         // constructor: 1. initialize board with blank cells 
         public Pile()
@@ -53,9 +53,9 @@ namespace getris.GameState
         }
         private void PutBlock(int row, int col, Block block)
         {
-            for (int i = 0; i < Block.ROW; i++)
+            for (int i = 0; i < Block.ROW_SIZE; i++)
             {
-                for (int j = 0; j < Block.COL; j++)
+                for (int j = 0; j < Block.COL_SIZE; j++)
                 {
                     if (!block.GetCell(i, j).IsEmpty()) // if not empty
                     {
@@ -67,9 +67,9 @@ namespace getris.GameState
 
         public bool IsBlockCollision(int row, int col, Block block)
         {
-            for (int i = 0; i < Block.ROW; i++)
+            for (int i = 0; i < Block.ROW_SIZE; i++)
             {
-                for (int j = 0; j < Block.COL; j++)
+                for (int j = 0; j < Block.COL_SIZE; j++)
                 {
                     if (isCellCollision(row + i, col + j, block.GetCell(i, j))) return true;
                 }
@@ -87,7 +87,7 @@ namespace getris.GameState
                 throw new Exception("블럭이 올바른 위치에서 놓이지 않았음. 놓일 수 없는 위치임. DropBlock");
             }
             int lastRow = row;
-            for (int i = row-1; i+Block.ROW >= 0; i--)
+            for (int i = row-1; i+Block.ROW_SIZE >= 0; i--)
             {
                 if (IsBlockCollision(i, col, block)) break;
                 lastRow = i;

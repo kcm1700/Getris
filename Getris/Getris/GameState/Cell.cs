@@ -18,7 +18,7 @@ namespace getris.GameState
             }
             set
             {
-                blockColor = maskColor;
+                blockColor = value;
             }
         }
 

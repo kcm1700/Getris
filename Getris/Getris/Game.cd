@@ -19,7 +19,7 @@
   <Class Name="getris.GameState.Block" Collapsed="true">
     <Position X="2.75" Y="9.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>RAAEBAAAAAEAAgAAAAAAgAACAIAAAAAAAAAAAAEAAAA=</HashCode>
+      <HashCode>RIAEBAAAAAAAAAAAAAAAgQACAEEAAgAIQAAAAAEAAIA=</HashCode>
       <FileName>GameState\Block.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -61,7 +61,7 @@
   <Class Name="getris.GameState.DisplayGame" Collapsed="true">
     <Position X="2.5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
       <FileName>GameState\DisplayGame.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -73,7 +73,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAABAA=</HashCode>
+      <HashCode>AAAAAAAAACAAAAEAAAAAAAAQAAAAAAAAAAAAAAAABAA=</HashCode>
       <FileName>GameState\Game.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -84,7 +84,7 @@
   <Class Name="getris.GameState.RunGame" Collapsed="true">
     <Position X="4.25" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIQAAAAAAAAAA=</HashCode>
       <FileName>GameState\RunGame.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -130,7 +130,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <HashCode>AAIABAAAACAAAAABAAAgQBAAAAAAAAAAAABAAAABDAA=</HashCode>
       <FileName>GameState\BlockList.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>

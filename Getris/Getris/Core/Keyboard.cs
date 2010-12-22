@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace getris.Core
+﻿namespace getris.Core
 {
-    static class KeyboardSingleton
+    public static sealed class KeyboardSingleton
     {
-        static private Object thisLock = new Object();
+        static private System.Object thisLock = new System.Object();
         static private Keyboard instance;
-        static KeyboardSingleton()
+        static private KeyboardSingleton()
         {
         }
-        static Keyboard Instance
+        static public Keyboard Instance
         {
             get
             {
@@ -20,7 +15,8 @@ namespace getris.Core
                 {
                     lock (thisLock)
                     {
-                        instance = new Keyboard();
+                        if(instance==null)
+                            instance = new Keyboard();
                     }
                 }
                 return instance;

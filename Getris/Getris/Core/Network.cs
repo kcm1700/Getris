@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace getris.Core
+﻿namespace getris.Core
 {
-    static class NetworkSingleton
+    public static sealed class NetworkSingleton
     {
         static private Network instance;
-        static private Object thisLock = new Object();
-        static NetworkSingleton()
+        static private System.Object thisLock = new System.Object();
+        static private NetworkSingleton()
         {
         }
         static Network Instance
@@ -20,7 +15,8 @@ namespace getris.Core
                 {
                     lock (thisLock)
                     {
-                        instance = new Network();
+                        if(instance==null)
+                            instance = new Network();
                     }
                 }
                 return instance;

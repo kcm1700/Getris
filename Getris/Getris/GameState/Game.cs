@@ -9,5 +9,7 @@ namespace getris.GameState
     {
         protected Pile pile;
         protected Block block;// 현재 움직이는 블럭
+        protected System.Threading.Thread thread;
+        protected void Start();
     }
 }
