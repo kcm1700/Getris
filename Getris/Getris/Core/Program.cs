@@ -25,8 +25,6 @@ namespace getris.Core
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             myDlg = new MainDlg();
-            // add idlegameloop
-            Application.Idle += new EventHandler(myDlg.IdleGameLoop);
             Application.Run(myDlg);
         }
 

@@ -11,13 +11,11 @@ namespace getris.GameState
     /// </summary>
     class Block
     {
-        public static const int ROW_SIZE = 3;
-        public static const int COL_SIZE = 3;
-        private int row;
-        private int col;
+        public const int ROW_SIZE = 3;
+        public const int COL_SIZE = 3;
         private Cell[,] cells;
 
-        public Color BlockColor
+        public CellColor BlockColor
         {
             get
             {
@@ -42,11 +40,14 @@ namespace getris.GameState
         {
         }
         //TODO : 아무 인자를 안넣으면 random한 색을 생성하는 생성자로 만들고 싶은데 방법이 없나? 그냥 Color를 enum으로 정의해서 쓰면 안될까?
-        public Block(Color color)
+        // 답: 게임에서 몇 색으로 게임을 할 것인지 설정가능하게 할 것이므로, 무작정 Block에 랜덤 색상을 요구하는 것은 무리가 있을 것 같습니다.
+        // 랜덤 색상은 역시 그 윗단에서 처리를 해줘야하지 않을까요?
+        public Block(CellColor color)
         {
             // TODO: 어느쪽이 위지?
-            row = Pile.ROW;
-            col = (Pile.COL + 1) / 2;
+            // 0번이 아래, ROW-1이 위입니다.
+/*            row = Pile.ROW;
+            col = (Pile.COL + 1) / 2;*/
             cells = new Cell[ROW_SIZE, COL_SIZE];
             for (int i = 0; i < ROW_SIZE; i++)
             {
@@ -63,7 +64,7 @@ namespace getris.GameState
                 }
             }
         }
-        // TODO : Random을 인자로 넘기는 이유는?
+        // TODO : Random을 인자로 넘기는 이유는? 매번 새로운 Random을 만들면 random성이 보장이 안 됩니다.
         public void MakeRandomBlock(int blockCellCnt, Random rnd)
         {
             if (ROW_SIZE * COL_SIZE < blockCellCnt || blockCellCnt < 1)
@@ -141,38 +142,5 @@ namespace getris.GameState
             cells[row, col] = cell;
         }
 
-        public int Row
-        {
-            get
-            {
-                return this.row;
-            }
-        }
-        public int Col
-        {
-            get
-            {
-                return this.col;
-            }
-        }
-
-        public void MoveDown()
-        {
-            //TODO: 어느쪽이 위지?
-            this.row--;
-        }
-        public void MoveLeft()
-        {
-            this.col--;
-        }
-        public void MoveRight()
-        {
-            this.col++;
-        }
-        public void GoTo(int row, int col)
-        {
-            this.row = row;
-            this.col = col;
-        }
     }
 }

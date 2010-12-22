@@ -1,10 +1,10 @@
 ﻿namespace getris.Core
 {
-    public static sealed class KeyboardSingleton
+    public static class KeyboardSingleton
     {
         static private System.Object thisLock = new System.Object();
         static private Keyboard instance;
-        static private KeyboardSingleton()
+        static KeyboardSingleton()
         {
         }
         static public Keyboard Instance
@@ -24,7 +24,7 @@
         }
 
     }
-    class Keyboard
+    public class Keyboard
     {
     }
 }

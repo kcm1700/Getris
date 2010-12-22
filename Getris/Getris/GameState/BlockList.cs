@@ -5,7 +5,7 @@ using System.Text;
 
 namespace getris.GameState
 {
-    public class BlockList
+    class BlockList
     {
         private uint leftPivot;
         private uint rightPivot;
@@ -19,7 +19,7 @@ namespace getris.GameState
             for (int i = 0; i < blocks.Length; i++)
             {
                 //TODO : Block 생성자 수정한 다음에 수정.
-                blocks[i] = new Block(System.Drawing.Color.Red);
+                blocks[i] = new Block(CellColor.color1);
             }
         }
         public void NextBlockLeft()
@@ -30,7 +30,7 @@ namespace getris.GameState
         {
             rightPivot = rightPivot + 1;
         }
-        public  Block LeftBlock
+        public Block LeftBlock
         {
             get
             {

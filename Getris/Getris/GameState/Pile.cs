@@ -11,8 +11,8 @@ namespace getris.GameState
         //bottom index is 0
         private Cell[,] board;
 
-        public static const int ROW = 21;
-        public static const int COL = 10;
+        public const int ROW = 21;
+        public const int COL = 10;
 
         // constructor: 1. initialize board with blank cells 
         public Pile()
@@ -33,7 +33,7 @@ namespace getris.GameState
             return board[row, col];
         }
 
-        public Color GetCellColor(int row, int col)
+        public CellColor GetCellColor(int row, int col)
         {
             return board[row, col].maskColor;
         }

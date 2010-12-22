@@ -10,10 +10,14 @@ namespace getris.GameState
         public DisplayGame()
         {
         }
-        private void GoTo(int row, int col)
+        protected override void Start()
+        {
+            //TODO: start ?
+        }
+        public override void GoTo(int row, int col)
         {
             //TODO : validate check
-            block.GoTo(row, col);
+            base.GoTo(row, col);
         }
     }
 }

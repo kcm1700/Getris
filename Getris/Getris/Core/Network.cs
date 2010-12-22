@@ -1,10 +1,10 @@
 ﻿namespace getris.Core
 {
-    public static sealed class NetworkSingleton
+    public static class NetworkSingleton
     {
         static private Network instance;
         static private System.Object thisLock = new System.Object();
-        static private NetworkSingleton()
+        static NetworkSingleton()
         {
         }
         static Network Instance

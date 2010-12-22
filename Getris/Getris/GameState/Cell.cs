@@ -6,11 +6,20 @@ using System.Drawing;
 
 namespace getris.GameState
 {
+    public enum CellColor
+    {
+        transparent,
+        color1,
+        color2,
+        color3,
+        color4,
+        color5
+    }
     abstract class Cell
     {
-        private Color blockColor;
+        private CellColor blockColor;
         
-        public virtual Color maskColor
+        public virtual CellColor maskColor
         {
             get
             {
@@ -33,7 +42,7 @@ namespace getris.GameState
         private BlockCell()
         {
         }
-        public BlockCell(Color color)
+        public BlockCell(CellColor color)
         {
             maskColor = color;
         }
@@ -45,9 +54,9 @@ namespace getris.GameState
         public BlankCell()
         {
             //default: invisible color mask
-            maskColor = Color.Transparent;
+            maskColor = CellColor.transparent;
         }
-        public BlankCell(Color color)
+        public BlankCell(CellColor color)
         {
             maskColor = color;
         }

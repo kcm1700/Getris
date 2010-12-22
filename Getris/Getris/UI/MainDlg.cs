@@ -10,6 +10,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Diagnostics;
 
 namespace getris
 {
@@ -18,19 +19,21 @@ namespace getris
         private enum GameMode
         {
             CreatingGL,
-            Game
+            GameControl,
+            GameAnimation
         }
 
         private GameMode gameMode;
         private bool glLoad;
-        private DateTime lastTime;
         private const int MaxFrameRate = 30;
+        private Stopwatch sw;
 
         public MainDlg()
         {
+            sw = new Stopwatch();
+            sw.Start();
             glLoad = false;
             gameMode = GameMode.CreatingGL;
-            lastTime = DateTime.Now;
             InitializeComponent();
         }
 
@@ -46,25 +49,39 @@ namespace getris
         private void glMain_Load(object sender, EventArgs e)
         {
             glLoad = true;
+            Application.Idle += new EventHandler(IdleGameLoop);
         }
 
         // an efficient game loop
         public void IdleGameLoop(object sender, EventArgs e)
         {
-            while (IsIdle)
+            while (glMain.IsIdle)
             {
                 /* calculate elapsed time in seconds */
-                DateTime now = DateTime.Now;
-                double timeDelta = now.Subtract(lastTime).TotalSeconds;
+                double timeDelta = sw.Elapsed.TotalSeconds;
                 if (timeDelta >= 1.0 / MaxFrameRate)
                 {
-                    lastTime = now;
+                    sw.Restart();
+                    Accumulate(timeDelta);
                     /* Update & Render */
                     TransitGameMode();
                     Update(timeDelta);
-                    Render();
+                    Render(timeDelta);
                 }
                 Thread.Sleep(1);
+            }
+        }
+
+        double elapsedTime = 0;
+        int frameCounter = 0;
+        private void Accumulate(double timeDelta)
+        {
+            frameCounter++;
+            elapsedTime += timeDelta;
+            if (elapsedTime > 1)
+            {
+                elapsedTime -= 1;
+                frameCounter = 0;
             }
         }
 
@@ -74,8 +91,16 @@ namespace getris
             {
                 if (isGLReady)// when it's ready to use GL
                 {   //Enter Game mode
-                    gameMode = GameMode.Game;
+                    gameMode = GameMode.GameControl;
                 }
+            }
+            if (gameMode == GameMode.GameControl)
+            {
+                //TODO: check if animation should occur.
+            }
+            if (gameMode == GameMode.GameAnimation)
+            {
+                //TODO: check if animation ended
             }
         }
 
@@ -86,25 +111,31 @@ namespace getris
                 case GameMode.CreatingGL:
                     //do nothing here
                     break;
-                case GameMode.Game:
+                case GameMode.GameControl:
                     //TODO: update game state based on input queue
+                    break;
+                case GameMode.GameAnimation:
+                    //TODO: 
                     break;
             }
         }
 
-        private void Render()
+        private void Render(double timeDelta)
         {
             switch (gameMode)
             {
                 case GameMode.CreatingGL:
                     //do nothing
                     break;
-                case GameMode.Game:
+                case GameMode.GameControl:
                     GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-                    RenderBackground();
+                    RenderBackground(timeDelta);
                     RenderLeftGame();
                     RenderRightGame();
                     glMain.SwapBuffers();
+                    break;
+                case GameMode.GameAnimation:
+                    //TODO:
                     break;
             }
         }
@@ -128,7 +159,7 @@ namespace getris
             GL.Viewport(0, 0, w, h); // Use all of the glControl painting area
         }
 
-        private void RenderBackground()
+        private void RenderBackground(double timeDelta)
         {
             //set render pipeline matrix
             SetupViewport();
@@ -145,37 +176,11 @@ namespace getris
             //TODO: modify below code
             GL.Begin(BeginMode.Polygon);
             GL.Color3((double)0.3, (double)0.5, (double)System.DateTime.Now.Millisecond/1000.0);
-            GL.Vertex2(0, 0);
+            GL.Vertex2(0, timeDelta*1000);
             GL.Vertex2(glMain.Width, 0);
             GL.Vertex2(glMain.Width, glMain.Height);
             GL.Vertex2(0, glMain.Height);
             GL.End();
         }
-
-        bool IsIdle
-        {
-            get
-            {
-                NativeMessage msg;
-                return !PeekMessage(out msg, this.Handle, 0, 0, 0);
-            }
-        }
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool PeekMessage(out NativeMessage lpMsg, IntPtr hWnd, uint wMsgFilterMin,
-           uint wMsgFilterMax, uint wRemoveMsg);
-
-        [StructLayout(LayoutKind.Sequential)]
-        private struct NativeMessage
-        {
-            public IntPtr handle;
-            public uint msg;
-            public IntPtr wParam;
-            public IntPtr lParam;
-            public uint time;
-            public System.Drawing.Point p;
-        }
-
     }
 }

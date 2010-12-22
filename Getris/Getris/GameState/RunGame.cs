@@ -10,20 +10,24 @@ namespace getris.GameState
         public RunGame()
         {
         }
-        private void MoveDown()  
+        protected override void Start()
         {
-            //TODO: Validate check
-            block.MoveDown();
+            //TODO: start ?
         }
-        private void MoveLeft()
+        public override void MoveDown()
         {
             //TODO: Validate check
-            block.MoveLeft();
+            base.MoveDown();
         }
-        private void MoveRight()
+        public override void MoveLeft()
         {
             //TODO: Validate check
-            block.MoveRight();
+            base.MoveLeft();
+        }
+        public override void MoveRight()
+        {
+            //TODO: Validate check
+            base.MoveRight();
         }
     }
 }

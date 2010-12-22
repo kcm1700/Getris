@@ -8,7 +8,7 @@ namespace getris.GameState
 {
     interface IPile
     {
-        Color GetCellColor(int row, int col);
+        CellColor GetCellColor(int row, int col);
         bool IsCellEmpty(int row, int col);
     }
 }
