@@ -9,7 +9,7 @@
   <Class Name="getris.Core.Program">
     <Position X="0.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAIAAA=</HashCode>
+      <HashCode>AAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAIAAA=</HashCode>
       <FileName>Core\Program.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -50,18 +50,17 @@
   <Class Name="getris.GameState.Pile" Collapsed="true">
     <Position X="4.5" Y="9.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QBAgAIAAAAEAAgBAIAAAAABAAAAAAAAAIAAAAABAAAA=</HashCode>
+      <HashCode>YBAgAIAAAAEAAgBAIAAAAABAQAAAAAAAIAAAAABAAAA=</HashCode>
       <FileName>GameState\Pile.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="board" />
     </ShowAsAssociation>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="getris.GameState.DisplayGame" Collapsed="true">
     <Position X="2.5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
       <FileName>GameState\DisplayGame.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -73,7 +72,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACAAAAEAAAAAAQASAAEAAgAIQAAAAAAABIA=</HashCode>
+      <HashCode>AAAAAAAAACAAAAkAAAAIAQASEAEAAgAIQAAAAAAABIA=</HashCode>
       <FileName>GameState\Game.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -84,7 +83,7 @@
   <Class Name="getris.GameState.RunGame" Collapsed="true">
     <Position X="4.25" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIQAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAIQAAAAAAAAAA=</HashCode>
       <FileName>GameState\RunGame.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -149,7 +148,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAEAABAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAACAAAAAAAAAAIAAAAAAAAAAEAABAA=</HashCode>
       <FileName>GameState\Battle.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -168,7 +167,7 @@
   <Class Name="getris.MainDlg" Collapsed="true">
     <Position X="4" Y="1" Width="3.5" />
     <TypeIdentifier>
-      <HashCode>ACQgAAAAASAgIAAAAACAAAACAYICAAMIEBBAAAoAAIA=</HashCode>
+      <HashCode>ACQgAAAAASAiooAAAACAAACDAYoCAAMIEBBAAAoEAIA=</HashCode>
       <FileName>UI\MainDlg.cs</FileName>
     </TypeIdentifier>
   </Class>

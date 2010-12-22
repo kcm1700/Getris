@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace getris.GameState
 {
@@ -9,11 +10,12 @@ namespace getris.GameState
     {
         public RunGame()
         {
+            base.pile = new Pile();
         }
         protected override void Start()
         {
-            //TODO: start ?
         }
+
         public override void MoveDown()
         {
             //TODO: Validate check

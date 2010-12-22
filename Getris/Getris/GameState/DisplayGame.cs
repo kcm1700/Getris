@@ -9,6 +9,7 @@ namespace getris.GameState
     {
         public DisplayGame()
         {
+            base.pile = new Pile();
         }
         protected override void Start()
         {

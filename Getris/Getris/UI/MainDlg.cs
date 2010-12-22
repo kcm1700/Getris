@@ -12,6 +12,9 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Diagnostics;
 
+using getris.GameState;
+using getris.Animation;
+
 namespace getris
 {
     public partial class MainDlg : Form
@@ -28,8 +31,20 @@ namespace getris
         private const int MaxFrameRate = 30;
         private Stopwatch sw;
 
+        private const int LeftGameWidth = 200;
+        private const int LeftGameHeight = 420;
+        private const int LeftGameLeft = 20;
+        private const int LeftGameBottom = 20;
+        private const int RightGameWidth = 200;
+        private const int RightGameHeight = 420;
+        private const int RightGameLeft = 20+200+20+100+20;
+        private const int RightGameBottom = 20;
+
+        private GameState.Battle battle;
+
         public MainDlg()
         {
+            battle = new Battle();
             sw = new Stopwatch();
             sw.Start();
             glLoad = false;
@@ -101,6 +116,7 @@ namespace getris
             if (gameMode == GameMode.GameAnimation)
             {
                 //TODO: check if animation ended
+                gameMode = GameMode.GameControl;
             }
         }
 
@@ -142,7 +158,58 @@ namespace getris
 
         private void RenderLeftGame()
         {
-            //TODO:
+            //Setup Viewport
+            int w = LeftGameWidth;
+            int h = LeftGameHeight;
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(0, w, 0, h, -1, 1);
+            GL.Viewport(LeftGameLeft, LeftGameBottom, w, h);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+
+            //Draw Background
+            GL.Begin(BeginMode.Quads);
+            GL.Color4(Color.Black);
+            GL.Vertex2(0, 0);
+            GL.Vertex2(w, 0);
+            GL.Vertex2(w, h);
+            GL.Vertex2(0, h);
+            GL.End();
+
+            //Draw Blocks
+            GL.Begin(BeginMode.Quads);
+            for (int i = 0; i < Pile.ROW; i++)
+            {
+                for (int j = 0; j < Pile.COL; j++)
+                {
+                    CellColor col = battle.GetLeftGamePileCellColor(i, j);
+                    switch (col)
+                    {
+                        case CellColor.transparent:
+                            GL.Color4(Color.Transparent);
+                            break;
+                        case CellColor.color1:
+                            GL.Color4(Color.Red);
+                            break;
+                        case CellColor.color2:
+                            GL.Color4(Color.Blue);
+                            break;
+                        case CellColor.color3:
+                            GL.Color4(Color.Green);
+                            break;
+                        case CellColor.color4:
+                            GL.Color4(Color.Yellow);
+                            break;
+                        default:
+                            break;
+                    }
+                    GL.Vertex2(20 * j + 1, 20 * i + 1);
+                    GL.Vertex2(20 * (j+1) - 1, 20 * i + 1);
+                    GL.Vertex2(20 * (j+1) - 1, 20 * (i+1) - 1);
+                    GL.Vertex2(20 * j + 1, 20 * (i+1) - 1);
+                }
+            }
+            GL.End();
         }
         private void RenderRightGame()
         {
@@ -175,8 +242,8 @@ namespace getris
 
             //TODO: modify below code
             GL.Begin(BeginMode.Polygon);
-            GL.Color3((double)0.3, (double)0.5, (double)System.DateTime.Now.Millisecond/1000.0);
-            GL.Vertex2(0, timeDelta*1000);
+            GL.Color3((double)0.3, (double)0.5, (double)Math.Abs(System.DateTime.Now.Millisecond-500)/1000.0);
+            GL.Vertex2(0, 0);
             GL.Vertex2(glMain.Width, 0);
             GL.Vertex2(glMain.Width, glMain.Height);
             GL.Vertex2(0, glMain.Height);

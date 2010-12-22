@@ -59,7 +59,6 @@
     <Compile Include="GameState\DisplayGame.cs" />
     <Compile Include="GameState\Game.cs" />
     <Compile Include="GameState\Pile.cs" />
-    <Compile Include="GameState\IPile.cs" />
     <Compile Include="GameState\RunGame.cs" />
     <Compile Include="Animation\AnimationStructs.cs" />
     <Compile Include="UI\MainDlg.cs">

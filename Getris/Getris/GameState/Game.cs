@@ -12,8 +12,27 @@ namespace getris.GameState
         protected int row;
         protected int col;
 
+        protected decimal score;
+
         protected System.Threading.Thread thread;
         protected abstract void Start();
+
+        public virtual CellColor GetPileCellColor(int row, int col)
+        {
+            return pile.GetCellColor(row, col);
+        }
+
+        public virtual decimal Score
+        {
+            get
+            {
+                return score;
+            }
+            set
+            {
+                score = Score;
+            }
+        }
 
         public virtual int Row
         {
@@ -28,6 +47,11 @@ namespace getris.GameState
             {
                 return this.col;
             }
+        }
+
+        public virtual void Rotate()
+        {
+            //TODO: 짜기
         }
 
         public virtual void MoveDown()

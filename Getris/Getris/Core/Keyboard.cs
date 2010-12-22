@@ -15,14 +15,13 @@
                 {
                     lock (thisLock)
                     {
-                        if(instance==null)
+                        if(instance == null)
                             instance = new Keyboard();
                     }
                 }
                 return instance;
             }
         }
-
     }
     public class Keyboard
     {

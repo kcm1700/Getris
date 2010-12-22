@@ -20,6 +20,7 @@ namespace getris.GameState
             {
                 //TODO : Block 생성자 수정한 다음에 수정.
                 blocks[i] = new Block(CellColor.color1);
+                blocks[i].MakeRandomBlock(4, r);
             }
         }
         public void NextBlockLeft()
