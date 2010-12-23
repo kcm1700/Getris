@@ -42,6 +42,9 @@
             this.glMain.TabIndex = 0;
             this.glMain.VSync = false;
             this.glMain.Load += new System.EventHandler(this.glMain_Load);
+            this.glMain.Enter += new System.EventHandler(this.glMain_Enter);
+            this.glMain.KeyDown += new System.Windows.Forms.KeyEventHandler(this.glMain_KeyDown);
+            this.glMain.Leave += new System.EventHandler(this.glMain_Leave);
             // 
             // textBox1
             // 

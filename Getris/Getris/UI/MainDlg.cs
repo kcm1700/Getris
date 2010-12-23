@@ -65,6 +65,7 @@ namespace getris
         {
             glLoad = true;
             Application.Idle += new EventHandler(IdleGameLoop);
+            Core.Keyboard.Start();
         }
 
         // an efficient game loop
@@ -248,6 +249,24 @@ namespace getris
             GL.Vertex2(glMain.Width, glMain.Height);
             GL.Vertex2(0, glMain.Height);
             GL.End();
+        }
+
+        private void glMain_Enter(object sender, EventArgs e)
+        {
+            Core.Keyboard.IsGame = true;
+        }
+
+        private void glMain_Leave(object sender, EventArgs e)
+        {
+            Core.Keyboard.IsGame = false;
+        }
+
+        private void glMain_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.X)
+            {
+                Core.Keyboard.
+            }
         }
     }
 }
