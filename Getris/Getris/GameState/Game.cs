@@ -11,6 +11,7 @@ namespace getris.GameState
         protected Block block;// 현재 움직이는 블럭
         protected int row;
         protected int col;
+        protected bool isLeft;
 
         protected decimal score;
 
@@ -30,7 +31,7 @@ namespace getris.GameState
             }
             set
             {
-                score = Score;
+                score = value;
             }
         }
 

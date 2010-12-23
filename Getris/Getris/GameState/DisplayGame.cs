@@ -15,10 +15,5 @@ namespace getris.GameState
         {
             //TODO: start ?
         }
-        public override void GoTo(int row, int col)
-        {
-            //TODO : validate check
-            base.GoTo(row, col);
-        }
     }
 }

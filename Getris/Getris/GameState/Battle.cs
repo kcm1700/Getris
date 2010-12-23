@@ -9,13 +9,11 @@ namespace getris.GameState
     {
         private Game leftGame;
         private Game rightGame;
-        private BlockList blocks;
 
         public Battle()
         {
             leftGame = new RunGame();
             rightGame = new DisplayGame();
-            blocks = new BlockList();
         }
 
         public CellColor GetLeftGamePileCellColor(int row, int col)

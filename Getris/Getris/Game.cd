@@ -72,7 +72,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACAAAAkAAAAIAQASEAEAAgAIQAAAAAAABIA=</HashCode>
+      <HashCode>AAAAAIAAACAAAAkAAAAIAQASEAEAAgAIQAAAAAAABIA=</HashCode>
       <FileName>GameState\Game.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -87,54 +87,13 @@
       <FileName>GameState\RunGame.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="getris.Core.KeyboardSingleton" Collapsed="true">
-    <Position X="9" Y="1" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQCAAAAAAAAA=</HashCode>
-      <FileName>Core\Keyboard.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Instance" />
-    </ShowAsAssociation>
-  </Class>
-  <Class Name="getris.Core.Keyboard" Collapsed="true">
+  <Class Name="getris.Core.Network" Collapsed="true">
     <Position X="9" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Core\Keyboard.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="getris.Core.NetworkSingleton" Collapsed="true">
-    <Position X="10.75" Y="1" Width="1.5" />
-    <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQCAAAAAAAAA=</HashCode>
       <FileName>Core\Network.cs</FileName>
+      <NewMemberFileName>Core\Keyboard.cs</NewMemberFileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Instance" />
-    </ShowAsAssociation>
-  </Class>
-  <Class Name="getris.Core.Network" Collapsed="true">
-    <Position X="10.75" Y="2" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Core\Network.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="getris.GameState.BlockList" Collapsed="true">
-    <Position X="0.75" Y="3.75" Width="1.5" />
-    <AssociationLine Name="blocks" Type="getris.GameState.Block">
-      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
-        <Position X="0.085" Y="-0.254" Height="0.182" Width="0.887" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <TypeIdentifier>
-      <HashCode>AAIABAAAACAAAAABAAAgQBAAAAAAAAAAAABAAAABDAA=</HashCode>
-      <FileName>GameState\BlockList.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="blocks" />
-    </ShowAsAssociation>
   </Class>
   <Class Name="getris.GameState.Battle" Collapsed="true">
     <Position X="1.5" Y="2.75" Width="5" />
@@ -148,13 +107,12 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAACAAAAAAAAAAIAAAAAAAAAAEAABAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAACAAAAAAAAAAIAAAAAAAAAAEAAAAA=</HashCode>
       <FileName>GameState\Battle.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="leftGame" />
       <Field Name="rightGame" />
-      <Field Name="blocks" />
     </ShowAsAssociation>
   </Class>
   <Class Name="getris.Chat" Collapsed="true">
@@ -180,6 +138,21 @@
     <ShowAsCollectionAssociation>
       <Field Name="dropCellList" />
     </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="getris.GameState.BlockList" Collapsed="true">
+    <Position X="0.75" Y="3.75" Width="1.5" />
+    <AssociationLine Name="blocks" Type="getris.GameState.Block">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.085" Y="-0.254" Height="0.182" Width="0.887" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAIABAAAACAAAAABAAAgQBAAAABAAAAAQCBAAAABDAA=</HashCode>
+      <FileName>GameState\BlockList.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="blocks" />
+    </ShowAsAssociation>
   </Class>
   <Struct Name="getris.GameState.ChainResult">
     <Position X="4.5" Y="8" Width="1.5" />

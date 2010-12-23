@@ -1,13 +1,13 @@
 ﻿namespace getris.Core
 {
-    public static class NetworkSingleton
+    public sealed class Network
     {
-        static private Network instance;
-        static private System.Object thisLock = new System.Object();
-        static NetworkSingleton()
+        static private Network instance = null;
+        static private readonly System.Object thisLock = new System.Object();
+        static Network()
         {
         }
-        static Network Instance
+        static public Network Instance
         {
             get
             {
@@ -15,16 +15,12 @@
                 {
                     lock (thisLock)
                     {
-                        if(instance==null)
+                        if (instance == null)
                             instance = new Network();
                     }
                 }
                 return instance;
             }
         }
-
-    }
-    class Network
-    {
     }
 }

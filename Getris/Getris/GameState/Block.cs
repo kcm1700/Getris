@@ -44,8 +44,6 @@ namespace getris.GameState
         // 랜덤 색상은 역시 그 윗단에서 처리를 해줘야하지 않을까요?
         public Block(CellColor color)
         {
-            // TODO: 어느쪽이 위지?
-            // 0번이 아래, ROW-1이 위입니다.
 /*            row = Pile.ROW;
             col = (Pile.COL + 1) / 2;*/
             cells = new Cell[ROW_SIZE, COL_SIZE];

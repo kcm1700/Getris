@@ -15,21 +15,5 @@ namespace getris.GameState
         protected override void Start()
         {
         }
-
-        public override void MoveDown()
-        {
-            //TODO: Validate check
-            base.MoveDown();
-        }
-        public override void MoveLeft()
-        {
-            //TODO: Validate check
-            base.MoveLeft();
-        }
-        public override void MoveRight()
-        {
-            //TODO: Validate check
-            base.MoveRight();
-        }
     }
 }

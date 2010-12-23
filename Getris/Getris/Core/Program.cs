@@ -14,7 +14,6 @@ namespace getris.Core
         /// The main entry point for the application.
         /// </summary>
         static MainDlg myDlg;
-        static Keyboard keyboard;
 
         static Program()
         {
@@ -23,7 +22,6 @@ namespace getris.Core
         [STAThread]
         static void Main()
         {
-            keyboard = KeyboardSingleton.Instance;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             myDlg = new MainDlg();
