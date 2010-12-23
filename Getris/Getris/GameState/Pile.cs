@@ -132,31 +132,22 @@ namespace getris.GameState
                 List<int> removedLines = new List<int>();
                 List<Animation.Drop> dropCells = new List<Animation.Drop>();
 
-                //(1) clear full line
-                for (int i = 0; i < ROW+3; i++)
-                {
-                    int cnt = 0;
+                flgContinue = false;
+                
 
-                    for (int j = 0; j < COL; j++)
-                        if (IsCellEmpty(i, j))
-                            cnt++;
-
-                    if (cnt == 0)
-                    {
-                        for (int j = 0; j < COL; j++)
-                            board[i, j] = new BlankCell();
-                        removedLines.Add(i);
-                        flgContinue = true;
-                    }
-                }
-
-                //(2) calculate drops
+                //(1) calculate drops
                 bool[,] visit = new bool[ROW+3, COL];//flood fill color array
                 bool flgDown; // flag for gravity down
 
                 do{
                     flgDown = false;
-                    visit.Initialize();
+                    for (int i = 0; i < ROW + 3; i++)
+                    {
+                        for (int j = 0; j < COL; j++)
+                        {
+                            visit[i, j] = false;
+                        }
+                    }
 
                     for (int j = 0; j < COL; j++)
                     {
@@ -200,6 +191,25 @@ namespace getris.GameState
                     }
                 }while(flgDown);
                 //DONE : move all blocks down & add it to drop cells list
+
+
+                //(2) clear full line
+                for (int i = 0; i < ROW + 3; i++)
+                {
+                    int cnt = 0;
+
+                    for (int j = 0; j < COL; j++)
+                        if (IsCellEmpty(i, j))
+                            cnt++;
+
+                    if (cnt == 0)
+                    {
+                        for (int j = 0; j < COL; j++)
+                            board[i, j] = new BlankCell();
+                        removedLines.Add(i);
+                        flgContinue = true;
+                    }
+                }
 
                 chainResult.animation.Add(new Animation.EraseDropPair(removedLines, dropCells));
                 //DONE : combine removedLines & drop cells list to make EraseDropPair
