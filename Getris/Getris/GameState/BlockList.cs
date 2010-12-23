@@ -8,11 +8,12 @@ namespace getris.GameState
     sealed class BlockList
     {
         static private BlockList instance = null;
-        static private readonly System.Object thisLock = new System.Object();
-        static private readonly System.Object leftLock = new System.Object();
-        static private readonly System.Object rightLock = new System.Object();
+        static private readonly System.Object thisLock, leftLock, rightLock;
         static BlockList()
         {
+            thisLock = new System.Object();
+            leftLock = new System.Object();
+            rightLock = new System.Object();
         }
         static public BlockList Instance
         {
@@ -37,7 +38,7 @@ namespace getris.GameState
             for (int i = 0; i < blocks.Length; i++)
             {
                 //TODO : Block 생성자 수정한 다음에 수정.
-                blocks[i] = new Block((CellColor)(Core.Random.rand(1,colorCnt+1)));
+                blocks[i] = new Block();
                 blocks[i].MakeRandomBlock(4, colorCnt);
             }
         }
@@ -88,7 +89,8 @@ namespace getris.GameState
                     if (rightPivot >= leftPivot + 1)
                         return blocks[(leftPivot + 1) % blocks.Length];
                     else
-                        return new Block(blocks[leftPivot + 1].BlockColor);
+                        //TODO: 
+                        return new Block();
                 }
             }
             else
@@ -98,7 +100,7 @@ namespace getris.GameState
                     if (leftPivot >= rightPivot + 1)
                         return blocks[(rightPivot + 1) % blocks.Length];
                     else
-                        return new Block(blocks[rightPivot + 1].BlockColor);
+                        return new Block();
                 }
             }
         }
@@ -111,7 +113,8 @@ namespace getris.GameState
                     if (rightPivot >= leftPivot + 2)
                         return blocks[(leftPivot + 2) % blocks.Length];
                     else
-                        return new Block(blocks[leftPivot + 2].BlockColor);
+                        //Block()을 기본적으로 완전 BlankCell로 채워진 놈으로 출력하게 수정했고, 결과적으로 여기서도 BlankCell로 채워진 block을 return할 것임
+                        return new Block();
                 }
             }
             else
@@ -121,7 +124,8 @@ namespace getris.GameState
                     if (leftPivot >= rightPivot + 2)
                         return blocks[(rightPivot + 2) % blocks.Length];
                     else
-                        return new Block(blocks[rightPivot + 2].BlockColor);
+                        //Block()을 기본적으로 완전 BlankCell로 채워진 놈으로 출력하게 수정했고, 결과적으로 여기서도 BlankCell로 채워진 block을 return할 것임
+                        return new Block();
                 }
             }
         }

@@ -30,10 +30,12 @@ namespace getris.GameState
                 }
             }
         }
-
-        public Cell GetCell(int row, int col)
+        public Cell this[int row, int col]
         {
-            return board[row, col];
+            get
+            {
+                return board[row, col];
+            }
         }
 
         public CellColor GetCellColor(int row, int col)
@@ -61,9 +63,9 @@ namespace getris.GameState
             {
                 for (int j = 0; j < Block.COL_SIZE; j++)
                 {
-                    if (!block.GetCell(i, j).IsEmpty()) // if not empty
+                    if (!block[i, j].IsEmpty()) // if not empty
                     {
-                        board[row + i, col + j] = block.GetCell(i, j);
+                        board[row + i, col + j] = block[i, j];
                     }
                 }
             }
@@ -75,7 +77,8 @@ namespace getris.GameState
             {
                 for (int j = 0; j < Block.COL_SIZE; j++)
                 {
-                    if (isCellCollision(row + i, col + j, block.GetCell(i, j))) return true;
+                    if (isCellCollision(row + i, col + j, block[i, j]))
+                        return true;
                 }
             }
             return false;

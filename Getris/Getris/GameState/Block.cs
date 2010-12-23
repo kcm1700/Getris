@@ -14,7 +14,8 @@ namespace getris.GameState
         public const int ROW_SIZE = 3;
         public const int COL_SIZE = 3;
         private Cell[,] cells;
-
+        /*
+        //TODO:어쩌피 색을 완전 random으로 할거라면 이게 필요없을듯
         public CellColor BlockColor
         {
             get
@@ -39,10 +40,7 @@ namespace getris.GameState
         private Block()
         {
         }
-        //TODO : 아무 인자를 안넣으면 random한 색을 생성하는 생성자로 만들고 싶은데 방법이 없나? 그냥 Color를 enum으로 정의해서 쓰면 안될까?
-        // 답: 게임에서 몇 색으로 게임을 할 것인지 설정가능하게 할 것이므로, 무작정 Block에 랜덤 색상을 요구하는 것은 무리가 있을 것 같습니다.
-        // 랜덤 색상은 역시 그 윗단에서 처리를 해줘야하지 않을까요?
-        public Block(CellColor color)
+        public Block(CellColor color= CellColor.transparent)
         {
             cells = new Cell[ROW_SIZE, COL_SIZE];
             for (int i = 0; i < ROW_SIZE; i++)
@@ -60,9 +58,21 @@ namespace getris.GameState
                 }
             }
         }
+         * */
+        public Block(bool isRandom = false)
+        {
+            cells = new Cell[ROW_SIZE, COL_SIZE];
+            for (int i = 0; i < ROW_SIZE; i++)
+            {
+                for (int j = 0; j < COL_SIZE; j++)
+                {
+                    cells[i, j] = new BlankCell();
+                }
+            }
+        }
         public void MakeRandomBlock(int blockCellCnt, int colorCnt)
         {
-            if (ROW_SIZE * COL_SIZE < blockCellCnt || blockCellCnt < 1)
+            if (blockCellCnt < 1 || ROW_SIZE * COL_SIZE < blockCellCnt)
             {
                 throw new Exception("Can't MakeRandomBlock");
             }
@@ -127,15 +137,16 @@ namespace getris.GameState
                 }
             }
         }
-
-        public Cell GetCell(int row, int col)
+        public Cell this[int row, int col]
         {
-            return cells[row, col];
+            get
+            {
+                return cells[row, col];
+            }
+            set
+            {
+                cells[row, col]=value;
+            }
         }
-        public void SetCell(int row, int col, Cell cell)
-        {
-            cells[row, col] = cell;
-        }
-
     }
 }

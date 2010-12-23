@@ -43,7 +43,7 @@ namespace getris.GameState
 
         public virtual CellColor GetBlockCellColor(int row, int col)
         {
-            return block.GetCell(row, col).maskColor;
+            return block[row, col].maskColor;
         }
 
         public virtual decimal Score
