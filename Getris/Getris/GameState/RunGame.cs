@@ -28,40 +28,29 @@ namespace getris.GameState
                         if (!Core.Keyboard.IsEmpty())
                         // is not empty
                         {
-                            Core.Action a = Core.Keyboard.Pop();
-                            if (a is Core.Move)
+                            switch (Core.Keyboard.Pop().data)
                             {
-                                switch (a.data)
-                                {
-                                    case "down":
-                                        MoveDown();
-                                        break;
-                                    case "left":
-                                        MoveLeft();
-                                        break;
-                                    case "right":
-                                        MoveRight();
-                                        break;
-                                    case "drop":
-                                        Drop();
-                                        break;
-                                    default:
-                                        throw new Exception("unknown move");
-                                }
-                            }
-                            else if (a is Core.Rotate)
-                            {
-                                switch (a.data)
-                                {
-                                    case "cw":
-                                        Rotate(true);
-                                        break;
-                                    case "ccw":
-                                        Rotate(false);
-                                        break;
-                                    default:
-                                        throw new Exception("unknown rotation");
-                                }
+                                case "down":
+                                    MoveDown();
+                                    break;
+                                case "left":
+                                    MoveLeft();
+                                    break;
+                                case "right":
+                                    MoveRight();
+                                    break;
+                                case "drop":
+                                    Drop();
+                                    break;
+                                case "cw":
+                                    Rotate(true);
+                                    break;
+                                case "ccw":
+                                    Rotate(false);
+                                    break;
+                                default:
+                                    throw new Exception("unknown action");
+                                //Action(Core.Keyboard.Pop());
                             }
                         }
                     }
@@ -71,6 +60,85 @@ namespace getris.GameState
             }
             catch(ThreadAbortException e)
             {
+            }
+        }
+        private void Action(Core.Move a)
+        {
+            switch (a.data)
+            {
+                case "down":
+                    MoveDown();
+                    break;
+                case "left":
+                    MoveLeft();
+                    break;
+                case "right":
+                    MoveRight();
+                    break;
+                case "drop":
+                    Drop();
+                    break;
+                default:
+                    throw new Exception("unknown move");
+            }
+        }
+        private void Action(Core.Rotate a)
+        {
+            switch (a.data)
+            {
+                case "cw":
+                    Rotate(true);
+                    break;
+                case "ccw":
+                    Rotate(false);
+                    break;
+                default:
+                    throw new Exception("unknown action");
+            }
+        }
+        private void Action(Core.Attack a)
+        {
+        }
+        private void Action(Core.Chat a)
+        {
+        }
+        private void Action(Core.GoTo a)
+        {
+        }
+        private void Action(Core.Turn a)
+        {
+        }
+
+        private void MoveDown()
+        {
+            if (gameOver) return;
+            //TODO: validation
+            // vaildation 실패시 Drop으로
+            this.row--;
+            if (pile.IsBlockCollision(row, col, block))
+            {
+                this.row++;
+                Drop();
+            }
+        }
+        private void MoveLeft()
+        {
+            if (gameOver) return;
+            //TODO: validation
+            this.col--;
+            if (pile.IsBlockCollision(row, col, block))
+            {
+                this.col++;
+            }
+        }
+        private void MoveRight()
+        {
+            if (gameOver) return;
+            //TODO: validation
+            this.col++;
+            if (pile.IsBlockCollision(row, col, block))
+            {
+                this.col--;
             }
         }
     }

@@ -11,8 +11,8 @@ namespace getris.GameState
         //bottom index is 0
         private Cell[,] board;
 
-        public const int ROW = 21;
-        public const int COL = 10;
+        public const int ROW_SIZE = 21;
+        public const int COL_SIZE = 10;
 
         // score table for chain removal
         
@@ -20,11 +20,11 @@ namespace getris.GameState
         // constructor: 1. initialize board with blank cells 
         public Pile()
         {
-            board = new Cell[ROW+3, COL];
+            board = new Cell[ROW_SIZE+3, COL_SIZE];
 
-            for (int i = 0; i < ROW+3; i++)
+            for (int i = 0; i < ROW_SIZE+3; i++)
             {
-                for (int j = 0; j < COL; j++)
+                for (int j = 0; j < COL_SIZE; j++)
                 {
                     board[i, j] = new BlankCell();
                 }
@@ -38,11 +38,6 @@ namespace getris.GameState
             }
         }
 
-        public CellColor GetCellColor(int row, int col)
-        {
-            return board[row, col].maskColor;
-        }
-
         public bool IsCellEmpty(int row, int col)
         {
             return board[row, col] is BlankCell;
@@ -51,8 +46,8 @@ namespace getris.GameState
         private bool isCellCollision(int row, int col, Cell cell)
         {
             if (cell is BlankCell) return false; // always safe
-            if (col < 0 || col >= COL) return true;
-            if (row >= ROW) return false;
+            if (col < 0 || col >= COL_SIZE) return true;
+            if (row >= ROW_SIZE) return false;
             if (row < 0) return true;
             if (!IsCellEmpty(row,col)) return true; // if board cell is not empty, it collides
             return false;
@@ -105,17 +100,17 @@ namespace getris.GameState
         
         private void FloodFill(int row, int col, bool[,] visit, CellColor par)
         {
-            if (row < 0 || row >= ROW + 3) return;
-            if (col < 0 || col >= COL) return;
+            if (row < 0 || row >= ROW_SIZE + 3) return;
+            if (col < 0 || col >= COL_SIZE) return;
             if (visit[row, col]) return;
             if (board[row, col] is BlankCell) return;
 
-            if (board[row, col].maskColor != par) return;
+            if (board[row, col].Color != par) return;
 
             // in same color
             visit[row, col] = true;
-            if (row + 1 < ROW + 3)
-                FloodFill(row + 1, col, visit, board[row + 1, col].maskColor); // connect upper
+            if (row + 1 < ROW_SIZE + 3)
+                FloodFill(row + 1, col, visit, board[row + 1, col].Color); // connect upper
             FloodFill(row - 1, col, visit, par);
             FloodFill(row, col + 1, visit, par);
             FloodFill(row, col - 1, visit, par);
@@ -135,26 +130,26 @@ namespace getris.GameState
                 
 
                 //(1) calculate drops
-                bool[,] visit = new bool[ROW+3, COL];//flood fill color array
+                bool[,] visit = new bool[ROW_SIZE+3, COL_SIZE];//flood fill color array
                 bool flgDown; // flag for gravity down
 
                 do{
                     flgDown = false;
-                    for (int i = 0; i < ROW + 3; i++)
+                    for (int i = 0; i < ROW_SIZE + 3; i++)
                     {
-                        for (int j = 0; j < COL; j++)
+                        for (int j = 0; j < COL_SIZE; j++)
                         {
                             visit[i, j] = false;
                         }
                     }
 
-                    for (int j = 0; j < COL; j++)
+                    for (int j = 0; j < COL_SIZE; j++)
                     {
-                        FloodFill(0, j, visit, board[0, j].maskColor);
+                        FloodFill(0, j, visit, board[0, j].Color);
                     }
-                    for (int i = 1; i < ROW+3; i++)
+                    for (int i = 1; i < ROW_SIZE+3; i++)
                     {
-                        for (int j = 0; j < COL; j++)
+                        for (int j = 0; j < COL_SIZE; j++)
                         {
                             if (visit[i, j] == false && ((board[i,j] is BlankCell) == false))
                             {
@@ -193,17 +188,17 @@ namespace getris.GameState
 
 
                 //(2) clear full line
-                for (int i = 0; i < ROW + 3; i++)
+                for (int i = 0; i < ROW_SIZE + 3; i++)
                 {
                     int cnt = 0;
 
-                    for (int j = 0; j < COL; j++)
+                    for (int j = 0; j < COL_SIZE; j++)
                         if (IsCellEmpty(i, j))
                             cnt++;
 
                     if (cnt == 0)
                     {
-                        for (int j = 0; j < COL; j++)
+                        for (int j = 0; j < COL_SIZE; j++)
                             board[i, j] = new BlankCell();
                         removedLines.Add(i);
                         flgContinue = true;

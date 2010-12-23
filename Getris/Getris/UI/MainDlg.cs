@@ -161,9 +161,9 @@ namespace getris
         {
             //Draw blockpiles
             GL.Begin(BeginMode.Quads);
-            for (int i = 0; i < Pile.ROW; i++)
+            for (int i = 0; i < Pile.ROW_SIZE; i++)
             {
-                for (int j = 0; j < Pile.COL; j++)
+                for (int j = 0; j < Pile.COL_SIZE; j++)
                 {
                     CellColor col = battle.GetPileCellColor(isLeft,i, j);
                     switch (col)

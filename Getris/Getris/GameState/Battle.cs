@@ -45,11 +45,11 @@ namespace getris.GameState
         {
             if (isLeft)
             {
-                return leftGame.GetPileCellColor(row, col);
+                return leftGame.Pile[row, col].Color;
             }
             else
             {
-                return rightGame.GetPileCellColor(row, col);
+                return rightGame.Pile[row, col].Color;
             }
         }
         public int GetRow(bool isLeft)

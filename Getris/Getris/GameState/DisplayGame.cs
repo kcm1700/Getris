@@ -28,10 +28,10 @@ namespace getris.GameState
                     Thread.Sleep(1);
                 }
                 //TODO:
-/*                while (true)
-                {
+                /*
+                  while (true)
+                  {
                     if (!Core.Keyboard.IsEmpty())
-                    // is not empty
                     {
                         Core.Action a = Core.Network.BufferPop();
                         if (a is Core.Move)
@@ -82,6 +82,12 @@ namespace getris.GameState
             catch (ThreadAbortException e)
             {
             }
+        }
+        private void GoTo(int row, int col)
+        {
+            if (gameOver) return;
+            this.row = row;
+            this.col = col;
         }
     }
 }

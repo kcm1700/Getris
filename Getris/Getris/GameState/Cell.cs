@@ -19,7 +19,7 @@ namespace getris.GameState
     {
         protected CellColor blockColor;
         
-        public virtual CellColor maskColor
+        public virtual CellColor Color
         {
             get
             {
