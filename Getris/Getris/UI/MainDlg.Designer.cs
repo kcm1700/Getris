@@ -31,12 +31,13 @@
             this.glMain = new OpenTK.GLControl();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
+            this.lblFPS = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // glMain
             // 
             this.glMain.BackColor = System.Drawing.Color.Black;
-            this.glMain.Location = new System.Drawing.Point(0, 0);
+            this.glMain.Location = new System.Drawing.Point(0, 30);
             this.glMain.Name = "glMain";
             this.glMain.Size = new System.Drawing.Size(700, 443);
             this.glMain.TabIndex = 0;
@@ -66,11 +67,21 @@
             this.textBox2.Size = new System.Drawing.Size(240, 21);
             this.textBox2.TabIndex = 2;
             // 
+            // lblFPS
+            // 
+            this.lblFPS.AutoSize = true;
+            this.lblFPS.Location = new System.Drawing.Point(-2, 9);
+            this.lblFPS.Name = "lblFPS";
+            this.lblFPS.Size = new System.Drawing.Size(28, 12);
+            this.lblFPS.TabIndex = 4;
+            this.lblFPS.Text = "FPS";
+            // 
             // MainDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(971, 533);
+            this.Controls.Add(this.lblFPS);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.glMain);
@@ -89,6 +100,7 @@
         private OpenTK.GLControl glMain;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label lblFPS;
     }
 }
 

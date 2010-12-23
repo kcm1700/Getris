@@ -51,5 +51,6 @@ namespace getris.GameState
         {
             blockColor = color;
         }
+
     }
 }

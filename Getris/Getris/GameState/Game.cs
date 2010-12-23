@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace getris.GameState
 {
     abstract class Game
     {
-        public Object thisLock = new Object(); // animation 중 또는 렌더링 중에는 잠길 필요가 있다.
+        protected Object thisLock = new Object(); // animation 중 또는 렌더링 중에는 잠길 필요가 있다.
 
         protected Pile pile;
         protected Block block;// 현재 움직이는 블럭
@@ -17,10 +18,26 @@ namespace getris.GameState
 
         protected decimal score;
 
+        public ChainResult chainResult;
+
         public System.Threading.Thread thread;
         public abstract void Start();
 
         protected bool gameOver;
+        protected bool animationMode;
+
+        protected int[,] ghostInfoRow;
+
+        //모니터 lock 관련 함수. 그릴 때는 통제해야한다.
+        public void Enter()
+        {
+            System.Threading.Monitor.Enter(thisLock);
+        }
+        public void Exit()
+        {
+            System.Threading.Monitor.Exit(thisLock);
+        }
+
         public bool isGameOver
         {
             get
@@ -28,16 +45,33 @@ namespace getris.GameState
                 return gameOver;
             }
         }
-
+        public bool isAnimationMode
+        {
+            get
+            {
+                return animationMode;
+            }
+            set
+            {
+                //TODO: keyboard로 쌓인 것들 냅둘 것인가 결정하기.
+                animationMode = true;
+            }
+        }
         public Game(bool isLeft=true)
         {
             this.isLeft = isLeft;
+            animationMode = false;
             score = 0;
             pile = new Pile();
-            BlockRegen();
+            ghostInfoRow = new int[Block.ROW_SIZE, Block.COL_SIZE];
             gameOver = false;
+            BlockRegen();
         }
 
+        public virtual CellColor GetPileCellColor(int row, int col)
+        {
+            return pile.GetCellColor(row,col);
+        }
         public Pile Pile
         {
             get
@@ -83,29 +117,57 @@ namespace getris.GameState
             }
         }
 
+        protected void waitAnimationEnds()
+        {
+            while (animationMode)
+            {
+                /* pause while animation Mode */
+                Thread.Sleep(10);
+            }
+        }
+
         protected virtual void Rotate(bool isCw)
         {
+            waitAnimationEnds();
             if (gameOver) return;
-            //TODO: validation
             if (isCw)
             {
                 block.RotateCw();
-                if (pile.IsBlockCollision(row, col, block))
-                {
-                    block.RotateCcw();
-                }
             }
             else
             {
                 block.RotateCcw();
-                if (pile.IsBlockCollision(row, col, block))
+            }
+            //SRS
+            int[,] trylist = { { 0, 0 }, { 1, 0 }, { -1, 0 }, { 0, -1 }, { 0, 1 }, { 2, 0 }, { 0, 2 }, { 0, -2 } };
+            bool flgOk = false;
+            for (int i = 0; i < trylist.GetLength(0); i++)
+            {
+                if (!pile.IsBlockCollision(row + trylist[i, 0], col + trylist[i, 1], block))
+                {
+                    row += trylist[i, 0];
+                    col += trylist[i, 1];
+                    flgOk = true;
+                    break;
+                }
+            }
+            if (flgOk == false)
+            {
+                if (isCw)
+                {
+                    block.RotateCcw();
+                }
+                else
                 {
                     block.RotateCw();
                 }
             }
+
+            pile.CalcGhost(ghostInfoRow, row, col, block);
         }
         protected virtual void BlockRegen()
         {
+            waitAnimationEnds();
             if (gameOver) return;
             BlockList.Instance.NextBlock(isLeft);
             block = BlockList.Instance.GetBlock(isLeft);
@@ -116,16 +178,34 @@ namespace getris.GameState
             {
                 gameOver = true;
             }
+            else
+            {
+                //regen succeeded
+                pile.CalcGhost(ghostInfoRow, row, col, block);
+            }
         }
         protected virtual void Drop()
         {
+            waitAnimationEnds();
             if (gameOver) return;
             pile.DropBlock(row, col, block);
             //TODO: SimulateChain의 결과 처리하기
-            ChainResult chainResult = pile.SimulateChain();
+            chainResult = pile.SimulateChain();
+            score += chainResult.Score;
+//            animationMode = true;
             BlockRegen();
         }
 
         
+
+        public int GetGhostRow(int rowInBlock, int colInBlock)
+        {
+            return ghostInfoRow[rowInBlock, colInBlock];
+        }
+
+        public int GetGhostCol(int rowInBlock, int colInBlock)
+        {
+            return this.col + colInBlock;
+        }
     }
 }

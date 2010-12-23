@@ -79,12 +79,13 @@ namespace getris.GameState
                     Thread.Sleep(1);
                 }*/
             }
-            catch (ThreadAbortException e)
+            catch/*(ThreadAbortException e)*/
             {
             }
         }
         private void GoTo(int row, int col)
         {
+            waitAnimationEnds();
             if (gameOver) return;
             this.row = row;
             this.col = col;

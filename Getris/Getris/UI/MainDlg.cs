@@ -21,14 +21,13 @@ namespace getris
     {
         private enum GameMode
         {
-            CreatingGL,
-            GameControl,
-            GameAnimation
+            CreatingGL = 0,
+            Game = 1
         }
 
         private GameMode gameMode;
         private bool glLoad;
-        private const int MaxFrameRate = 30;
+        private const int MaxFrameRate = 60;
         private Stopwatch sw;
 
         private const int LeftGameWidth = 200;
@@ -39,6 +38,9 @@ namespace getris
         private const int RightGameHeight = 420;
         private const int RightGameLeft = 20+200+20+100+20;
         private const int RightGameBottom = 20;
+
+        private const string blockimagefilename = "block1.bmp";
+        private int TN_BLOCK;
 
         private GameState.Battle battle;
 
@@ -66,6 +68,15 @@ namespace getris
             glLoad = true;
             Application.Idle += new EventHandler(IdleGameLoop);
             Core.Keyboard.Start();
+
+            //Load Textures
+            try
+            {
+                TN_BLOCK = Core.GraphicsUtil.LoadTexture(blockimagefilename);
+            }
+            catch
+            {
+            }
         }
 
         // an efficient game loop
@@ -96,6 +107,7 @@ namespace getris
             elapsedTime += timeDelta;
             if (elapsedTime > 1)
             {
+                lblFPS.Text = String.Format("{0:N} FPS", frameCounter / elapsedTime);
                 elapsedTime -= 1;
                 frameCounter = 0;
             }
@@ -107,98 +119,120 @@ namespace getris
             {
                 if (isGLReady)// when it's ready to use GL
                 {   //Enter Game mode
-                    gameMode = GameMode.GameControl;
+                    gameMode = GameMode.Game;
                 }
             }
-            if (gameMode == GameMode.GameControl)
+            else if (gameMode == GameMode.Game)
             {
-                //TODO: check if animation should occur.
-            }
-            if (gameMode == GameMode.GameAnimation)
-            {
-                //TODO: check if animation ended
-                gameMode = GameMode.GameControl;
+                //Nothing to do
             }
         }
 
         void Update(double timeDelta)
         {
-            switch (gameMode)
-            {
-                case GameMode.CreatingGL:
-                    //do nothing here
-                    break;
-                case GameMode.GameControl:
-                    //TODO: update game state based on input queue
-                    break;
-                case GameMode.GameAnimation:
-                    //TODO: 
-                    break;
-            }
+            //TODO: is there something to do with it?
         }
 
         private void Render(double timeDelta)
         {
-            switch (gameMode)
+            if (gameMode == GameMode.CreatingGL)
             {
-                case GameMode.CreatingGL:
-                    //do nothing
-                    break;
-                case GameMode.GameControl:
-                    GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-                    RenderBackground(timeDelta);
+                return;
+            }
+            if ((gameMode & GameMode.Game) != 0)
+            {
+                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+                RenderBackground(timeDelta);
+
+                //lock for the left
+                battle.MonEnter(true);
+                if (battle.isAnimationMode(true))
+                {
+                    RenderLeftAnimation(timeDelta);
+                }
+                else
+                {
                     RenderLeftGame();
+                    accumLeft = 0; // reset time accumulator
+                }
+                battle.MonExit(true);
+
+                battle.MonEnter(false);
+                if (battle.isAnimationMode(false))
+                {
+                    RenderRightAnimation(timeDelta);
+                }
+                else
+                {
                     RenderRightGame();
-                    glMain.SwapBuffers();
-                    break;
-                case GameMode.GameAnimation:
-                    //TODO:
-                    break;
+                    accumRight = 0; // reset time accumulator
+                }
+                battle.MonExit(false);
+                glMain.SwapBuffers();
             }
         }
 
-        private void RenderGame(bool isLeft)
+
+        private void RenderAnimation(bool isLeft, double timeElapsed)
         {
-            //Draw blockpiles
+            //TODO:
+/*            ChainResult cResult = battle.chainResult(isLeft);
+            cResult.SetElapsedTime(timeElapsed);*/
+        }
+
+
+        double accumLeft = 0;
+        double accumRight = 0;
+        private void RenderLeftAnimation(double timeDelta)
+        {
+            SetupLeftGameRender();
+            RenderAnimation(true, accumLeft);
+
+            accumRight += timeDelta;
+        }
+
+        private void RenderRightAnimation(double timeDelta)
+        {
+            SetupRightGameRender();
+            RenderAnimation(false, accumRight);
+
+            accumLeft += timeDelta;
+        }
+
+
+        private void RenderPile(bool isLeft)
+        {
+            //Use Texture
+            GL.Enable(EnableCap.Texture2D);
+            GL.BindTexture(TextureTarget.Texture2D, TN_BLOCK);
+            //Draw begin
             GL.Begin(BeginMode.Quads);
             for (int i = 0; i < Pile.ROW_SIZE; i++)
             {
                 for (int j = 0; j < Pile.COL_SIZE; j++)
                 {
-                    CellColor col = battle.GetPileCellColor(isLeft,i, j);
-                    switch (col)
-                    {
-                        case CellColor.transparent:
-                            GL.Color4(Color.Transparent);
-                            break;
-                        case CellColor.color1:
-                            GL.Color4(Color.Red);
-                            break;
-                        case CellColor.color2:
-                            GL.Color4(Color.Blue);
-                            break;
-                        case CellColor.color3:
-                            GL.Color4(Color.Green);
-                            break;
-                        case CellColor.color4:
-                            GL.Color4(Color.Yellow);
-                            break;
-                        case CellColor.color5:
-                            GL.Color4(Color.Ivory);
-                            break;
-                        default:
-                            break;
-                    }
+                    Color color = Core.GraphicsUtil.CellColor2Color(battle.GetPileCellColor(isLeft, i, j));
+                    GL.Color4(color);
+                    GL.TexCoord2(0, 1);
                     GL.Vertex2(20 * j + 1, 20 * i + 1);
+                    GL.TexCoord2(1, 1);
                     GL.Vertex2(20 * (j + 1) - 1, 20 * i + 1);
+                    GL.TexCoord2(1, 0);
                     GL.Vertex2(20 * (j + 1) - 1, 20 * (i + 1) - 1);
+                    GL.TexCoord2(0, 0);
                     GL.Vertex2(20 * j + 1, 20 * (i + 1) - 1);
                 }
             }
             GL.End();
-
-            // Draw block
-
+            //Disable Texture
+            GL.Disable(EnableCap.Texture2D);
+        }
+        private void RenderBlock(bool isLeft)
+        {
+            //Use Texture
+            GL.Enable(EnableCap.Texture2D);
+            GL.BindTexture(TextureTarget.Texture2D, TN_BLOCK);
+            //Draw begin
             GL.Begin(BeginMode.Quads);
             for (int i = 0; i < Block.ROW_SIZE; i++)
             {
@@ -206,40 +240,64 @@ namespace getris
                 {
                     int row = i + battle.GetRow(isLeft), col = j + battle.GetCol(isLeft);
 
-                    CellColor color = battle.GetBlockCellColor(isLeft, i, j); 
-                    switch (color)
-                    {
-                        case CellColor.transparent:
-                            GL.Color4(Color.Transparent);
-                            break;
-                        case CellColor.color1:
-                            GL.Color4(Color.Red);
-                            break;
-                        case CellColor.color2:
-                            GL.Color4(Color.Blue);
-                            break;
-                        case CellColor.color3:
-                            GL.Color4(Color.Green);
-                            break;
-                        case CellColor.color4:
-                            GL.Color4(Color.Yellow);
-                            break;
-                        case CellColor.color5:
-                            GL.Color4(Color.Ivory);
-                            break;
-                        default:
-                            break;
-                    }
+                    Color color = Core.GraphicsUtil.CellColor2Color(battle.GetBlockCellColor(isLeft, i, j));
+                    GL.Color4(color);
+                    GL.TexCoord2(0, 1);
                     GL.Vertex2(20 * col + 1, 20 * row + 1);
+                    GL.TexCoord2(1, 1);
                     GL.Vertex2(20 * (col + 1) - 1, 20 * row + 1);
+                    GL.TexCoord2(1, 0);
                     GL.Vertex2(20 * (col + 1) - 1, 20 * (row + 1) - 1);
+                    GL.TexCoord2(0, 0);
                     GL.Vertex2(20 * col + 1, 20 * (row + 1) - 1);
                 }
             }
             GL.End();
+            //Disable Texture
+            GL.Disable(EnableCap.Texture2D);
         }
 
-        private void RenderLeftGame()
+        private void RenderGhost(bool isLeft)
+        {
+            if (battle.UseGhost == false) return;
+            //Use Texture
+            GL.Enable(EnableCap.Texture2D);
+            GL.BindTexture(TextureTarget.Texture2D, TN_BLOCK);
+            //Draw begin
+            GL.Begin(BeginMode.Quads);
+            for (int i = 0; i < Block.ROW_SIZE; i++)
+            {
+                for (int j = 0; j < Block.COL_SIZE; j++)
+                {
+                    int row = battle.GetGhostRow(isLeft, i, j), col = battle.GetGhostCol(isLeft,i,j);
+
+                    Color colorOriginal = Core.GraphicsUtil.CellColor2Color(battle.GetBlockCellColor(isLeft, i, j));
+                    Color color = System.Drawing.Color.FromArgb(colorOriginal.A / 4,colorOriginal.R, colorOriginal.G, colorOriginal.B);
+                    GL.Color4(color);
+                    GL.TexCoord2(0, 1);
+                    GL.Vertex2(20 * col + 1, 20 * row + 1);
+                    GL.TexCoord2(1, 1);
+                    GL.Vertex2(20 * (col + 1) - 1, 20 * row + 1);
+                    GL.TexCoord2(1, 0);
+                    GL.Vertex2(20 * (col + 1) - 1, 20 * (row + 1) - 1);
+                    GL.TexCoord2(0, 0);
+                    GL.Vertex2(20 * col + 1, 20 * (row + 1) - 1);
+                }
+            }
+            GL.End();
+            //Disable Texture
+            GL.Disable(EnableCap.Texture2D);
+        }
+
+
+        private void RenderGame(bool isLeft)
+        {
+            RenderPile(isLeft);
+            RenderBlock(isLeft);
+            RenderGhost(isLeft);
+        }
+
+        private void SetupLeftGameRender()
         {
             //Setup Viewport
             int w = LeftGameWidth;
@@ -263,10 +321,14 @@ namespace getris
             GL.Vertex2(w, h);
             GL.Vertex2(0, h);
             GL.End();
+        }
 
+        private void RenderLeftGame()
+        {
+            SetupLeftGameRender();
             RenderGame(true);
         }
-        private void RenderRightGame()
+        private void SetupRightGameRender()
         {
             //Setup Viewport
             int w = RightGameWidth;
@@ -290,7 +352,10 @@ namespace getris
             GL.Vertex2(w, h);
             GL.Vertex2(0, h);
             GL.End();
-
+        }
+        private void RenderRightGame()
+        {
+            SetupRightGameRender();
             RenderGame(false);
         }
 
@@ -326,6 +391,8 @@ namespace getris
             GL.Vertex2(glMain.Width, glMain.Height);
             GL.Vertex2(0, glMain.Height);
             GL.End();
+
+
         }
 
         private void glMain_Enter(object sender, EventArgs e)

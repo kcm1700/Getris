@@ -233,7 +233,7 @@ namespace getris.Core
                     Thread.Sleep(1);
                 }
             }
-            catch(ThreadAbortException e)
+            catch/*(ThreadAbortException e)*/
             {
             }
         }
@@ -258,7 +258,7 @@ namespace getris.Core
         {
             lock (thisLock)
             {
-                Logger.Write(action.data);
+//                Logger.Write(action.data);
                 buffer.Enqueue(action);
             }
         }

@@ -58,7 +58,7 @@ namespace getris.GameState
                     Thread.Sleep(1);
                 }
             }
-            catch(ThreadAbortException e)
+            catch/*(ThreadAbortException e)*/
             {
             }
         }
@@ -111,8 +111,8 @@ namespace getris.GameState
 
         private void MoveDown()
         {
+            waitAnimationEnds();
             if (gameOver) return;
-            //TODO: validation
             // vaildation 실패시 Drop으로
             this.row--;
             if (pile.IsBlockCollision(row, col, block))
@@ -120,25 +120,39 @@ namespace getris.GameState
                 this.row++;
                 Drop();
             }
+            else
+            {
+                //succeeded
+            }
         }
         private void MoveLeft()
         {
+            waitAnimationEnds();
             if (gameOver) return;
-            //TODO: validation
             this.col--;
             if (pile.IsBlockCollision(row, col, block))
             {
                 this.col++;
             }
+            else
+            {
+                pile.CalcGhost(ghostInfoRow, row, col, block);
+                //succeeded
+            }
         }
         private void MoveRight()
         {
+            waitAnimationEnds();
             if (gameOver) return;
-            //TODO: validation
             this.col++;
             if (pile.IsBlockCollision(row, col, block))
             {
                 this.col--;
+            }
+            else
+            {
+                pile.CalcGhost(ghostInfoRow, row, col, block);
+                //succeeded
             }
         }
     }

@@ -15,6 +15,49 @@ namespace getris.GameState
 
         public readonly static int colorCnt = 5;
 
+        public void MonEnter(bool isLeft){
+            if(isLeft){
+                leftGame.Enter();
+            }else{
+                rightGame.Enter();
+            }
+        }
+        public void MonExit(bool isLeft)
+        {
+            if (isLeft)
+            {
+                leftGame.Exit();
+            }
+            else
+            {
+                rightGame.Exit();
+            }
+        }
+
+        public bool isAnimationMode(bool isLeft)
+        {
+            if (isLeft)
+            {
+                return leftGame.isAnimationMode;
+            }
+            else
+            {
+                return rightGame.isAnimationMode;
+            }
+        }
+
+/*        public ChainResult chainResult(bool isLeft){
+            //TODO: ChainResult에 대한 copy constructor 만들어서 적용하기.
+            if (isLeft)
+            {
+                return leftGame.chainResult;
+            }
+            else
+            {
+                return rightGame.chainResult;
+            }
+        }*/
+
         public Battle(bool isLeftRun=true, bool isRightRun=false)
         {
             if (isLeftRun && isRightRun)
@@ -84,6 +127,33 @@ namespace getris.GameState
             else
             {
                 return rightGame.GetBlockCellColor(row, col);
+            }
+        }
+
+
+        public bool UseGhost = true;
+
+        public int GetGhostRow(bool isLeft, int rowInBlock, int colInBlock)
+        {
+            if (isLeft)
+            {
+                return leftGame.GetGhostRow(rowInBlock, colInBlock);
+            }
+            else
+            {
+                return rightGame.GetGhostRow(rowInBlock, colInBlock);
+            }
+        }
+
+        public int GetGhostCol(bool isLeft, int rowInBlock, int colInBlock)
+        {
+            if (isLeft)
+            {
+                return leftGame.GetGhostCol(rowInBlock, colInBlock);
+            }
+            else
+            {
+                return rightGame.GetGhostCol(rowInBlock, colInBlock);
             }
         }
     }

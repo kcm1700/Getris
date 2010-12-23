@@ -11,8 +11,8 @@ namespace getris.Animation
     }
     class EraseDropPair
     {
-        private List<int> erasedLineList;
-        private List<Drop> dropCellList; // includes all drop cells.
+        public List<Drop> dropCellList; // includes all drop cells.
+        public List<int> erasedLineList;
 
         public EraseDropPair()
         {
