@@ -44,6 +44,7 @@
             this.glMain.Load += new System.EventHandler(this.glMain_Load);
             this.glMain.Enter += new System.EventHandler(this.glMain_Enter);
             this.glMain.KeyDown += new System.Windows.Forms.KeyEventHandler(this.glMain_KeyDown);
+            this.glMain.KeyUp += new System.Windows.Forms.KeyEventHandler(this.glMain_KeyUp);
             this.glMain.Leave += new System.EventHandler(this.glMain_Leave);
             // 
             // textBox1
@@ -55,6 +56,7 @@
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox1.Size = new System.Drawing.Size(206, 281);
             this.textBox1.TabIndex = 1;
+            this.textBox1.TabStop = false;
             // 
             // textBox2
             // 
@@ -74,6 +76,7 @@
             this.Controls.Add(this.glMain);
             this.Name = "MainDlg";
             this.Text = "Getris";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainDlg_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

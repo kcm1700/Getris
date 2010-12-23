@@ -168,6 +168,11 @@ namespace getris
             GL.Viewport(LeftGameLeft, LeftGameBottom, w, h);
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 
+            //Set alpha blending
+            GL.ColorMask(true, true, true, true);
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+
             //Draw Background
             GL.Begin(BeginMode.Quads);
             GL.Color4(Color.Black);
@@ -208,6 +213,41 @@ namespace getris
                     GL.Vertex2(20 * (j+1) - 1, 20 * i + 1);
                     GL.Vertex2(20 * (j+1) - 1, 20 * (i+1) - 1);
                     GL.Vertex2(20 * j + 1, 20 * (i+1) - 1);
+                }
+            }
+            GL.End();
+
+            GL.Begin(BeginMode.Quads);
+            for (int i = 0; i < Block.ROW_SIZE; i++)
+            {
+                for (int j = 0; j < Block.COL_SIZE; j++)
+                {
+                    int row = i + battle.GetLeftGameRow-10, col = j + battle.GetLeftGameCol;
+                    CellColor color = battle.GetLeftGameBlockCellColor(i, j);
+                    switch (color)
+                    {
+                        case CellColor.transparent:
+                            GL.Color4(Color.Transparent);
+                            break;
+                        case CellColor.color1:
+                            GL.Color4(Color.Red);
+                            break;
+                        case CellColor.color2:
+                            GL.Color4(Color.Blue);
+                            break;
+                        case CellColor.color3:
+                            GL.Color4(Color.Green);
+                            break;
+                        case CellColor.color4:
+                            GL.Color4(Color.Yellow);
+                            break;
+                        default:
+                            break;
+                    }
+                    GL.Vertex2(20 * col + 1, 20 * row + 1);
+                    GL.Vertex2(20 * (col + 1) - 1, 20 * row + 1);
+                    GL.Vertex2(20 * (col + 1) - 1, 20 * (row + 1) - 1);
+                    GL.Vertex2(20 * col + 1, 20 * (row + 1) - 1);
                 }
             }
             GL.End();
@@ -263,10 +303,17 @@ namespace getris
 
         private void glMain_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.X)
-            {
-                Core.Keyboard.
-            }
+            Core.Keyboard.KeyDown(e.KeyCode);
+        }
+
+        private void glMain_KeyUp(object sender, KeyEventArgs e)
+        {
+            Core.Keyboard.KeyUp(e.KeyCode);
+        }
+
+        private void MainDlg_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Core.Keyboard.keyboardThread.Abort();
         }
     }
 }

@@ -18,7 +18,8 @@ namespace getris.Core
             lock (thisLock)
             {
                 System.IO.FileStream fs = System.IO.File.Open("C:\\Temp\\asdf.txt",System.IO.FileMode.Append);
-                fs.Write(new System.Text.ASCIIEncoding().GetBytes(msg),0,msg.Length);
+                fs.Write(new System.Text.ASCIIEncoding().GetBytes(msg), 0, msg.Length);
+                fs.Write(new System.Text.UTF8Encoding().GetBytes("\r\n"), 0, "\r\n".Length);
                 fs.Close();
             }
         }

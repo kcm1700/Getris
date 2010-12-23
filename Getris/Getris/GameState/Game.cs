@@ -15,12 +15,34 @@ namespace getris.GameState
 
         protected decimal score;
 
-        protected System.Threading.Thread thread;
-        protected abstract void Start();
+        public System.Threading.Thread thread;
+        public abstract void Start();
+
+        public Game(bool isLeft=true)
+        {
+            this.isLeft = isLeft;
+            score = 0;
+            pile = new Pile();
+            row = Pile.ROW;
+            col = (Pile.COL+1) / 2;
+            if (isLeft)
+            {
+                block = BlockList.Instance.LeftBlock;
+            }
+            else
+            {
+                block = BlockList.Instance.RightBlock;
+            }
+        }
 
         public virtual CellColor GetPileCellColor(int row, int col)
         {
             return pile.GetCellColor(row, col);
+        }
+
+        public virtual CellColor GetBlockCellColor(int row, int col)
+        {
+            return block.GetCell(row, col).maskColor;
         }
 
         public virtual decimal Score
@@ -50,21 +72,37 @@ namespace getris.GameState
             }
         }
 
-        public virtual void Rotate()
+        public virtual void Rotate(bool isCw)
         {
-            //TODO: 짜기
+            //TODO: validation
+            if (isCw)
+            {
+                block.RotateCw();
+            }
+            else
+            {
+                block.RotateCcw();
+            }
         }
-
+        public virtual void Drop()
+        {
+            pile.DropBlock(row, col, block);
+            //TODO: block = BlockList.Instance.NextBlock(isLeft);
+        }
         public virtual void MoveDown()
         {
+            //TODO: validation
+            // vaildation 실패시 Drop으로
             this.row--;
         }
         public virtual void MoveLeft()
         {
+            //TODO: validation
             this.col--;
         }
         public virtual void MoveRight()
         {
+            //TODO: validation
             this.col++;
         }
         public virtual void GoTo(int row, int col)

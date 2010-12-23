@@ -20,5 +20,27 @@ namespace getris.GameState
         {
             return leftGame.GetPileCellColor(row, col);
         }
+        /// <summary>
+        /// Row는 블럭의 위치를 나타냄
+        /// </summary>
+        public int GetLeftGameRow
+        {
+            get
+            {
+                return leftGame.Row;
+            }
+        }
+        public int GetLeftGameCol
+        {
+            get
+            {
+                return leftGame.Col;
+            }
+        }
+
+        public CellColor GetLeftGameBlockCellColor(int row, int col)
+        {
+            return leftGame.GetBlockCellColor(row, col);
+        }
     }
 }
