@@ -59,6 +59,26 @@ namespace getris.GameState
             }
         }
          * */
+
+        /// <summary>
+        /// Copy Constructor
+        /// </summary>
+        /// <param name="from"></param>
+        public Block(Block from)
+        {
+            this.cells = new Cell[ROW_SIZE, COL_SIZE];
+            for (int i = 0; i < ROW_SIZE; i++)
+            {
+                for (int j = 0; j < COL_SIZE; j++)
+                {
+                    this.cells[i, j] = from.cells[i, j];
+                }
+            }
+        }
+        /// <summary>
+        /// Blank Block Constructor
+        /// </summary>
+        /// <param name="isRandom"></param>
         public Block(bool isRandom = false)
         {
             cells = new Cell[ROW_SIZE, COL_SIZE];
@@ -70,6 +90,7 @@ namespace getris.GameState
                 }
             }
         }
+
         public void MakeRandomBlock(int blockCellCnt, int colorCnt)
         {
             if (blockCellCnt < 1 || ROW_SIZE * COL_SIZE < blockCellCnt)
@@ -78,18 +99,21 @@ namespace getris.GameState
             }
             int cnt = COL_SIZE * ROW_SIZE - 1;
             int remain = blockCellCnt - 1;
+
+            int numberOfColors = 2;
+            int blockCellColorOrigin = Core.Random.rand(1, 1 + colorCnt - (numberOfColors - 1));
             for (int i = 0; i < ROW_SIZE; i++)
             {
                 for (int j = 0; j < COL_SIZE; j++)
                 {
                     if (i == ROW_SIZE / 2 && j == COL_SIZE / 2)
                     {
-                        cells[i, j] = new BlockCell((CellColor)Core.Random.rand(1, colorCnt + 1));
+                        cells[i, j] = new BlockCell((CellColor)Core.Random.rand(blockCellColorOrigin, blockCellColorOrigin + numberOfColors));
                         continue;
                     }
                     if (Core.Random.rand(cnt) < remain)
                     {
-                        cells[i, j] = new BlockCell((CellColor)Core.Random.rand(1, colorCnt + 1));
+                        cells[i, j] = new BlockCell((CellColor)Core.Random.rand(blockCellColorOrigin, blockCellColorOrigin + numberOfColors));
                         remain--;
                     }
                     else

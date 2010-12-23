@@ -8,7 +8,7 @@ namespace getris.GameState
 {
     class DisplayGame : Game
     {
-        public DisplayGame()
+        public DisplayGame(bool isLeft = false) : base(isLeft)
         {
             thread = new Thread(new ThreadStart(ThreadWork));
         }
@@ -20,6 +20,13 @@ namespace getris.GameState
         {
             try
             {
+                while (true)
+                {
+                    lock (thisLock)
+                    {
+                    }
+                    Thread.Sleep(1);
+                }
                 //TODO:
 /*                while (true)
                 {

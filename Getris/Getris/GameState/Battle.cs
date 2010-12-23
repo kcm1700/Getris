@@ -21,19 +21,19 @@ namespace getris.GameState
                 throw new Exception("둘다 run일리가 없다.");
             if (isLeftRun)
             {
-                leftGame = new RunGame();
+                leftGame = new RunGame(true);
             }
             else
             {
-                leftGame = new DisplayGame();
+                leftGame = new DisplayGame(true);
             }
             if (isRightRun)
             {
-                rightGame = new RunGame();
+                rightGame = new RunGame(false);
             }
             else
             {
-                rightGame = new DisplayGame();
+                rightGame = new DisplayGame(false);
             }
             LeftThread = leftGame.thread;
             RightThread = rightGame.thread;
@@ -41,31 +41,50 @@ namespace getris.GameState
             rightGame.Start();
         }
 
-        public CellColor GetLeftGamePileCellColor(int row, int col)
+        public CellColor GetPileCellColor(bool isLeft, int row, int col)
         {
-            return leftGame.GetPileCellColor(row, col);
+            if (isLeft)
+            {
+                return leftGame.GetPileCellColor(row, col);
+            }
+            else
+            {
+                return rightGame.GetPileCellColor(row, col);
+            }
         }
-        /// <summary>
-        /// Row는 블럭의 위치를 나타냄
-        /// </summary>
-        public int GetLeftGameRow
+        public int GetRow(bool isLeft)
         {
-            get
+            if (isLeft)
             {
                 return leftGame.Row;
             }
+            else
+            {
+                return rightGame.Row;
+            }
         }
-        public int GetLeftGameCol
+        public int GetCol(bool isLeft)
         {
-            get
+            if (isLeft)
             {
                 return leftGame.Col;
             }
+            else
+            {
+                return rightGame.Col;
+            }
         }
 
-        public CellColor GetLeftGameBlockCellColor(int row, int col)
+        public CellColor GetBlockCellColor(bool isLeft, int row, int col)
         {
-            return leftGame.GetBlockCellColor(row, col);
+            if (isLeft)
+            {
+                return leftGame.GetBlockCellColor(row, col);
+            }
+            else
+            {
+                return rightGame.GetBlockCellColor(row, col);
+            }
         }
     }
 }

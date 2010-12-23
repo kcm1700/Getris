@@ -63,23 +63,33 @@ namespace getris.GameState
                 }
             }
         }
+        /// <summary>
+        /// returns new instance of Block
+        /// </summary>
+        /// <param name="isLeft">좌측인지의 여부</param>
+        /// <returns></returns>
         public Block GetBlock(bool isLeft)
         {
             if(isLeft)
             {
                 lock (leftLock)
                 {
-                    return blocks[leftPivot % blocks.Length];
+                    return new Block(blocks[leftPivot % blocks.Length]);
                 }
             }
             else
             {
                 lock (rightLock)
                 {
-                    return blocks[rightPivot % blocks.Length];
+                    return new Block(blocks[rightPivot % blocks.Length]);
                 }
             }
         }
+        /// <summary>
+        /// returns new instance of Block
+        /// </summary>
+        /// <param name="isLeft">좌측인지의 여부</param>
+        /// <returns></returns>
         public Block Get1st(bool isLeft)
         {
             if(isLeft)
@@ -87,7 +97,7 @@ namespace getris.GameState
                 lock (leftLock)
                 {
                     if (rightPivot >= leftPivot + 1)
-                        return blocks[(leftPivot + 1) % blocks.Length];
+                        return new Block(blocks[(leftPivot + 1) % blocks.Length]);
                     else
                         //TODO: 
                         return new Block();
@@ -98,12 +108,17 @@ namespace getris.GameState
                 lock (rightLock)
                 {
                     if (leftPivot >= rightPivot + 1)
-                        return blocks[(rightPivot + 1) % blocks.Length];
+                        return new Block(blocks[(rightPivot + 1) % blocks.Length]);
                     else
                         return new Block();
                 }
             }
         }
+        /// <summary>
+        /// returns new instance of Block
+        /// </summary>
+        /// <param name="isLeft">좌측인지의 여부</param>
+        /// <returns></returns>
         public Block Get2nd(bool isLeft)
         {
             if(isLeft)
@@ -111,7 +126,7 @@ namespace getris.GameState
                 lock (leftLock)
                 {
                     if (rightPivot >= leftPivot + 2)
-                        return blocks[(leftPivot + 2) % blocks.Length];
+                        return new Block(blocks[(leftPivot + 2) % blocks.Length]);
                     else
                         //Block()을 기본적으로 완전 BlankCell로 채워진 놈으로 출력하게 수정했고, 결과적으로 여기서도 BlankCell로 채워진 block을 return할 것임
                         return new Block();
@@ -122,7 +137,7 @@ namespace getris.GameState
                 lock (rightLock)
                 {
                     if (leftPivot >= rightPivot + 2)
-                        return blocks[(rightPivot + 2) % blocks.Length];
+                        return new Block(blocks[(rightPivot + 2) % blocks.Length]);
                     else
                         //Block()을 기본적으로 완전 BlankCell로 채워진 놈으로 출력하게 수정했고, 결과적으로 여기서도 BlankCell로 채워진 block을 return할 것임
                         return new Block();

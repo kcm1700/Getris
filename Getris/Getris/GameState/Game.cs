@@ -7,6 +7,8 @@ namespace getris.GameState
 {
     abstract class Game
     {
+        public Object thisLock = new Object(); // animation 중 또는 렌더링 중에는 잠길 필요가 있다.
+
         protected Pile pile;
         protected Block block;// 현재 움직이는 블럭
         protected int row;
@@ -52,10 +54,6 @@ namespace getris.GameState
             {
                 return score;
             }
-            set
-            {
-                score = value;
-            }
         }
 
         public virtual int Row
@@ -73,7 +71,7 @@ namespace getris.GameState
             }
         }
 
-        public virtual void Rotate(bool isCw)
+        protected virtual void Rotate(bool isCw)
         {
             if (gameOver) return;
             //TODO: validation
@@ -107,7 +105,7 @@ namespace getris.GameState
                 gameOver = true;
             }
         }
-        public virtual void Drop()
+        protected virtual void Drop()
         {
             if (gameOver) return;
             pile.DropBlock(row, col, block);
@@ -115,7 +113,7 @@ namespace getris.GameState
             pile.SimulateChain();
             BlockRegen();
         }
-        public virtual void MoveDown()
+        protected virtual void MoveDown()
         {
             if (gameOver) return;
             //TODO: validation
@@ -127,7 +125,7 @@ namespace getris.GameState
                 Drop();
             }
         }
-        public virtual void MoveLeft()
+        protected virtual void MoveLeft()
         {
             if (gameOver) return;
             //TODO: validation
@@ -137,7 +135,7 @@ namespace getris.GameState
                 this.col++;
             }
         }
-        public virtual void MoveRight()
+        protected virtual void MoveRight()
         {
             if (gameOver) return;
             //TODO: validation
@@ -147,7 +145,7 @@ namespace getris.GameState
                 this.col--;
             }
         }
-        public virtual void GoTo(int row, int col)
+        protected virtual void GoTo(int row, int col)
         {
             if (gameOver) return;
             this.row = row;

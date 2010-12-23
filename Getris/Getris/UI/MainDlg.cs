@@ -157,38 +157,15 @@ namespace getris
             }
         }
 
-        private void RenderLeftGame()
+        private void RenderGame(bool isLeft)
         {
-            //Setup Viewport
-            int w = LeftGameWidth;
-            int h = LeftGameHeight;
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(0, w, 0, h, -1, 1);
-            GL.Viewport(LeftGameLeft, LeftGameBottom, w, h);
-            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-
-            //Set alpha blending
-            GL.ColorMask(true, true, true, true);
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-
-            //Draw Background
-            GL.Begin(BeginMode.Quads);
-            GL.Color4(Color.Black);
-            GL.Vertex2(0, 0);
-            GL.Vertex2(w, 0);
-            GL.Vertex2(w, h);
-            GL.Vertex2(0, h);
-            GL.End();
-
-            //Draw Blocks
+            //Draw blockpiles
             GL.Begin(BeginMode.Quads);
             for (int i = 0; i < Pile.ROW; i++)
             {
                 for (int j = 0; j < Pile.COL; j++)
                 {
-                    CellColor col = battle.GetLeftGamePileCellColor(i, j);
+                    CellColor col = battle.GetPileCellColor(isLeft,i, j);
                     switch (col)
                     {
                         case CellColor.transparent:
@@ -213,20 +190,23 @@ namespace getris
                             break;
                     }
                     GL.Vertex2(20 * j + 1, 20 * i + 1);
-                    GL.Vertex2(20 * (j+1) - 1, 20 * i + 1);
-                    GL.Vertex2(20 * (j+1) - 1, 20 * (i+1) - 1);
-                    GL.Vertex2(20 * j + 1, 20 * (i+1) - 1);
+                    GL.Vertex2(20 * (j + 1) - 1, 20 * i + 1);
+                    GL.Vertex2(20 * (j + 1) - 1, 20 * (i + 1) - 1);
+                    GL.Vertex2(20 * j + 1, 20 * (i + 1) - 1);
                 }
             }
             GL.End();
+
+            // Draw block
 
             GL.Begin(BeginMode.Quads);
             for (int i = 0; i < Block.ROW_SIZE; i++)
             {
                 for (int j = 0; j < Block.COL_SIZE; j++)
                 {
-                    int row = i + battle.GetLeftGameRow, col = j + battle.GetLeftGameCol;
-                    CellColor color = battle.GetLeftGameBlockCellColor(i, j);
+                    int row = i + battle.GetRow(isLeft), col = j + battle.GetCol(isLeft);
+
+                    CellColor color = battle.GetBlockCellColor(isLeft, i, j); 
                     switch (color)
                     {
                         case CellColor.transparent:
@@ -258,9 +238,60 @@ namespace getris
             }
             GL.End();
         }
+
+        private void RenderLeftGame()
+        {
+            //Setup Viewport
+            int w = LeftGameWidth;
+            int h = LeftGameHeight;
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(0, w, 0, h, -1, 1);
+            GL.Viewport(LeftGameLeft, LeftGameBottom, w, h);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+
+            //Set alpha blending
+            GL.ColorMask(true, true, true, true);
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+
+            //Draw Background
+            GL.Begin(BeginMode.Quads);
+            GL.Color4(Color.Black);
+            GL.Vertex2(0, 0);
+            GL.Vertex2(w, 0);
+            GL.Vertex2(w, h);
+            GL.Vertex2(0, h);
+            GL.End();
+
+            RenderGame(true);
+        }
         private void RenderRightGame()
         {
-            //TODO:
+            //Setup Viewport
+            int w = RightGameWidth;
+            int h = RightGameHeight;
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(0, w, 0, h, -1, 1);
+            GL.Viewport(RightGameLeft, RightGameBottom, w, h);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+
+            //Set alpha blending
+            GL.ColorMask(true, true, true, true);
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+
+            //Draw Background
+            GL.Begin(BeginMode.Quads);
+            GL.Color4(Color.Black);
+            GL.Vertex2(0, 0);
+            GL.Vertex2(w, 0);
+            GL.Vertex2(w, h);
+            GL.Vertex2(0, h);
+            GL.End();
+
+            RenderGame(false);
         }
 
         private void SetupViewport()
@@ -338,6 +369,11 @@ namespace getris
             {
                 e.IsInputKey = true;
             }
+        }
+
+        private void MainDlg_Deactivate(object sender, EventArgs e)
+        {
+//            Core.Keyboard.KeyReset();
         }
     }
 }

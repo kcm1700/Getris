@@ -38,7 +38,7 @@
             this.glMain.BackColor = System.Drawing.Color.Black;
             this.glMain.Location = new System.Drawing.Point(0, 0);
             this.glMain.Name = "glMain";
-            this.glMain.Size = new System.Drawing.Size(600, 480);
+            this.glMain.Size = new System.Drawing.Size(700, 443);
             this.glMain.TabIndex = 0;
             this.glMain.VSync = false;
             this.glMain.Load += new System.EventHandler(this.glMain_Load);
@@ -50,32 +50,33 @@
             // textBox1
             // 
             this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(614, 12);
+            this.textBox1.Location = new System.Drawing.Point(716, 11);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(206, 281);
+            this.textBox1.Size = new System.Drawing.Size(240, 260);
             this.textBox1.TabIndex = 1;
             this.textBox1.TabStop = false;
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(614, 299);
+            this.textBox2.Location = new System.Drawing.Point(716, 276);
             this.textBox2.MaxLength = 511;
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(206, 20);
+            this.textBox2.Size = new System.Drawing.Size(240, 21);
             this.textBox2.TabIndex = 2;
             // 
             // MainDlg
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(832, 577);
+            this.ClientSize = new System.Drawing.Size(971, 533);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.glMain);
             this.Name = "MainDlg";
             this.Text = "Getris";
+            this.Deactivate += new System.EventHandler(this.MainDlg_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainDlg_FormClosing);
             this.Load += new System.EventHandler(this.MainDlg_Load);
             this.ResumeLayout(false);

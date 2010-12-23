@@ -3,11 +3,14 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Collections;
 using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Forms;
 
 namespace getris.Core
 {
     public sealed class Keyboard
     {
+
         static private Keyboard instance;
         static private readonly System.Object thisLock;
         static private System.Collections.Generic.Queue<Action> buffer;
@@ -35,6 +38,30 @@ namespace getris.Core
             }
         }
 
+
+        static public void KeyReset()
+        {
+            isPressed.Clear();
+            lock (keymapLock)
+            {
+                lock (KeySettings.thisLock)
+                {
+                    isPressed.Add(KeySettings.KeyDrop, false);
+                    isPressed.Add(KeySettings.KeyMoveDown, false);
+                    isPressed.Add(KeySettings.KeyMoveLeft, false);
+                    isPressed.Add(KeySettings.KeyMoveRight, false);
+                    isPressed.Add(KeySettings.KeyRotateCcw1, false);
+                    isPressed.Add(KeySettings.KeyRotateCw1, false);
+
+                    //secondary key check
+                    if (KeySettings.KeyRotateCcw2.HasValue)
+                        isPressed.Add(KeySettings.KeyRotateCcw2.Value, false);
+                    if (KeySettings.KeyRotateCw2.HasValue)
+                        isPressed.Add(KeySettings.KeyRotateCw2.Value, false);
+                }
+            }
+        }
+
         static Keyboard()
         {
             instance = null;
@@ -45,15 +72,7 @@ namespace getris.Core
             sw = new System.Diagnostics.Stopwatch();
             keyboardThread = new Thread(new ThreadStart(threadLoop));
             isPressed = new Dictionary<System.Windows.Forms.Keys, bool>();
-            lock(keymapLock){
-                isPressed.Add(System.Windows.Forms.Keys.Up, false);
-                isPressed.Add(System.Windows.Forms.Keys.Down, false);
-                isPressed.Add(System.Windows.Forms.Keys.Left, false);
-                isPressed.Add(System.Windows.Forms.Keys.Right, false);
-                isPressed.Add(System.Windows.Forms.Keys.X, false);
-                isPressed.Add(System.Windows.Forms.Keys.Z, false);
-                isPressed.Add(System.Windows.Forms.Keys.Space, false);
-            }
+            KeyReset();
         }
 
         static public void Start()
@@ -92,6 +111,7 @@ namespace getris.Core
                 }
                 restTime += timeDelta;
                 if (before == false){
+                    before = true;
                     return true;
                 }
                 if (isRepeated)
@@ -137,23 +157,17 @@ namespace getris.Core
         {
             try
             {
-                KeyState up, down, left, right, x, z, space;
+                KeyState keyDrop, keyMoveDown, keyMoveLeft, keyMoveRight, keyRotateCw1, keyRotateCcw1, keyRotateCw2, keyRotateCcw2;
                 double beforeElapsed = sw.Elapsed.TotalMilliseconds;
 
-                space = new KeyState();
-                up = new KeyState();
-                down = new KeyState();
-                left = new KeyState();
-                right = new KeyState();
-                x = new KeyState();
-                z = new KeyState();
-                space.restTime = 0;
-                up.restTime = 0;
-                down.restTime = 0;
-                left.restTime = 0;
-                right.restTime = 0;
-                x.restTime = 0;
-                z.restTime = 0;
+                keyDrop = new KeyState();
+                keyMoveDown = new KeyState();
+                keyMoveLeft = new KeyState();
+                keyMoveRight = new KeyState();
+                keyRotateCw1 = new KeyState();
+                keyRotateCcw1 = new KeyState();
+                keyRotateCw2 = new KeyState();
+                keyRotateCcw2 = new KeyState();
 
                 while (true)
                 {
@@ -165,47 +179,56 @@ namespace getris.Core
 
                     lock (keymapLock)
                     {
-                        up.newState = isPressed[System.Windows.Forms.Keys.Up];
-                        down.newState = isPressed[System.Windows.Forms.Keys.Down];
-                        left.newState = isPressed[System.Windows.Forms.Keys.Left];
-                        right.newState = isPressed[System.Windows.Forms.Keys.Right];
-                        x.newState = isPressed[System.Windows.Forms.Keys.X];
-                        z.newState = isPressed[System.Windows.Forms.Keys.Z];
-                        space.newState = isPressed[System.Windows.Forms.Keys.Space];
+                        lock (KeySettings.thisLock)
+                        {
+                            keyDrop.newState = isPressed[KeySettings.KeyDrop];
+                            keyMoveDown.newState = isPressed[KeySettings.KeyMoveDown];
+                            keyMoveLeft.newState = isPressed[KeySettings.KeyMoveLeft];
+                            keyMoveRight.newState = isPressed[KeySettings.KeyMoveRight];
+                            keyRotateCw1.newState = isPressed[KeySettings.KeyRotateCw1];
+                            keyRotateCcw1.newState = isPressed[KeySettings.KeyRotateCcw1];
+                            if (KeySettings.KeyRotateCw2.HasValue)
+                                keyRotateCw2.newState = isPressed[KeySettings.KeyRotateCw2.Value];
+                            if (KeySettings.KeyRotateCcw2.HasValue)
+                                keyRotateCcw2.newState = isPressed[KeySettings.KeyRotateCcw2.Value];
+                        }
                     }
 
                     double nowElapsed = sw.Elapsed.TotalMilliseconds;
                     double tmspan = nowElapsed - beforeElapsed;
                     beforeElapsed = nowElapsed;
 
-                    if (up.keyPress(tmspan))
+                    while (keyDrop.keyPress(tmspan))
                     {
-                        //TODO: option based ccw or cw
-                        Add(new Rotate("cw"));
+                        Add(new Move("drop"));
                     }
-                    if (down.keyPress(tmspan))
+                    while (keyMoveDown.keyPress(tmspan))
                     {
                         Add(new Move("down"));
                     }
-                    if (left.keyPress(tmspan))
+                    while (keyMoveLeft.keyPress(tmspan))
                     {
                         Add(new Move("left"));
                     }
-                    if (right.keyPress(tmspan))
+                    while (keyMoveRight.keyPress(tmspan))
                     {
                         Add(new Move("right"));
                     }
-                    if (x.keyPress(tmspan))
+                    while (keyRotateCw1.keyPress(tmspan))
                     {
                         Add(new Rotate("cw"));
                     }
-                    if (z.keyPress(tmspan))
+                    while (keyRotateCcw1.keyPress(tmspan))
                     {
                         Add(new Rotate("ccw"));
                     }
-                    if (space.keyPress(tmspan))
+                    while (keyRotateCw2.keyPress(tmspan))
                     {
-                        Add(new Move("drop"));
+                        Add(new Rotate("cw"));
+                    }
+                    while (keyRotateCcw2.keyPress(tmspan))
+                    {
+                        Add(new Rotate("ccw"));
                     }
                     Thread.Sleep(1);
                 }

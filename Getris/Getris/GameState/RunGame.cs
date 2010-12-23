@@ -8,7 +8,7 @@ namespace getris.GameState
 {
     class RunGame : Game
     {
-        public RunGame()
+        public RunGame(bool isLeft = true) : base(isLeft)
         {
             thread = new Thread(new ThreadStart(ThreadWork));
         }
@@ -22,45 +22,50 @@ namespace getris.GameState
             {
                 while (true)
                 {
-                    if (!Core.Keyboard.IsEmpty())
-                        // is not empty
+                    //일단 lock 걸고 작업하고,
+                    lock (thisLock)
                     {
-                        Core.Action a = Core.Keyboard.Pop();
-                        if (a is Core.Move)
+                        if (!Core.Keyboard.IsEmpty())
+                        // is not empty
                         {
-                            switch (a.data)
+                            Core.Action a = Core.Keyboard.Pop();
+                            if (a is Core.Move)
                             {
-                                case "down":
-                                    MoveDown();
-                                    break;
-                                case "left":
-                                    MoveLeft();
-                                    break;
-                                case "right":
-                                    MoveRight();
-                                    break;
-                                case "drop":
-                                    Drop();
-                                    break;
-                                default:
-                                    throw new Exception("unknown move");
+                                switch (a.data)
+                                {
+                                    case "down":
+                                        MoveDown();
+                                        break;
+                                    case "left":
+                                        MoveLeft();
+                                        break;
+                                    case "right":
+                                        MoveRight();
+                                        break;
+                                    case "drop":
+                                        Drop();
+                                        break;
+                                    default:
+                                        throw new Exception("unknown move");
+                                }
                             }
-                        }
-                        else if (a is Core.Rotate)
-                        {
-                            switch (a.data)
+                            else if (a is Core.Rotate)
                             {
-                                case "cw":
-                                    Rotate(true);
-                                    break;
-                                case "ccw":
-                                    Rotate(false);
-                                    break;
-                                default:
-                                    throw new Exception("unknown rotation");
+                                switch (a.data)
+                                {
+                                    case "cw":
+                                        Rotate(true);
+                                        break;
+                                    case "ccw":
+                                        Rotate(false);
+                                        break;
+                                    default:
+                                        throw new Exception("unknown rotation");
+                                }
                             }
                         }
                     }
+                    // lock 풀고 Thread 양보하자.
                     Thread.Sleep(1);
                 }
             }
