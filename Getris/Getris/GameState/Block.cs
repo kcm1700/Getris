@@ -44,8 +44,6 @@ namespace getris.GameState
         // 랜덤 색상은 역시 그 윗단에서 처리를 해줘야하지 않을까요?
         public Block(CellColor color)
         {
-/*            row = Pile.ROW;
-            col = (Pile.COL + 1) / 2;*/
             cells = new Cell[ROW_SIZE, COL_SIZE];
             for (int i = 0; i < ROW_SIZE; i++)
             {
@@ -62,8 +60,7 @@ namespace getris.GameState
                 }
             }
         }
-        // TODO : Random을 인자로 넘기는 이유는? 매번 새로운 Random을 만들면 random성이 보장이 안 됩니다.
-        public void MakeRandomBlock(int blockCellCnt, Random rnd)
+        public void MakeRandomBlock(int blockCellCnt, int colorCnt)
         {
             if (ROW_SIZE * COL_SIZE < blockCellCnt || blockCellCnt < 1)
             {
@@ -77,12 +74,12 @@ namespace getris.GameState
                 {
                     if (i == ROW_SIZE / 2 && j == COL_SIZE / 2)
                     {
-                        cells[i, j] = new BlockCell(cells[1,1].maskColor);
+                        cells[i, j] = new BlockCell((CellColor)Core.Random.rand(1, colorCnt + 1));
                         continue;
                     }
-                    if (rnd.Next(cnt) < remain)
+                    if (Core.Random.rand(cnt) < remain)
                     {
-                        cells[i, j] = new BlockCell(cells[1,1].maskColor);
+                        cells[i, j] = new BlockCell((CellColor)Core.Random.rand(1, colorCnt + 1));
                         remain--;
                     }
                     else

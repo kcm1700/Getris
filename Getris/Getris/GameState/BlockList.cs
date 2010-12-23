@@ -33,13 +33,12 @@ namespace getris.GameState
         {
             leftPivot=0;
             rightPivot=0;
-            Random rnd = new Random();
-            blocks = new Block[900 + rnd.Next(100)];
+            blocks = new Block[900 + Core.Random.rand(100)];
             for (int i = 0; i < blocks.Length; i++)
             {
                 //TODO : Block 생성자 수정한 다음에 수정.
-                blocks[i] = new Block((CellColor)(rnd.Next(1,colorCnt+1)));
-                blocks[i].MakeRandomBlock(4, rnd);
+                blocks[i] = new Block((CellColor)(Core.Random.rand(1,colorCnt+1)));
+                blocks[i].MakeRandomBlock(4, colorCnt);
             }
         }
 

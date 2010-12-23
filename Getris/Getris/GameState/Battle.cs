@@ -15,10 +15,26 @@ namespace getris.GameState
 
         public readonly static int colorCnt = 5;
 
-        public Battle()
+        public Battle(bool isLeftRun=true, bool isRightRun=false)
         {
-            leftGame = new RunGame();
-            rightGame = new DisplayGame();
+            if (isLeftRun && isRightRun)
+                throw new Exception("둘다 run일리가 없다.");
+            if (isLeftRun)
+            {
+                leftGame = new RunGame();
+            }
+            else
+            {
+                leftGame = new DisplayGame();
+            }
+            if (isRightRun)
+            {
+                rightGame = new RunGame();
+            }
+            else
+            {
+                rightGame = new DisplayGame();
+            }
             LeftThread = leftGame.thread;
             RightThread = rightGame.thread;
             leftGame.Start();

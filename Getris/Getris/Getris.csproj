@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Core\Action.cs" />
     <Compile Include="Core\Logger.cs" />
+    <Compile Include="Core\Random.cs" />
     <Compile Include="GameState\ChainResult.cs" />
     <Compile Include="UI\Chat.cs" />
     <Compile Include="GameState\Battle.cs" />
