@@ -37,9 +37,7 @@ namespace getris.GameState
             blocks = new Block[900 + Core.Random.rand(100)];
             for (int i = 0; i < blocks.Length; i++)
             {
-                //TODO : Block 생성자 수정한 다음에 수정.
-                blocks[i] = new Block();
-                blocks[i].MakeRandomBlock(4, colorCnt);
+                blocks[i] = new Block(4, colorCnt);
             }
         }
 

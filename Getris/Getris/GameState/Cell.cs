@@ -17,7 +17,7 @@ namespace getris.GameState
     }
     abstract class Cell
     {
-        private CellColor blockColor;
+        protected CellColor blockColor;
         
         public virtual CellColor maskColor
         {
@@ -25,15 +25,6 @@ namespace getris.GameState
             {
                 return blockColor;
             }
-            set
-            {
-                blockColor = value;
-            }
-        }
-
-        public virtual bool IsEmpty()
-        {
-            return false;
         }
     }
 
@@ -44,7 +35,7 @@ namespace getris.GameState
         }
         public BlockCell(CellColor color)
         {
-            maskColor = color;
+            blockColor = color;
         }
 
     }
@@ -54,16 +45,11 @@ namespace getris.GameState
         public BlankCell()
         {
             //default: invisible color mask
-            maskColor = CellColor.transparent;
+            blockColor = CellColor.transparent;
         }
         public BlankCell(CellColor color)
         {
-            maskColor = color;
-        }
-
-        public override bool IsEmpty()
-        {
-            return true;
+            blockColor = color;
         }
     }
 }

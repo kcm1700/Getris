@@ -79,7 +79,7 @@ namespace getris.GameState
         /// Blank Block Constructor
         /// </summary>
         /// <param name="isRandom"></param>
-        public Block(bool isRandom = false)
+        public Block()
         {
             cells = new Cell[ROW_SIZE, COL_SIZE];
             for (int i = 0; i < ROW_SIZE; i++)
@@ -91,12 +91,15 @@ namespace getris.GameState
             }
         }
 
-        public void MakeRandomBlock(int blockCellCnt, int colorCnt)
+        public Block(int blockCellCnt, int colorCnt)
         {
             if (blockCellCnt < 1 || ROW_SIZE * COL_SIZE < blockCellCnt)
             {
                 throw new Exception("Can't MakeRandomBlock");
             }
+
+            cells = new Cell[ROW_SIZE, COL_SIZE];
+
             int cnt = COL_SIZE * ROW_SIZE - 1;
             int remain = blockCellCnt - 1;
 
@@ -166,10 +169,6 @@ namespace getris.GameState
             get
             {
                 return cells[row, col];
-            }
-            set
-            {
-                cells[row, col]=value;
             }
         }
     }
