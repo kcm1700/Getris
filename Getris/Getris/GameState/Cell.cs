@@ -8,12 +8,12 @@ namespace getris.GameState
 {
     public enum CellColor
     {
-        transparent,
-        color1,
-        color2,
-        color3,
-        color4,
-        color5
+        transparent = 0,
+        color1 = 1,
+        color2 = 2,
+        color3 = 3,
+        color4 = 4,
+        color5 = 5
     }
     abstract class Cell
     {

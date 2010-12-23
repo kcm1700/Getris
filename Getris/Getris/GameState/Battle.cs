@@ -10,10 +10,19 @@ namespace getris.GameState
         private Game leftGame;
         private Game rightGame;
 
+        public System.Threading.Thread LeftThread;
+        public System.Threading.Thread RightThread;
+
+        public readonly static int colorCnt = 5;
+
         public Battle()
         {
             leftGame = new RunGame();
             rightGame = new DisplayGame();
+            LeftThread = leftGame.thread;
+            RightThread = rightGame.thread;
+            leftGame.Start();
+            rightGame.Start();
         }
 
         public CellColor GetLeftGamePileCellColor(int row, int col)

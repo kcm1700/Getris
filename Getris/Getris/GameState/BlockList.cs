@@ -29,7 +29,7 @@ namespace getris.GameState
                 return instance;
             }
         }
-        public BlockList()
+        public BlockList(int colorCnt=5)
         {
             leftPivot=0;
             rightPivot=0;
@@ -38,7 +38,7 @@ namespace getris.GameState
             for (int i = 0; i < blocks.Length; i++)
             {
                 //TODO : Block 생성자 수정한 다음에 수정.
-                blocks[i] = new Block(CellColor.color1);
+                blocks[i] = new Block((CellColor)(rnd.Next(1,colorCnt+1)));
                 blocks[i].MakeRandomBlock(4, rnd);
             }
         }

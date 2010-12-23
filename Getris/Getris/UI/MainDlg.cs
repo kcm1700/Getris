@@ -206,6 +206,9 @@ namespace getris
                         case CellColor.color4:
                             GL.Color4(Color.Yellow);
                             break;
+                        case CellColor.color5:
+                            GL.Color4(Color.Ivory);
+                            break;
                         default:
                             break;
                     }
@@ -222,7 +225,7 @@ namespace getris
             {
                 for (int j = 0; j < Block.COL_SIZE; j++)
                 {
-                    int row = i + battle.GetLeftGameRow-10, col = j + battle.GetLeftGameCol;
+                    int row = i + battle.GetLeftGameRow, col = j + battle.GetLeftGameCol;
                     CellColor color = battle.GetLeftGameBlockCellColor(i, j);
                     switch (color)
                     {
@@ -240,6 +243,9 @@ namespace getris
                             break;
                         case CellColor.color4:
                             GL.Color4(Color.Yellow);
+                            break;
+                        case CellColor.color5:
+                            GL.Color4(Color.Ivory);
                             break;
                         default:
                             break;
@@ -314,6 +320,24 @@ namespace getris
         private void MainDlg_FormClosing(object sender, FormClosingEventArgs e)
         {
             Core.Keyboard.keyboardThread.Abort();
+            battle.LeftThread.Abort();
+            battle.RightThread.Abort();
+        }
+
+        private void MainDlg_Load(object sender, EventArgs e)
+        {
+            foreach (Control control in this.Controls)
+            {
+                control.PreviewKeyDown += new PreviewKeyDownEventHandler(control_PreviewKeyDown);
+            }
+        }
+
+        private void control_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right)
+            {
+                e.IsInputKey = true;
+            }
         }
     }
 }

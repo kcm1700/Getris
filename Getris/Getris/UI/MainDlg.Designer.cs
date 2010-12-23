@@ -77,6 +77,7 @@
             this.Name = "MainDlg";
             this.Text = "Getris";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainDlg_FormClosing);
+            this.Load += new System.EventHandler(this.MainDlg_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -20,9 +20,9 @@ namespace getris.GameState
         // constructor: 1. initialize board with blank cells 
         public Pile()
         {
-            board = new Cell[ROW, COL];
+            board = new Cell[ROW+3, COL];
 
-            for (int i = 0; i < ROW; i++)
+            for (int i = 0; i < ROW+3; i++)
             {
                 for (int j = 0; j < COL; j++)
                 {
@@ -49,8 +49,9 @@ namespace getris.GameState
         private bool isCellCollision(int row, int col, Cell cell)
         {
             if (cell.IsEmpty()) return false; // always safe
-            if (row < 0 || row >= ROW) return true;
             if (col < 0 || col >= COL) return true;
+            if (row >= ROW) return false;
+            if (row < 0) return true;
             if (!IsCellEmpty(row,col)) return true; // if board cell is not empty, it collides
             return false;
         }
@@ -101,7 +102,7 @@ namespace getris.GameState
         
         private void FloodFill(int row, int col, bool[,] visit, CellColor par)
         {
-            if (row < 0 || row >= ROW) return;
+            if (row < 0 || row >= ROW + 3) return;
             if (col < 0 || col >= COL) return;
             if (visit[row, col]) return;
             if (board[row, col].IsEmpty()) return;
@@ -110,7 +111,7 @@ namespace getris.GameState
 
             // in same color
             visit[row, col] = true;
-            if (row + 1 < ROW)
+            if (row + 1 < ROW + 3)
                 FloodFill(row + 1, col, visit, board[row + 1, col].maskColor); // connect upper
             FloodFill(row - 1, col, visit, par);
             FloodFill(row, col + 1, visit, par);
@@ -124,7 +125,7 @@ namespace getris.GameState
             chainResult.animation = new List<Animation.EraseDropPair>();
             chainResult.score = 0;
 
-            bool flgRemoved = false;
+            bool flgContinue = false;
             int chainCnt = 0;
             do
             {
@@ -132,7 +133,7 @@ namespace getris.GameState
                 List<Animation.Drop> dropCells = new List<Animation.Drop>();
 
                 //(1) clear full line
-                for (int i = 0; i < ROW; i++)
+                for (int i = 0; i < ROW+3; i++)
                 {
                     int cnt = 0;
 
@@ -145,12 +146,12 @@ namespace getris.GameState
                         for (int j = 0; j < COL; j++)
                             board[i, j] = new BlankCell();
                         removedLines.Add(i);
-                        flgRemoved = true;
+                        flgContinue = true;
                     }
                 }
 
                 //(2) calculate drops
-                bool[,] visit = new bool[ROW, COL];//flood fill color array
+                bool[,] visit = new bool[ROW+3, COL];//flood fill color array
                 bool flgDown; // flag for gravity down
 
                 do{
@@ -161,7 +162,7 @@ namespace getris.GameState
                     {
                         FloodFill(0, j, visit, board[0, j].maskColor);
                     }
-                    for (int i = 1; i < ROW; i++)
+                    for (int i = 1; i < ROW+3; i++)
                     {
                         for (int j = 0; j < COL; j++)
                         {
@@ -193,6 +194,10 @@ namespace getris.GameState
                             }
                         }
                     }
+                    if (flgDown)
+                    {
+                        flgContinue = true;
+                    }
                 }while(flgDown);
                 //DONE : move all blocks down & add it to drop cells list
 
@@ -203,7 +208,7 @@ namespace getris.GameState
                 chainResult.score += chainScore[chainCnt] * removedLines.Count;
                 //DONE : calculate score
                 chainCnt++;
-            } while (flgRemoved);
+            } while (flgContinue);
 
             return chainResult;
         }

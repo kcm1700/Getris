@@ -18,21 +18,22 @@ namespace getris.GameState
         public System.Threading.Thread thread;
         public abstract void Start();
 
+        private bool gameOver;
+        public bool GameOver
+        {
+            get
+            {
+                return gameOver;
+            }
+        }
+
         public Game(bool isLeft=true)
         {
             this.isLeft = isLeft;
             score = 0;
             pile = new Pile();
-            row = Pile.ROW;
-            col = (Pile.COL+1) / 2;
-            if (isLeft)
-            {
-                block = BlockList.Instance.LeftBlock;
-            }
-            else
-            {
-                block = BlockList.Instance.RightBlock;
-            }
+            BlockRegen();
+            gameOver = false;
         }
 
         public virtual CellColor GetPileCellColor(int row, int col)
@@ -74,39 +75,88 @@ namespace getris.GameState
 
         public virtual void Rotate(bool isCw)
         {
+            if (gameOver) return;
             //TODO: validation
             if (isCw)
             {
                 block.RotateCw();
+                if (pile.IsBlockCollision(row, col, block))
+                {
+                    block.RotateCcw();
+                }
             }
             else
             {
                 block.RotateCcw();
+                if (pile.IsBlockCollision(row, col, block))
+                {
+                    block.RotateCw();
+                }
+            }
+        }
+        protected virtual void BlockRegen()
+        {
+            if (gameOver) return;
+            if (isLeft)
+            {
+                BlockList.Instance.NextBlockLeft();
+                block = BlockList.Instance.LeftBlock;
+            }
+            else
+            {
+                BlockList.Instance.NextBlockRight();
+                block = BlockList.Instance.RightBlock;
+            }
+            row = Pile.ROW - 2;
+            col = (Pile.COL + 1) / 2;
+            if (pile.IsBlockCollision(row, col, block))
+            {
+                gameOver = true;
             }
         }
         public virtual void Drop()
         {
+            if (gameOver) return;
             pile.DropBlock(row, col, block);
-            //TODO: block = BlockList.Instance.NextBlock(isLeft);
+            //TODO: SimulateChain의 결과 처리하기
+            pile.SimulateChain();
+            BlockRegen();
         }
         public virtual void MoveDown()
         {
+            if (gameOver) return;
             //TODO: validation
             // vaildation 실패시 Drop으로
             this.row--;
+            if (pile.IsBlockCollision(row, col, block))
+            {
+                this.row++;
+                Drop();
+            }
         }
         public virtual void MoveLeft()
         {
+            if (gameOver) return;
             //TODO: validation
             this.col--;
+            if (pile.IsBlockCollision(row, col, block))
+            {
+                this.col++;
+            }
         }
         public virtual void MoveRight()
         {
+            if (gameOver) return;
             //TODO: validation
             this.col++;
+            if (pile.IsBlockCollision(row, col, block))
+            {
+                this.col--;
+            }
         }
         public virtual void GoTo(int row, int col)
         {
+            if (gameOver) return;
             this.row = row;
             this.col = col;
         }
