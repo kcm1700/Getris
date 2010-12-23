@@ -46,33 +46,33 @@ namespace getris.GameState
         private uint leftPivot;
         private uint rightPivot;
         private readonly Block[] blocks;
-        public void NextBlockLeft()
+        public void NextBlock(bool isLeft)
         {
-            lock (leftLock)
+            if (isLeft)
             {
-                leftPivot++;
+                lock (leftLock)
+                {
+                    leftPivot++;
+                }
+            }
+            else
+            {
+                lock (rightLock)
+                {
+                    rightPivot++;
+                }
             }
         }
-        public void NextBlockRight()
+        public Block GetBlock(bool isLeft)
         {
-            lock (rightLock)
-            {
-                rightPivot++;
-            }
-        }
-        public Block LeftBlock
-        {
-            get
+            if(isLeft)
             {
                 lock (leftLock)
                 {
                     return blocks[leftPivot % blocks.Length];
                 }
             }
-        }
-        public Block RightBlock
-        {
-            get
+            else
             {
                 lock (rightLock)
                 {
@@ -80,9 +80,9 @@ namespace getris.GameState
                 }
             }
         }
-        public Block Left1st
+        public Block Get1st(bool isLeft)
         {
-            get
+            if(isLeft)
             {
                 lock (leftLock)
                 {
@@ -92,10 +92,7 @@ namespace getris.GameState
                         return new Block(blocks[leftPivot + 1].BlockColor);
                 }
             }
-        }
-        public Block Right1st
-        {
-            get
+            else
             {
                 lock (rightLock)
                 {
@@ -106,9 +103,9 @@ namespace getris.GameState
                 }
             }
         }
-        public Block Left2nd
+        public Block Get2nd(bool isLeft)
         {
-            get
+            if(isLeft)
             {
                 lock (leftLock)
                 {
@@ -118,10 +115,7 @@ namespace getris.GameState
                         return new Block(blocks[leftPivot + 2].BlockColor);
                 }
             }
-        }
-        public Block Right2nd
-        {
-            get
+            else
             {
                 lock (rightLock)
                 {

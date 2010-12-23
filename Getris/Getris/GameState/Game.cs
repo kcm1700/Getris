@@ -97,16 +97,9 @@ namespace getris.GameState
         protected virtual void BlockRegen()
         {
             if (gameOver) return;
-            if (isLeft)
-            {
-                BlockList.Instance.NextBlockLeft();
-                block = BlockList.Instance.LeftBlock;
-            }
-            else
-            {
-                BlockList.Instance.NextBlockRight();
-                block = BlockList.Instance.RightBlock;
-            }
+            BlockList.Instance.NextBlock(isLeft);
+            block = BlockList.Instance.GetBlock(isLeft);
+
             row = Pile.ROW - 2;
             col = (Pile.COL + 1) / 2;
             if (pile.IsBlockCollision(row, col, block))
