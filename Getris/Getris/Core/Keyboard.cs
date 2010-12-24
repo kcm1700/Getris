@@ -83,8 +83,6 @@ namespace getris.Core
             keyboardThread.Start();
         }
 
-        public const int initTime = 250;
-        public const int repeatPeriod = 100;
         static public System.Diagnostics.Stopwatch sw;
 
         struct KeyState{
@@ -116,18 +114,18 @@ namespace getris.Core
                 }
                 if (isRepeated)
                 {
-                    if (restTime > repeatPeriod)
+                    if (restTime > KeySettings.RepeatPeriod)
                     {
-                        restTime -= repeatPeriod;
+                        restTime -= KeySettings.RepeatPeriod;
                         return true;
                     }
                 }
                 else
                 {
                     isRepeated = true;
-                    if (restTime > initTime)
+                    if (restTime > KeySettings.InitTime)
                     {
-                        restTime -= initTime;
+                        restTime -= KeySettings.InitTime;
                         return true;
                     }
                 }
