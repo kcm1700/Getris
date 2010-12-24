@@ -13,7 +13,8 @@ namespace getris.GameState
         color2 = 2,
         color3 = 3,
         color4 = 4,
-        color5 = 5
+        color5 = 5,
+        dropped = 99
     }
     public abstract class Cell
     {

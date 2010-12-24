@@ -77,7 +77,7 @@ namespace getris.GameState
                         }
                         now =sw.Elapsed.TotalMilliseconds;
                         TimeLimit(now, ref before, 700);
-                        
+                        LockTimeLimit(5000);
                     }
                     // lock 풀고 Thread 양보하자.
                     Thread.Sleep(1);
@@ -85,6 +85,18 @@ namespace getris.GameState
             }
             catch/*(ThreadAbortException e)*/
             {
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="limitTime">in milli second</param>
+        private void LockTimeLimit(double limitTime)
+        {
+            if (swLock.Elapsed.TotalMilliseconds > limitTime)
+            {
+                swLock.Reset();
+                Drop();
             }
         }
         private void TimeLimit(double now, ref double before, double limitTime)
@@ -141,21 +153,80 @@ namespace getris.GameState
         {
         }
 
+        int lockCount = 25;
+        System.Diagnostics.Stopwatch swLock = new System.Diagnostics.Stopwatch();
+
+        private bool isLocked()
+        {
+            bool ret = false;
+            this.row--;
+            if(pile.IsBlockCollision(row,col,block))
+            {
+                ret = true;
+            }
+            this.row++;
+            return ret;
+        }
+
+        private void CheckLockCnt()
+        {
+            if (isLocked() == false)
+            {
+                lockCount = 25;
+                swLock.Stop();
+            }
+            if (swLock.IsRunning == true)
+            {
+                lockCount--;
+                if (lockCount < 0)
+                {
+                    lockCount = 25;
+                    Drop();
+                }
+            }
+            else
+            {
+                if (isLocked())
+                {
+                    swLock.Start();
+                    lockCount = 25;
+                }
+            }
+        }
+
+        protected override bool Drop()
+        {
+            //stop lock stopwatch
+            swLock.Reset();
+            lockCount = 25;
+            return base.Drop();
+        }
+
+        protected override bool Rotate(bool isCw)
+        {
+            bool ret = base.Rotate(isCw);
+            if (ret == true)
+            {
+                CheckLockCnt();
+            }
+            return ret;
+        }
+
         private bool MoveDown()
         {
             if (animationMode) return false;
             if (gameOver) return false;
-            // vaildation 실패시 Drop으로
+            // vaildation 실패시 Drop이 아니라 lock count decrease
             this.row--;
             if (pile.IsBlockCollision(row, col, block))
             {
                 this.row++;
-                Drop();
             }
             else
             {
                 //succeeded
             }
+            CheckLockCnt();
             return true;
         }
         private bool MoveLeft()
@@ -172,6 +243,7 @@ namespace getris.GameState
                 pile.CalcGhost(ghostInfoRow, row, col, block);
                 //succeeded
             }
+            CheckLockCnt();
             return true;
         }
         private bool MoveRight()
@@ -188,6 +260,7 @@ namespace getris.GameState
                 pile.CalcGhost(ghostInfoRow, row, col, block);
                 //succeeded
             }
+            CheckLockCnt();
             return true;
         }
     }

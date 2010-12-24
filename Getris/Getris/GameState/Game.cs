@@ -55,6 +55,11 @@ namespace getris.GameState
             {
                 //TODO: keyboard로 쌓인 것들 냅둘 것인가 결정하기.
                 animationMode = value;
+                if (animationMode == false)
+                {
+                    // animation ended. regen block
+                    BlockRegen();
+                }
             }
         }
         public Game(bool isLeft=true)
@@ -87,6 +92,7 @@ namespace getris.GameState
             }
         }
 
+        private System.Diagnostics.Stopwatch swDrop = new System.Diagnostics.Stopwatch();
         
 
         public virtual CellColor GetBlockCellColor(int row, int col)
@@ -177,6 +183,8 @@ namespace getris.GameState
             }
             return true;
         }
+
+
         protected virtual bool Drop()
         {
             if (isAnimationMode) return false;
@@ -187,10 +195,10 @@ namespace getris.GameState
                 //TODO: SimulateChain의 결과 처리하기
                 chainResult = pile.SimulateChain();
                 score += chainResult.Score;
-                BlockRegen();
             }
             finally
             {
+//                swDrop.Restart();
                 animationMode = true;
             }
             return true;

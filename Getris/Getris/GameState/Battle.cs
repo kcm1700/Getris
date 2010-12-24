@@ -168,5 +168,19 @@ namespace getris.GameState
                 return rightGame.GetGhostCol(rowInBlock, colInBlock);
             }
         }
+
+        public CellColor GetNextBlockCellColor(bool isLeft, int p, int i, int j)
+        {
+            Block nextBlock;
+            if (p == 0)
+            {
+                nextBlock = BlockList.Instance.Get1st(isLeft);
+            }
+            else
+            {
+                nextBlock = BlockList.Instance.Get2nd(isLeft);
+            }
+            return nextBlock[i, j].Color;
+        }
     }
 }

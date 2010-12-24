@@ -28,7 +28,9 @@ namespace getris.Core
                 case CellColor.color4:
                     return Color.Yellow;
                 case CellColor.color5:
-                    return Color.Ivory;
+                    return Color.BlueViolet;
+                case CellColor.dropped:
+                    return Color.White;
                 default:
                     return Color.Transparent;
             }

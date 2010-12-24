@@ -21,7 +21,8 @@ namespace getris
         private enum GameMode
         {
             CreatingGL = 0,
-            Game = 1
+            GameMenu = 1,
+            Game = 2
         }
 
         private GameMode gameMode;
@@ -32,11 +33,16 @@ namespace getris
         private const int LeftGameWidth = 200;
         private const int LeftGameHeight = 420;
         private const int LeftGameLeft = 20;
-        private const int LeftGameBottom = 20;
+        private const int LeftGameBottom = 80;
+        private static readonly Rectangle LeftGameNext1 = new Rectangle(225, 380, 20 * 3, 20 * 3);
+        private static readonly Rectangle LeftGameNext2 = new Rectangle(225, 280, 20 * 3, 20 * 3);
+
         private const int RightGameWidth = 200;
         private const int RightGameHeight = 420;
         private const int RightGameLeft = 20+200+20+100+20;
-        private const int RightGameBottom = 20;
+        private const int RightGameBottom = 80;
+        private static readonly Rectangle RightGameNext1 = new Rectangle(295, 380, 20 * 3, 20 * 3);
+        private static readonly Rectangle RightGameNext2 = new Rectangle(295, 280, 20 * 3, 20 * 3);
 
         private const string blockimagefilename = "block1.bmp";
         private int TN_BLOCK;
@@ -118,8 +124,10 @@ namespace getris
             {
                 if (isGLReady)// when it's ready to use GL
                 {   //Enter Game mode
-                    gameMode = GameMode.Game;
+                    gameMode = GameMode.GameMenu;
                 }
+            }
+            else if(gameMode == GameMode.GameMenu){
             }
             else if (gameMode == GameMode.Game)
             {
@@ -130,296 +138,6 @@ namespace getris
         void Update(double timeDelta)
         {
             //TODO: is there something to do with it?
-        }
-
-        private void Render(double timeDelta)
-        {
-            if (gameMode == GameMode.CreatingGL)
-            {
-                return;
-            }
-            if ((gameMode & GameMode.Game) != 0)
-            {
-                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-                RenderBackground(timeDelta);
-
-                //lock for the left
-                battle.MonEnter(true);
-                if (battle.isAnimationMode(true))
-                {
-                    RenderLeftAnimation(timeDelta);
-                }
-                else
-                {
-                    RenderLeftGame();
-                    accumLeft = 0; // reset time accumulator
-                }
-                battle.MonExit(true);
-
-                battle.MonEnter(false);
-                if (battle.isAnimationMode(false))
-                {
-                    RenderRightAnimation(timeDelta);
-                }
-                else
-                {
-                    RenderRightGame();
-                    accumRight = 0; // reset time accumulator
-                }
-                battle.MonExit(false);
-                glMain.SwapBuffers();
-            }
-        }
-
-
-        private void RenderAnimation(bool isLeft, double timeElapsed)
-        {
-            //TODO:
-            Animation.Animator aResult = battle.GetAnimator(isLeft);
-            if (aResult.SetElapsedTime(timeElapsed))
-            {
-                battle.finishedAnimationMode(isLeft);
-            }
-            //Use Texture
-            GL.Enable(EnableCap.Texture2D);
-            GL.BindTexture(TextureTarget.Texture2D, TN_BLOCK);
-            //Draw begin
-            GL.Begin(BeginMode.Quads);
-            for (int i = 0; i < Pile.ROW_SIZE; i++)
-            {
-                for (int j = 0; j < Pile.COL_SIZE; j++)
-                {
-                    Color color = Core.GraphicsUtil.CellColor2Color(aResult.getAniCellColor(i,j));
-                    double row = aResult.getAniRow(i, j), col = aResult.getAniCol(i, j);
-                    GL.Color4(color);
-                    GL.TexCoord2(0, 1);
-                    GL.Vertex2(20 * col + 1, 20 * row + 1);
-                    GL.TexCoord2(1, 1);
-                    GL.Vertex2(20 * (col + 1) - 1, 20 * row + 1);
-                    GL.TexCoord2(1, 0);
-                    GL.Vertex2(20 * (col + 1) - 1, 20 * (row + 1) - 1);
-                    GL.TexCoord2(0, 0);
-                    GL.Vertex2(20 * col + 1, 20 * (row + 1) - 1);
-                }
-            }
-            GL.End();
-            //Disable Texture
-            GL.Disable(EnableCap.Texture2D);
-        }
-
-
-        double accumLeft = 0;
-        double accumRight = 0;
-        private void RenderLeftAnimation(double timeDelta)
-        {
-            SetupLeftGameRender();
-            RenderAnimation(true, accumLeft);
-
-            accumLeft += timeDelta;
-        }
-
-        private void RenderRightAnimation(double timeDelta)
-        {
-            SetupRightGameRender();
-            RenderAnimation(false, accumRight);
-
-            accumRight += timeDelta;
-        }
-
-
-        private void RenderPile(bool isLeft)
-        {
-            //Use Texture
-            GL.Enable(EnableCap.Texture2D);
-            GL.BindTexture(TextureTarget.Texture2D, TN_BLOCK);
-            //Draw begin
-            GL.Begin(BeginMode.Quads);
-            for (int i = 0; i < Pile.ROW_SIZE; i++)
-            {
-                for (int j = 0; j < Pile.COL_SIZE; j++)
-                {
-                    Color color = Core.GraphicsUtil.CellColor2Color(battle.GetPileCellColor(isLeft, i, j));
-                    GL.Color4(color);
-                    GL.TexCoord2(0, 1);
-                    GL.Vertex2(20 * j + 1, 20 * i + 1);
-                    GL.TexCoord2(1, 1);
-                    GL.Vertex2(20 * (j + 1) - 1, 20 * i + 1);
-                    GL.TexCoord2(1, 0);
-                    GL.Vertex2(20 * (j + 1) - 1, 20 * (i + 1) - 1);
-                    GL.TexCoord2(0, 0);
-                    GL.Vertex2(20 * j + 1, 20 * (i + 1) - 1);
-                }
-            }
-            GL.End();
-            //Disable Texture
-            GL.Disable(EnableCap.Texture2D);
-        }
-        private void RenderBlock(bool isLeft)
-        {
-            //Use Texture
-            GL.Enable(EnableCap.Texture2D);
-            GL.BindTexture(TextureTarget.Texture2D, TN_BLOCK);
-            //Draw begin
-            GL.Begin(BeginMode.Quads);
-            for (int i = 0; i < Block.ROW_SIZE; i++)
-            {
-                for (int j = 0; j < Block.COL_SIZE; j++)
-                {
-                    int row = i + battle.GetRow(isLeft), col = j + battle.GetCol(isLeft);
-
-                    Color color = Core.GraphicsUtil.CellColor2Color(battle.GetBlockCellColor(isLeft, i, j));
-                    GL.Color4(color);
-                    GL.TexCoord2(0, 1);
-                    GL.Vertex2(20 * col + 1, 20 * row + 1);
-                    GL.TexCoord2(1, 1);
-                    GL.Vertex2(20 * (col + 1) - 1, 20 * row + 1);
-                    GL.TexCoord2(1, 0);
-                    GL.Vertex2(20 * (col + 1) - 1, 20 * (row + 1) - 1);
-                    GL.TexCoord2(0, 0);
-                    GL.Vertex2(20 * col + 1, 20 * (row + 1) - 1);
-                }
-            }
-            GL.End();
-            //Disable Texture
-            GL.Disable(EnableCap.Texture2D);
-        }
-
-        private void RenderGhost(bool isLeft)
-        {
-            if (battle.UseGhost == false) return;
-            //Use Texture
-            GL.Enable(EnableCap.Texture2D);
-            GL.BindTexture(TextureTarget.Texture2D, TN_BLOCK);
-            //Draw begin
-            GL.Begin(BeginMode.Quads);
-            for (int i = 0; i < Block.ROW_SIZE; i++)
-            {
-                for (int j = 0; j < Block.COL_SIZE; j++)
-                {
-                    int row = battle.GetGhostRow(isLeft, i, j), col = battle.GetGhostCol(isLeft,i,j);
-
-                    Color colorOriginal = Core.GraphicsUtil.CellColor2Color(battle.GetBlockCellColor(isLeft, i, j));
-                    Color color = System.Drawing.Color.FromArgb(colorOriginal.A / 4,colorOriginal.R, colorOriginal.G, colorOriginal.B);
-                    GL.Color4(color);
-                    GL.TexCoord2(0, 1);
-                    GL.Vertex2(20 * col + 1, 20 * row + 1);
-                    GL.TexCoord2(1, 1);
-                    GL.Vertex2(20 * (col + 1) - 1, 20 * row + 1);
-                    GL.TexCoord2(1, 0);
-                    GL.Vertex2(20 * (col + 1) - 1, 20 * (row + 1) - 1);
-                    GL.TexCoord2(0, 0);
-                    GL.Vertex2(20 * col + 1, 20 * (row + 1) - 1);
-                }
-            }
-            GL.End();
-            //Disable Texture
-            GL.Disable(EnableCap.Texture2D);
-        }
-
-
-        private void RenderGame(bool isLeft)
-        {
-            RenderPile(isLeft);
-            RenderBlock(isLeft);
-            RenderGhost(isLeft);
-        }
-
-        private void SetupLeftGameRender()
-        {
-            //Setup Viewport
-            int w = LeftGameWidth;
-            int h = LeftGameHeight;
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(0, w, 0, h, -1, 1);
-            GL.Viewport(LeftGameLeft, LeftGameBottom, w, h);
-            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-
-            //Set alpha blending
-            GL.ColorMask(true, true, true, true);
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-
-            //Draw Background
-            GL.Begin(BeginMode.Quads);
-            GL.Color4(Color.Black);
-            GL.Vertex2(0, 0);
-            GL.Vertex2(w, 0);
-            GL.Vertex2(w, h);
-            GL.Vertex2(0, h);
-            GL.End();
-        }
-
-        private void RenderLeftGame()
-        {
-            SetupLeftGameRender();
-            RenderGame(true);
-        }
-        private void SetupRightGameRender()
-        {
-            //Setup Viewport
-            int w = RightGameWidth;
-            int h = RightGameHeight;
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(0, w, 0, h, -1, 1);
-            GL.Viewport(RightGameLeft, RightGameBottom, w, h);
-            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-
-            //Set alpha blending
-            GL.ColorMask(true, true, true, true);
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-
-            //Draw Background
-            GL.Begin(BeginMode.Quads);
-            GL.Color4(Color.Black);
-            GL.Vertex2(0, 0);
-            GL.Vertex2(w, 0);
-            GL.Vertex2(w, h);
-            GL.Vertex2(0, h);
-            GL.End();
-        }
-        private void RenderRightGame()
-        {
-            SetupRightGameRender();
-            RenderGame(false);
-        }
-
-        private void SetupViewport()
-        {
-            int w = glMain.Width;
-            int h = glMain.Height;
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(0, w, 0, h, -1, 1); // Bottom-left corner pixel has coordinate (0, 0)
-            GL.Viewport(0, 0, w, h); // Use all of the glControl painting area
-        }
-
-        private void RenderBackground(double timeDelta)
-        {
-            //set render pipeline matrix
-            SetupViewport();
-
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
-
-            
-            // draw both front and back, polygon fill mode
-            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-            // set polygon front face
-            GL.FrontFace(FrontFaceDirection.Ccw);
-
-            //TODO: modify below code
-            GL.Begin(BeginMode.Polygon);
-            GL.Color3((double)0.3, (double)0.5, (double)Math.Abs(System.DateTime.Now.Millisecond-500)/1000.0);
-            GL.Vertex2(0, 0);
-            GL.Vertex2(glMain.Width, 0);
-            GL.Vertex2(glMain.Width, glMain.Height);
-            GL.Vertex2(0, glMain.Height);
-            GL.End();
-
-
         }
 
         private void glMain_Enter(object sender, EventArgs e)

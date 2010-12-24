@@ -80,13 +80,14 @@ namespace getris.Animation
             }
         }
 
-        private double GetTimeDown(double dist, double g = 25)
+        double v0 = 3;
+        private double GetTimeDown(double dist, double g = 55)
         {
-            return Math.Sqrt(2 * dist / g);
+            return (-v0 + Math.Sqrt(2 * dist *g + v0*v0)) / g;
         }
-        private double GetDistDown(double time, double g = 25)
+        private double GetDistDown(double time, double g = 55)
         {
-            return time * time * g / 2;
+            return time * time * g / 2 + v0*time;
         }
 
         /// <summary>
