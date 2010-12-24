@@ -13,7 +13,6 @@ using System.Threading;
 using System.Diagnostics;
 
 using getris.GameState;
-using getris.Animation;
 
 namespace getris
 {
@@ -176,8 +175,36 @@ namespace getris
         private void RenderAnimation(bool isLeft, double timeElapsed)
         {
             //TODO:
-/*            ChainResult cResult = battle.chainResult(isLeft);
-            cResult.SetElapsedTime(timeElapsed);*/
+            Animation.Animator aResult = battle.GetAnimator(isLeft);
+            if (aResult.SetElapsedTime(timeElapsed))
+            {
+                battle.finishedAnimationMode(isLeft);
+            }
+            //Use Texture
+            GL.Enable(EnableCap.Texture2D);
+            GL.BindTexture(TextureTarget.Texture2D, TN_BLOCK);
+            //Draw begin
+            GL.Begin(BeginMode.Quads);
+            for (int i = 0; i < Pile.ROW_SIZE; i++)
+            {
+                for (int j = 0; j < Pile.COL_SIZE; j++)
+                {
+                    Color color = Core.GraphicsUtil.CellColor2Color(aResult.getAniCellColor(i,j));
+                    double row = aResult.getAniRow(i, j), col = aResult.getAniCol(i, j);
+                    GL.Color4(color);
+                    GL.TexCoord2(0, 1);
+                    GL.Vertex2(20 * col + 1, 20 * row + 1);
+                    GL.TexCoord2(1, 1);
+                    GL.Vertex2(20 * (col + 1) - 1, 20 * row + 1);
+                    GL.TexCoord2(1, 0);
+                    GL.Vertex2(20 * (col + 1) - 1, 20 * (row + 1) - 1);
+                    GL.TexCoord2(0, 0);
+                    GL.Vertex2(20 * col + 1, 20 * (row + 1) - 1);
+                }
+            }
+            GL.End();
+            //Disable Texture
+            GL.Disable(EnableCap.Texture2D);
         }
 
 
@@ -188,7 +215,7 @@ namespace getris
             SetupLeftGameRender();
             RenderAnimation(true, accumLeft);
 
-            accumRight += timeDelta;
+            accumLeft += timeDelta;
         }
 
         private void RenderRightAnimation(double timeDelta)
@@ -196,7 +223,7 @@ namespace getris
             SetupRightGameRender();
             RenderAnimation(false, accumRight);
 
-            accumLeft += timeDelta;
+            accumRight += timeDelta;
         }
 
 

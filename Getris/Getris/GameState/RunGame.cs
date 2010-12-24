@@ -32,25 +32,43 @@ namespace getris.GameState
                         if (!Core.Keyboard.IsEmpty())
                         // is not empty
                         {
-                            switch (Core.Keyboard.Pop().data)
+                            switch (Core.Keyboard.Peek().data)
                             {
                                 case "down":
-                                    MoveDown();
+                                    if (MoveDown())
+                                    {
+                                        Core.Keyboard.Pop();
+                                    }
                                     break;
                                 case "left":
-                                    MoveLeft();
+                                    if (MoveLeft())
+                                    {
+                                        Core.Keyboard.Pop();
+                                    }
                                     break;
                                 case "right":
-                                    MoveRight();
+                                    if (MoveRight())
+                                    {
+                                        Core.Keyboard.Pop();
+                                    }
                                     break;
                                 case "drop":
-                                    Drop();
+                                    if (Drop())
+                                    {
+                                        Core.Keyboard.Pop();
+                                    }
                                     break;
                                 case "cw":
-                                    Rotate(true);
+                                    if (Rotate(true))
+                                    {
+                                        Core.Keyboard.Pop();
+                                    }
                                     break;
                                 case "ccw":
-                                    Rotate(false);
+                                    if (Rotate(false))
+                                    {
+                                        Core.Keyboard.Pop();
+                                    }
                                     break;
                                 default:
                                     throw new Exception("unknown action");
@@ -58,7 +76,7 @@ namespace getris.GameState
                             }
                         }
                         now =sw.Elapsed.TotalMilliseconds;
-                        //TimeLimit(now, ref before, 1000);
+                        TimeLimit(now, ref before, 700);
                         
                     }
                     // lock 풀고 Thread 양보하자.
@@ -123,10 +141,10 @@ namespace getris.GameState
         {
         }
 
-        private void MoveDown()
+        private bool MoveDown()
         {
-            waitAnimationEnds();
-            if (gameOver) return;
+            if (animationMode) return false;
+            if (gameOver) return false;
             // vaildation 실패시 Drop으로
             this.row--;
             if (pile.IsBlockCollision(row, col, block))
@@ -138,11 +156,12 @@ namespace getris.GameState
             {
                 //succeeded
             }
+            return true;
         }
-        private void MoveLeft()
+        private bool MoveLeft()
         {
-            waitAnimationEnds();
-            if (gameOver) return;
+            if (animationMode) return false;
+            if (gameOver) return false;
             this.col--;
             if (pile.IsBlockCollision(row, col, block))
             {
@@ -153,11 +172,12 @@ namespace getris.GameState
                 pile.CalcGhost(ghostInfoRow, row, col, block);
                 //succeeded
             }
+            return true;
         }
-        private void MoveRight()
+        private bool MoveRight()
         {
-            waitAnimationEnds();
-            if (gameOver) return;
+            if (animationMode) return false;
+            if (gameOver) return false;
             this.col++;
             if (pile.IsBlockCollision(row, col, block))
             {
@@ -168,6 +188,7 @@ namespace getris.GameState
                 pile.CalcGhost(ghostInfoRow, row, col, block);
                 //succeeded
             }
+            return true;
         }
     }
 }

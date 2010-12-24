@@ -129,7 +129,7 @@ namespace getris.GameState
             FloodFill(row, col - 1, visit, par, board);
         }
 
-        private bool calculateDrop(List<Animation.Drop> dropCells,Cell[,] board)
+        private bool calculateDrop(List<Animation.Drop> dropCells, Cell[,] board)
         {
             //(1) calculate drops
             bool retVal = false;

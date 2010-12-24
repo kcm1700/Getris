@@ -15,7 +15,7 @@ namespace getris.GameState
         color4 = 4,
         color5 = 5
     }
-    abstract class Cell
+    public abstract class Cell
     {
         protected CellColor blockColor;
         
@@ -28,7 +28,7 @@ namespace getris.GameState
         }
     }
 
-    class BlockCell : Cell
+    public class BlockCell : Cell
     {
         private BlockCell()
         {
@@ -40,7 +40,7 @@ namespace getris.GameState
 
     }
 
-    class BlankCell : Cell
+    public class BlankCell : Cell
     {
         public BlankCell()
         {

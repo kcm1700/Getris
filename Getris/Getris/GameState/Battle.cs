@@ -45,18 +45,30 @@ namespace getris.GameState
                 return rightGame.isAnimationMode;
             }
         }
-
-/*        public ChainResult chainResult(bool isLeft){
-            //TODO: ChainResult에 대한 copy constructor 만들어서 적용하기.
+        public void finishedAnimationMode(bool isLeft)
+        {
             if (isLeft)
             {
-                return leftGame.chainResult;
+                leftGame.isAnimationMode = false;
             }
             else
             {
-                return rightGame.chainResult;
+                rightGame.isAnimationMode = false;
             }
-        }*/
+        }
+
+        public Animation.Animator GetAnimator(bool isLeft)
+        {
+            //TODO: ChainResult에 대한 copy constructor 만들어서 적용하기.
+            if (isLeft)
+            {
+                return new Animation.Animator(leftGame.chainResult.copiedBoard, leftGame.chainResult.animation);
+            }
+            else
+            {
+                return new Animation.Animator(rightGame.chainResult.copiedBoard, rightGame.chainResult.animation);
+            }
+        }
 
         public Battle(bool isLeftRun=true, bool isRightRun=false)
         {

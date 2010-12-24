@@ -54,7 +54,7 @@ namespace getris.GameState
             set
             {
                 //TODO: keyboard로 쌓인 것들 냅둘 것인가 결정하기.
-                animationMode = true;
+                animationMode = value;
             }
         }
         public Game(bool isLeft=true)
@@ -116,20 +116,11 @@ namespace getris.GameState
                 return this.col;
             }
         }
-
-        protected void waitAnimationEnds()
+        
+        protected virtual bool Rotate(bool isCw)
         {
-            while (animationMode)
-            {
-                /* pause while animation Mode */
-                Thread.Sleep(10);
-            }
-        }
-
-        protected virtual void Rotate(bool isCw)
-        {
-            waitAnimationEnds();
-            if (gameOver) return;
+            if (isAnimationMode) return false;
+            if (gameOver) return false;
             if (isCw)
             {
                 block.RotateCw();
@@ -164,11 +155,12 @@ namespace getris.GameState
             }
 
             pile.CalcGhost(ghostInfoRow, row, col, block);
+            return true;
         }
-        protected virtual void BlockRegen()
+        protected virtual bool BlockRegen()
         {
-            waitAnimationEnds();
-            if (gameOver) return;
+            if (isAnimationMode) return false;
+            if (gameOver) return false;
             BlockList.Instance.NextBlock(isLeft);
             block = BlockList.Instance.GetBlock(isLeft);
 
@@ -183,17 +175,25 @@ namespace getris.GameState
                 //regen succeeded
                 pile.CalcGhost(ghostInfoRow, row, col, block);
             }
+            return true;
         }
-        protected virtual void Drop()
+        protected virtual bool Drop()
         {
-            waitAnimationEnds();
-            if (gameOver) return;
-            pile.DropBlock(row, col, block);
-            //TODO: SimulateChain의 결과 처리하기
-            chainResult = pile.SimulateChain();
-            score += chainResult.Score;
-//            animationMode = true;
-            BlockRegen();
+            if (isAnimationMode) return false;
+            if (gameOver) return false;
+            try
+            {
+                pile.DropBlock(row, col, block);
+                //TODO: SimulateChain의 결과 처리하기
+                chainResult = pile.SimulateChain();
+                score += chainResult.Score;
+                BlockRegen();
+            }
+            finally
+            {
+                animationMode = true;
+            }
+            return true;
         }
 
         

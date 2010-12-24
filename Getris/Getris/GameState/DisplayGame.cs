@@ -83,12 +83,13 @@ namespace getris.GameState
             {
             }
         }
-        private void GoTo(int row, int col)
+        private bool GoTo(int row, int col)
         {
-            waitAnimationEnds();
-            if (gameOver) return;
+            if (isAnimationMode) return false;
+            if (gameOver) return false;
             this.row = row;
             this.col = col;
+            return true;
         }
     }
 }
