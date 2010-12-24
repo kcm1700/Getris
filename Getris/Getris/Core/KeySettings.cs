@@ -8,6 +8,7 @@ namespace getris.Core
     /// <summary>
     /// thread unsafe key settings class
     /// </summary>
+
     public static class KeySettings
     {
         public static Object thisLock = new Object();
@@ -15,24 +16,210 @@ namespace getris.Core
         private static int initTime;
         private static int repeatPeriod;
 
-        private static Keys keyRotateCw1;
-        private static Keys? keyRotateCw2;
-        private static Keys keyRotateCcw1;
-        private static Keys? keyRotateCcw2;
-        private static Keys keyMoveLeft;
-        private static Keys keyMoveRight;
-        private static Keys keyMoveDown;
-        private static Keys keyDrop;
+        private static KeySet keyRotateCw1;
+        private static KeySet keyRotateCw2;
+        private static KeySet keyRotateCcw1;
+        private static KeySet keyRotateCcw2;
+        private static KeySet keyMoveLeft;
+        private static KeySet keyMoveRight;
+        private static KeySet keyMoveDown;
+        private static KeySet keyDrop;
+
+        public static int InitTimeRotateCw1
+        {
+            get
+            {
+                return keyRotateCw1.initTime;
+            }
+            set
+            {
+                keyRotateCw1.initTime = value;
+            }
+        }
+        public static int InitTimeRotateCw2
+        {
+            get
+            {
+                return keyRotateCw2.initTime;
+            }
+            set
+            {
+                keyRotateCw2.initTime = value;
+            }
+        }
+
+        public static int InitTimeRotateCcw1
+        {
+            get
+            {
+                return keyRotateCcw1.initTime;
+            }
+            set
+            {
+                keyRotateCcw1.initTime = value;
+            }
+        }
+        public static int InitTimeRotateCcw2
+        {
+            get
+            {
+                return keyRotateCcw2.initTime;
+            }
+            set
+            {
+                keyRotateCcw2.initTime = value;
+            }
+        }
+
+        public static int InitTimeMoveLeft
+        {
+            get
+            {
+                return keyMoveLeft.initTime;
+            }
+            set
+            {
+                keyMoveLeft.initTime = value;
+            }
+        }
+        public static int InitTimeMoveRight
+        {
+            get
+            {
+                return keyMoveRight.initTime;
+            }
+            set
+            {
+                keyMoveRight.initTime = value;
+            }
+        }
+
+        public static int InitTimeMoveDown
+        {
+            get
+            {
+                return keyMoveDown.initTime;
+            }
+            set
+            {
+                keyMoveDown.initTime = value;
+            }
+        }
+        public static int InitTimeDrop
+        {
+            get
+            {
+                return keyDrop.initTime;
+            }
+            set
+            {
+                keyDrop.initTime = value;
+            }
+        }
+
+
+        public static int RepeatPeriodRotateCw1
+        {
+            get
+            {
+                return keyRotateCw1.repeatPeriod;
+            }
+            set
+            {
+                keyRotateCw1.repeatPeriod = value;
+            }
+        }
+        public static int RepeatPeriodRotateCw2
+        {
+            get
+            {
+                return keyRotateCw2.repeatPeriod;
+            }
+            set
+            {
+                keyRotateCw2.repeatPeriod = value;
+            }
+        }
+
+        public static int RepeatPeriodRotateCcw1
+        {
+            get
+            {
+                return keyRotateCcw1.repeatPeriod;
+            }
+            set
+            {
+                keyRotateCcw1.repeatPeriod = value;
+            }
+        }
+        public static int RepeatPeriodRotateCcw2
+        {
+            get
+            {
+                return keyRotateCcw2.repeatPeriod;
+            }
+            set
+            {
+                keyRotateCcw2.repeatPeriod = value;
+            }
+        }
+
+        public static int RepeatPeriodMoveLeft
+        {
+            get
+            {
+                return keyMoveLeft.repeatPeriod;
+            }
+            set
+            {
+                keyMoveLeft.repeatPeriod = value;
+            }
+        }
+        public static int RepeatPeriodMoveRight
+        {
+            get
+            {
+                return keyMoveRight.repeatPeriod;
+            }
+            set
+            {
+                keyMoveRight.repeatPeriod = value;
+            }
+        }
+
+        public static int RepeatPeriodMoveDown
+        {
+            get
+            {
+                return keyMoveDown.repeatPeriod;
+            }
+            set
+            {
+                keyMoveDown.repeatPeriod = value;
+            }
+        }
+        public static int RepeatPeriodDrop
+        {
+            get
+            {
+                return keyDrop.repeatPeriod;
+            }
+            set
+            {
+                keyDrop.repeatPeriod = value;
+            }
+        }
+
 
         public static Keys KeyRotateCw1
         {
             get
             {
-                return keyRotateCw1;
+                return keyRotateCw1.assigned.Value;
             }
             set
             {
-                keyRotateCw1 = value;
+                keyRotateCw1.assigned = value;
                 Keyboard.KeyReset();
             }
         }
@@ -40,11 +227,11 @@ namespace getris.Core
         {
             get
             {
-                return keyRotateCw2;
+                return keyRotateCw2.assigned;
             }
             set
             {
-                keyRotateCw2 = value;
+                keyRotateCw2.assigned = value;
                 Keyboard.KeyReset();
             }
         }
@@ -52,11 +239,11 @@ namespace getris.Core
         {
             get
             {
-                return keyRotateCcw1;
+                return keyRotateCcw1.assigned.Value;
             }
             set
             {
-                keyRotateCcw1 = value;
+                keyRotateCcw1.assigned = value;
                 Keyboard.KeyReset();
             }
         }
@@ -64,11 +251,11 @@ namespace getris.Core
         {
             get
             {
-                return keyRotateCcw2;
+                return keyRotateCcw2.assigned;
             }
             set
             {
-                keyRotateCcw2 = value;
+                keyRotateCcw2.assigned = value;
                 Keyboard.KeyReset();
             }
         }
@@ -76,11 +263,11 @@ namespace getris.Core
         {
             get
             {
-                return keyMoveLeft;
+                return keyMoveLeft.assigned.Value;
             }
             set
             {
-                keyMoveLeft = value;
+                keyMoveLeft.assigned = value;
                 Keyboard.KeyReset();
             }
         }
@@ -88,11 +275,11 @@ namespace getris.Core
         {
             get
             {
-                return keyMoveRight;
+                return keyMoveRight.assigned.Value;
             }
             set
             {
-                keyMoveRight = value;
+                keyMoveRight.assigned = value;
                 Keyboard.KeyReset();
             }
         }
@@ -100,11 +287,11 @@ namespace getris.Core
         {
             get
             {
-                return keyMoveDown;
+                return keyMoveDown.assigned.Value;
             }
             set
             {
-                keyMoveDown = value;
+                keyMoveDown.assigned = value;
                 Keyboard.KeyReset();
             }
         }
@@ -112,11 +299,11 @@ namespace getris.Core
         {
             get
             {
-                return keyDrop;
+                return keyDrop.assigned.Value;
             }
             set
             {
-                keyDrop = value;
+                keyDrop.assigned = value;
                 Keyboard.KeyReset();
             }
         }
@@ -145,16 +332,30 @@ namespace getris.Core
         }
         static KeySettings()
         {
-            keyRotateCw1 = Keys.X;
-            keyRotateCw2 = Keys.Up;
-            keyRotateCcw1 = Keys.Z;
-            keyRotateCcw2 = null;
-            keyMoveLeft = Keys.Left;
-            keyMoveRight = Keys.Right;
-            keyMoveDown = Keys.Down;
-            keyDrop = Keys.Space;
+            keyRotateCw1 = new KeySet(Keys.X,500,100);
+            keyRotateCw2 = new KeySet(Keys.Up,500,100);
+            keyRotateCcw1 = new KeySet(Keys.Z,500,100);
+            keyRotateCcw2 = new KeySet(null,500,100);
+            keyMoveLeft = new KeySet(Keys.Left,200,50);
+            keyMoveRight = new KeySet(Keys.Right, 200, 50);
+            keyMoveDown = new KeySet(Keys.Down, 200, 50);
+            keyDrop = new KeySet(Keys.Space, 600, 100);
             initTime = 250;
             repeatPeriod = 150;
+        }
+    }
+
+    public struct KeySet
+    {
+        public Keys? assigned;
+        public int initTime;
+        public int repeatPeriod;
+
+        public KeySet(Keys? key, int initTime, int repeatPeriod)
+        {
+            this.assigned = key;
+            this.initTime = initTime;
+            this.repeatPeriod = repeatPeriod;
         }
     }
 }

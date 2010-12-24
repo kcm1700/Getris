@@ -86,6 +86,19 @@ namespace getris.Core
         static public System.Diagnostics.Stopwatch sw;
 
         struct KeyState{
+            public int initTime;
+            public int repeatPeriod;
+
+            public KeyState(int initTime, int repeatPeriod)
+            {
+                this.initTime = initTime;
+                this.repeatPeriod = repeatPeriod;
+                this.before = false;
+                this.now = false;
+                this.isRepeated = false;
+                this.restTime = 0;
+            }
+
             public bool before;
             public bool now;
 
@@ -114,18 +127,18 @@ namespace getris.Core
                 }
                 if (isRepeated)
                 {
-                    if (restTime > KeySettings.RepeatPeriod)
+                    if (restTime > this.repeatPeriod)
                     {
-                        restTime -= KeySettings.RepeatPeriod;
+                        restTime -= this.repeatPeriod;
                         return true;
                     }
                 }
                 else
                 {
-                    isRepeated = true;
-                    if (restTime > KeySettings.InitTime)
+                    if (restTime > this.initTime)
                     {
-                        restTime -= KeySettings.InitTime;
+                        isRepeated = true;
+                        restTime -= this.initTime;
                         return true;
                     }
                 }
@@ -158,14 +171,14 @@ namespace getris.Core
                 KeyState keyDrop, keyMoveDown, keyMoveLeft, keyMoveRight, keyRotateCw1, keyRotateCcw1, keyRotateCw2, keyRotateCcw2;
                 double beforeElapsed = sw.Elapsed.TotalMilliseconds;
 
-                keyDrop = new KeyState();
-                keyMoveDown = new KeyState();
-                keyMoveLeft = new KeyState();
-                keyMoveRight = new KeyState();
-                keyRotateCw1 = new KeyState();
-                keyRotateCcw1 = new KeyState();
-                keyRotateCw2 = new KeyState();
-                keyRotateCcw2 = new KeyState();
+                keyDrop = new KeyState(KeySettings.InitTimeDrop, KeySettings.RepeatPeriodDrop);
+                keyMoveDown = new KeyState(KeySettings.InitTimeMoveDown, KeySettings.RepeatPeriodMoveDown);
+                keyMoveLeft = new KeyState(KeySettings.InitTimeMoveLeft, KeySettings.RepeatPeriodMoveLeft);
+                keyMoveRight = new KeyState(KeySettings.InitTimeMoveRight, KeySettings.RepeatPeriodMoveRight);
+                keyRotateCw1 = new KeyState(KeySettings.InitTimeRotateCw1, KeySettings.RepeatPeriodRotateCw1);
+                keyRotateCcw1 = new KeyState(KeySettings.InitTimeRotateCcw1, KeySettings.RepeatPeriodRotateCcw1);
+                keyRotateCw2 = new KeyState(KeySettings.InitTimeRotateCw2, KeySettings.RepeatPeriodRotateCw2);
+                keyRotateCcw2 = new KeyState(KeySettings.InitTimeRotateCcw2, KeySettings.RepeatPeriodRotateCcw2);
 
                 while (true)
                 {
