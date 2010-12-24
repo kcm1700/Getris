@@ -122,5 +122,10 @@ namespace getris.Core
         {
         }
 
+        /*
+        private class KeySet {
+            private static Keys? key;
+            private 
+        }*/
     }
 }

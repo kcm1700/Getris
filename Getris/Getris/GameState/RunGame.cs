@@ -20,6 +20,10 @@ namespace getris.GameState
         {
             try
             {
+                System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
+                double before = sw.Elapsed.TotalMilliseconds;
+                double now;
                 while (true)
                 {
                     //일단 lock 걸고 작업하고,
@@ -53,6 +57,9 @@ namespace getris.GameState
                                 //Action(Core.Keyboard.Pop());
                             }
                         }
+                        now =sw.Elapsed.TotalMilliseconds;
+                        //TimeLimit(now, ref before, 1000);
+                        
                     }
                     // lock 풀고 Thread 양보하자.
                     Thread.Sleep(1);
@@ -61,6 +68,13 @@ namespace getris.GameState
             catch/*(ThreadAbortException e)*/
             {
             }
+        }
+        private void TimeLimit(double now, ref double before, double limitTime)
+        {
+            if (limitTime > now - before)
+                return;
+            before = now;
+            MoveDown();
         }
         private void Action(Core.Move a)
         {
