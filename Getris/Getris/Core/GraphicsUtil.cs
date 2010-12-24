@@ -8,6 +8,7 @@ using System.Drawing.Imaging;
 using OpenTK.Graphics.OpenGL;
 
 using getris.GameState;
+using System.IO;
 
 namespace getris.Core
 {

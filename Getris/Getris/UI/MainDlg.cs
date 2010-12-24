@@ -22,10 +22,12 @@ namespace getris
         {
             CreatingGL = 0,
             GameMenu = 1,
-            Game = 2
+            Game = 2,
+            Exit = 99
         }
 
         private GameMode gameMode;
+        private GameMode nextGameMode;
         private bool glLoad;
         private const int MaxFrameRate = 60;
         private Stopwatch sw;
@@ -46,16 +48,24 @@ namespace getris
 
         private const string blockimagefilename = "block1.bmp";
         private int TN_BLOCK;
+        private static readonly string[] menuImageFileName = { "menu1.bmp", "menu2.bmp", "menu3.bmp", "menu4.bmp" };
+        private int[] TN_MENU;
+        private const int menuCnt = 4;
+
 
         private GameState.Battle battle;
 
         public MainDlg()
         {
-            battle = new Battle();
             sw = new Stopwatch();
             sw.Start();
             glLoad = false;
             gameMode = GameMode.CreatingGL;
+            nextGameMode = GameMode.CreatingGL;
+
+            menuPositionAngle = new double[menuCnt];
+            TN_MENU = new int[menuCnt];
+
             InitializeComponent();
         }
 
@@ -82,6 +92,17 @@ namespace getris
             catch
             {
             }
+            for (int i = 0; i < menuPositionAngle.Length; i++)
+            {
+                menuPositionAngle[i] = OpenTK.MathHelper.TwoPi * i / menuPositionAngle.Length;
+                try
+                {
+                    TN_MENU[i] = Core.GraphicsUtil.LoadTexture(menuImageFileName[i]);
+                }
+                catch
+                {
+                }
+            }
         }
 
         // an efficient game loop
@@ -99,6 +120,11 @@ namespace getris
                     TransitGameMode();
                     Update(timeDelta);
                     Render(timeDelta);
+                }
+                if (gameMode == GameMode.Exit)
+                {
+                    this.Close();
+                    return;
                 }
                 Thread.Sleep(1);
             }
@@ -128,26 +154,93 @@ namespace getris
                 }
             }
             else if(gameMode == GameMode.GameMenu){
+                Core.Keyboard.InputMode = Core.Keyboard.InputModes.Menu;
+                gameMode = nextGameMode;
             }
             else if (gameMode == GameMode.Game)
             {
+                Core.Keyboard.InputMode = Core.Keyboard.InputModes.Game;
                 //Nothing to do
             }
         }
 
         void Update(double timeDelta)
         {
-            //TODO: is there something to do with it?
+            if (gameMode == GameMode.GameMenu)
+            {
+                UpdateMenu(timeDelta);
+            }
         }
+
+        private void Render(double timeDelta)
+        {
+            if (gameMode == GameMode.CreatingGL)
+            {
+                return;
+            }
+            else if (gameMode == GameMode.GameMenu)
+            {
+                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.AccumBufferBit | ClearBufferMask.StencilBufferBit);
+                MenuRender(timeDelta);
+                glMain.SwapBuffers();
+            }
+            else if (gameMode == GameMode.Game)
+            {
+                GL.Disable(EnableCap.DepthTest);
+                GL.Disable(EnableCap.AlphaTest);
+                GL.Disable(EnableCap.Blend);
+                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.AccumBufferBit | ClearBufferMask.StencilBufferBit);
+                RenderBackground(timeDelta);
+
+                //lock for the left
+                battle.MonEnter(true);
+                if (battle.isAnimationMode(true))
+                {
+                    RenderLeftAnimation(timeDelta);
+                }
+                else
+                {
+                    RenderLeftGame(timeDelta);
+                    accumLeft = 0; // reset time accumulator
+                }
+                //draw next blocks
+                SetupLeftNext1Render();
+                RenderNextBlock(true, 0);
+                SetupLeftNext2Render();
+                RenderNextBlock(true, 1);
+
+                battle.MonExit(true);
+
+                battle.MonEnter(false);
+                if (battle.isAnimationMode(false))
+                {
+                    RenderRightAnimation(timeDelta);
+                }
+                else
+                {
+                    RenderRightGame(timeDelta);
+                    accumRight = 0; // reset time accumulator
+                }
+                //draw next blocks
+                SetupRightNext1Render();
+                RenderNextBlock(false, 0);
+                SetupRightNext2Render();
+                RenderNextBlock(false, 1);
+                battle.MonExit(false);
+
+                glMain.SwapBuffers();
+            }
+        }
+
 
         private void glMain_Enter(object sender, EventArgs e)
         {
-            Core.Keyboard.IsGame = true;
+            Core.Keyboard.Enabled = true;
         }
 
         private void glMain_Leave(object sender, EventArgs e)
         {
-            Core.Keyboard.IsGame = false;
+            Core.Keyboard.Enabled = false;
         }
 
         private void glMain_KeyDown(object sender, KeyEventArgs e)
@@ -163,8 +256,11 @@ namespace getris
         private void MainDlg_FormClosing(object sender, FormClosingEventArgs e)
         {
             Core.Keyboard.keyboardThread.Abort();
-            battle.LeftThread.Abort();
-            battle.RightThread.Abort();
+            if (battle != null)
+            {
+                battle.LeftThread.Abort();
+                battle.RightThread.Abort();
+            }
         }
 
         private void MainDlg_Load(object sender, EventArgs e)

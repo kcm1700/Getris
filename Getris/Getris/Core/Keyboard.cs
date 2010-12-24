@@ -15,25 +15,49 @@ namespace getris.Core
         static private readonly System.Object thisLock;
         static private System.Collections.Generic.Queue<Action> buffer;
 
-        static bool isGame;
-        static private System.Object iglock;
+        static bool isEnabled;
+        public enum InputModes{
+            Game,
+            Menu
+        }
 
-        static public Thread keyboardThread;
+        static private InputModes inputMode;
 
-        static public bool IsGame
-        {
+        static public InputModes InputMode {
             get
             {
                 lock (iglock)
                 {
-                    return isGame;
+                    return inputMode;
                 }
             }
             set
             {
                 lock (iglock)
                 {
-                    isGame = value;
+                    inputMode = value;
+                }
+            }
+        }
+
+        static private System.Object iglock;
+
+        static public Thread keyboardThread;
+
+        static public bool Enabled
+        {
+            get
+            {
+                lock (iglock)
+                {
+                    return isEnabled;
+                }
+            }
+            set
+            {
+                lock (iglock)
+                {
+                    isEnabled = value;
                 }
             }
         }
@@ -41,11 +65,20 @@ namespace getris.Core
 
         static public void KeyReset()
         {
-            isPressed.Clear();
             lock (keymapLock)
             {
                 lock (KeySettings.thisLock)
                 {
+                    keyDrop = new KeyState(KeySettings.InitTimeDrop, KeySettings.RepeatPeriodDrop);
+                    keyMoveDown = new KeyState(KeySettings.InitTimeMoveDown, KeySettings.RepeatPeriodMoveDown);
+                    keyMoveLeft = new KeyState(KeySettings.InitTimeMoveLeft, KeySettings.RepeatPeriodMoveLeft);
+                    keyMoveRight = new KeyState(KeySettings.InitTimeMoveRight, KeySettings.RepeatPeriodMoveRight);
+                    keyRotateCw1 = new KeyState(KeySettings.InitTimeRotateCw1, KeySettings.RepeatPeriodRotateCw1);
+                    keyRotateCcw1 = new KeyState(KeySettings.InitTimeRotateCcw1, KeySettings.RepeatPeriodRotateCcw1);
+                    keyRotateCw2 = new KeyState(KeySettings.InitTimeRotateCw2, KeySettings.RepeatPeriodRotateCw2);
+                    keyRotateCcw2 = new KeyState(KeySettings.InitTimeRotateCcw2, KeySettings.RepeatPeriodRotateCcw2);
+
+                    isPressed.Clear();
                     isPressed.Add(KeySettings.KeyDrop, false);
                     isPressed.Add(KeySettings.KeyMoveDown, false);
                     isPressed.Add(KeySettings.KeyMoveLeft, false);
@@ -164,88 +197,150 @@ namespace getris.Core
             }
         }
 
+        static private KeyState keyDrop, keyMoveDown, keyMoveLeft, keyMoveRight, keyRotateCw1, keyRotateCcw1, keyRotateCw2, keyRotateCcw2;
         static void threadLoop()
         {
             try
             {
-                KeyState keyDrop, keyMoveDown, keyMoveLeft, keyMoveRight, keyRotateCw1, keyRotateCcw1, keyRotateCw2, keyRotateCcw2;
                 double beforeElapsed = sw.Elapsed.TotalMilliseconds;
-
-                keyDrop = new KeyState(KeySettings.InitTimeDrop, KeySettings.RepeatPeriodDrop);
-                keyMoveDown = new KeyState(KeySettings.InitTimeMoveDown, KeySettings.RepeatPeriodMoveDown);
-                keyMoveLeft = new KeyState(KeySettings.InitTimeMoveLeft, KeySettings.RepeatPeriodMoveLeft);
-                keyMoveRight = new KeyState(KeySettings.InitTimeMoveRight, KeySettings.RepeatPeriodMoveRight);
-                keyRotateCw1 = new KeyState(KeySettings.InitTimeRotateCw1, KeySettings.RepeatPeriodRotateCw1);
-                keyRotateCcw1 = new KeyState(KeySettings.InitTimeRotateCcw1, KeySettings.RepeatPeriodRotateCcw1);
-                keyRotateCw2 = new KeyState(KeySettings.InitTimeRotateCw2, KeySettings.RepeatPeriodRotateCw2);
-                keyRotateCcw2 = new KeyState(KeySettings.InitTimeRotateCcw2, KeySettings.RepeatPeriodRotateCcw2);
+                KeyReset();
 
                 while (true)
                 {
-                    if (!isGame)
+                    if (!isEnabled)
                     {
                         Thread.Sleep(1);
                         continue;
                     }
 
-                    lock (keymapLock)
+                    switch (InputMode)
                     {
-                        lock (KeySettings.thisLock)
-                        {
-                            keyDrop.newState = isPressed[KeySettings.KeyDrop];
-                            keyMoveDown.newState = isPressed[KeySettings.KeyMoveDown];
-                            keyMoveLeft.newState = isPressed[KeySettings.KeyMoveLeft];
-                            keyMoveRight.newState = isPressed[KeySettings.KeyMoveRight];
-                            keyRotateCw1.newState = isPressed[KeySettings.KeyRotateCw1];
-                            keyRotateCcw1.newState = isPressed[KeySettings.KeyRotateCcw1];
-                            if (KeySettings.KeyRotateCw2.HasValue)
-                                keyRotateCw2.newState = isPressed[KeySettings.KeyRotateCw2.Value];
-                            if (KeySettings.KeyRotateCcw2.HasValue)
-                                keyRotateCcw2.newState = isPressed[KeySettings.KeyRotateCcw2.Value];
-                        }
+                        case InputModes.Menu:
+                            DoMenuInput(ref beforeElapsed);
+                            break;
+                        case InputModes.Game:
+                            DoGameInput(ref beforeElapsed);
+                            break;
                     }
 
-                    double nowElapsed = sw.Elapsed.TotalMilliseconds;
-                    double tmspan = nowElapsed - beforeElapsed;
-                    beforeElapsed = nowElapsed;
-
-                    while (keyDrop.keyPress(tmspan))
-                    {
-                        Add(new Move("drop"));
-                    }
-                    while (keyMoveDown.keyPress(tmspan))
-                    {
-                        Add(new Move("down"));
-                    }
-                    while (keyMoveLeft.keyPress(tmspan))
-                    {
-                        Add(new Move("left"));
-                    }
-                    while (keyMoveRight.keyPress(tmspan))
-                    {
-                        Add(new Move("right"));
-                    }
-                    while (keyRotateCw1.keyPress(tmspan))
-                    {
-                        Add(new Rotate("cw"));
-                    }
-                    while (keyRotateCcw1.keyPress(tmspan))
-                    {
-                        Add(new Rotate("ccw"));
-                    }
-                    while (keyRotateCw2.keyPress(tmspan))
-                    {
-                        Add(new Rotate("cw"));
-                    }
-                    while (keyRotateCcw2.keyPress(tmspan))
-                    {
-                        Add(new Rotate("ccw"));
-                    }
                     Thread.Sleep(1);
                 }
             }
             catch/*(ThreadAbortException e)*/
             {
+            }
+        }
+
+        static void DoMenuInput(ref double beforeElapsed)
+        {
+            lock (keymapLock)
+            {
+                lock (KeySettings.thisLock)
+                {
+                    keyDrop.newState = isPressed[KeySettings.KeyDrop];
+                    keyMoveDown.newState = isPressed[KeySettings.KeyMoveDown];
+                    keyMoveLeft.newState = isPressed[KeySettings.KeyMoveLeft];
+                    keyMoveRight.newState = isPressed[KeySettings.KeyMoveRight];
+                    keyRotateCw1.newState = isPressed[KeySettings.KeyRotateCw1];
+                    keyRotateCcw1.newState = isPressed[KeySettings.KeyRotateCcw1];
+                    if (KeySettings.KeyRotateCw2.HasValue)
+                        keyRotateCw2.newState = isPressed[KeySettings.KeyRotateCw2.Value];
+                    if (KeySettings.KeyRotateCcw2.HasValue)
+                        keyRotateCcw2.newState = isPressed[KeySettings.KeyRotateCcw2.Value];
+                }
+            }
+            double nowElapsed = sw.Elapsed.TotalMilliseconds;
+            double tmspan = nowElapsed - beforeElapsed;
+            beforeElapsed = nowElapsed;
+
+            while (keyDrop.keyPress(tmspan))
+            {
+                Add(new Move("drop"));
+            }
+            while (keyMoveDown.keyPress(tmspan))
+            {
+                Add(new Move("down"));
+            }
+            while (keyMoveLeft.keyPress(tmspan))
+            {
+                Add(new Move("left"));
+            }
+            while (keyMoveRight.keyPress(tmspan))
+            {
+                Add(new Move("right"));
+            }
+            while (keyRotateCw1.keyPress(tmspan))
+            {
+                Add(new Rotate("cw"));
+            }
+            while (keyRotateCcw1.keyPress(tmspan))
+            {
+                Add(new Rotate("ccw"));
+            }
+            while (keyRotateCw2.keyPress(tmspan))
+            {
+                Add(new Rotate("cw"));
+            }
+            while (keyRotateCcw2.keyPress(tmspan))
+            {
+                Add(new Rotate("ccw"));
+            }
+        }
+
+        static void DoGameInput(ref double beforeElapsed)
+        {
+            lock (keymapLock)
+            {
+                lock (KeySettings.thisLock)
+                {
+                    keyDrop.newState = isPressed[KeySettings.KeyDrop];
+                    keyMoveDown.newState = isPressed[KeySettings.KeyMoveDown];
+                    keyMoveLeft.newState = isPressed[KeySettings.KeyMoveLeft];
+                    keyMoveRight.newState = isPressed[KeySettings.KeyMoveRight];
+                    keyRotateCw1.newState = isPressed[KeySettings.KeyRotateCw1];
+                    keyRotateCcw1.newState = isPressed[KeySettings.KeyRotateCcw1];
+                    if (KeySettings.KeyRotateCw2.HasValue)
+                        keyRotateCw2.newState = isPressed[KeySettings.KeyRotateCw2.Value];
+                    if (KeySettings.KeyRotateCcw2.HasValue)
+                        keyRotateCcw2.newState = isPressed[KeySettings.KeyRotateCcw2.Value];
+                }
+            }
+
+            double nowElapsed = sw.Elapsed.TotalMilliseconds;
+            double tmspan = nowElapsed - beforeElapsed;
+            beforeElapsed = nowElapsed;
+
+            while (keyDrop.keyPress(tmspan))
+            {
+                Add(new Move("drop"));
+            }
+            while (keyMoveDown.keyPress(tmspan))
+            {
+                Add(new Move("down"));
+            }
+            while (keyMoveLeft.keyPress(tmspan))
+            {
+                Add(new Move("left"));
+            }
+            while (keyMoveRight.keyPress(tmspan))
+            {
+                Add(new Move("right"));
+            }
+            while (keyRotateCw1.keyPress(tmspan))
+            {
+                Add(new Rotate("cw"));
+            }
+            while (keyRotateCcw1.keyPress(tmspan))
+            {
+                Add(new Rotate("ccw"));
+            }
+            while (keyRotateCw2.keyPress(tmspan))
+            {
+                Add(new Rotate("cw"));
+            }
+            while (keyRotateCcw2.keyPress(tmspan))
+            {
+                Add(new Rotate("ccw"));
             }
         }
 

@@ -20,57 +20,6 @@ namespace getris
     public partial class MainDlg
     {
 
-        private void Render(double timeDelta)
-        {
-            if (gameMode == GameMode.CreatingGL)
-            {
-                return;
-            }
-            if ((gameMode & GameMode.Game) != 0)
-            {
-                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-                RenderBackground(timeDelta);
-
-                //lock for the left
-                battle.MonEnter(true);
-                if (battle.isAnimationMode(true))
-                {
-                    RenderLeftAnimation(timeDelta);
-                }
-                else
-                {
-                    RenderLeftGame(timeDelta);
-                    accumLeft = 0; // reset time accumulator
-                }
-                //draw next blocks
-                SetupLeftNext1Render();
-                RenderNextBlock(true, 0);
-                SetupLeftNext2Render();
-                RenderNextBlock(true, 1);
-
-                battle.MonExit(true);
-
-                battle.MonEnter(false);
-                if (battle.isAnimationMode(false))
-                {
-                    RenderRightAnimation(timeDelta);
-                }
-                else
-                {
-                    RenderRightGame(timeDelta);
-                    accumRight = 0; // reset time accumulator
-                }
-                //draw next blocks
-                SetupRightNext1Render();
-                RenderNextBlock(false, 0);
-                SetupRightNext2Render();
-                RenderNextBlock(false, 1);
-                battle.MonExit(false);
-
-                glMain.SwapBuffers();
-            }
-        }
-
 
         void ConnectHorizontally(double row, double col, Color a, Color b)
         {
@@ -486,6 +435,9 @@ namespace getris
         {
             int w = glMain.Width;
             int h = glMain.Height;
+            GL.ClearColor(Color.White);
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             GL.Ortho(0, w, 0, h, -1, 1); // Bottom-left corner pixel has coordinate (0, 0)
