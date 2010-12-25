@@ -296,8 +296,7 @@ namespace getris
                 glMain.SwapBuffers();
                 if (accumLeft > 2)
                 {
-                    while (!Core.Keyboard.IsEmpty())
-                        Core.Keyboard.Pop();
+                    Core.Keyboard.Flush();
                     nextGameMode = GameMode.GameMenu;
                 }
                 else
