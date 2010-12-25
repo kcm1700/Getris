@@ -70,6 +70,8 @@ namespace getris.GameState
                                         Core.Keyboard.Pop();
                                     }
                                     break;
+                                case "":
+                                    break;
                                 default:
                                     throw new Exception("unknown action");
                                 //Action(Core.Keyboard.Pop());

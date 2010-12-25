@@ -63,4 +63,11 @@ namespace getris.Core
         {
         }
     }
+    public class NullAction : Action
+    {
+        public NullAction(string data="")
+            : base(data)
+        {
+        }
+    }
 }

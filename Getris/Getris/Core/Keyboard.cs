@@ -381,14 +381,20 @@ namespace getris.Core
         {
             lock (thisLock)
             {
-                return buffer.Peek();
+                if (buffer.Count == 0)
+                    return new NullAction();
+                else
+                    return buffer.Peek();
             }
         }
         static public Action Pop()
         {
             lock (thisLock)
             {
-                return buffer.Dequeue();
+                if (buffer.Count == 0)
+                    return new NullAction();
+                else
+                    return buffer.Dequeue();
             }
         }
     }

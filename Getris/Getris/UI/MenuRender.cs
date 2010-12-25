@@ -168,6 +168,8 @@ namespace getris
                         timeElapsedMenu = 0;
                         Core.Keyboard.Pop();
                         break;
+                    case "":
+                        break;
                     default:
                         Core.Keyboard.Pop();
                         MenuWork();
