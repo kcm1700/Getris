@@ -12,6 +12,10 @@ namespace getris.Core
         {
             this.data = data;
         }
+        virtual public bool IsValid()
+        {
+            return false;
+        }
     }
 
     public class Move : Action
@@ -20,6 +24,19 @@ namespace getris.Core
             : base(data)
         {
         }
+        override public bool IsValid()
+        {
+            switch (data)
+            {
+                case "left":
+                case "right":
+                case "drop":
+                case "down":
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
     public class GoTo : Action
     {
@@ -27,12 +44,28 @@ namespace getris.Core
             : base(data)
         {
         }
+        override public bool IsValid()
+        {
+            return true;
+        }
+
     }
     public class Rotate : Action
     {
         public Rotate(string data)
             : base(data)
         {
+        }
+        override public bool IsValid()
+        {
+            switch (data)
+            {
+                case "cw":
+                case "ccw":
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
     public class Chat : Action
@@ -41,12 +74,20 @@ namespace getris.Core
             : base(data)
         {
         }
+        override public bool IsValid()
+        {
+            return true;
+        }
     }
     public class Turn : Action
     {
         public Turn(string data)
             : base(data)
         {
+        }
+        override public bool IsValid()
+        {
+            return true;
         }
     }
     public class Status : Action
@@ -55,6 +96,10 @@ namespace getris.Core
             : base(data)
         {
         }
+        override public bool IsValid()
+        {
+            return true;
+        }
     }
     public class Attack : Action
     {
@@ -62,12 +107,23 @@ namespace getris.Core
             : base(data)
         {
         }
+        override public bool IsValid()
+        {
+            return true;
+        }
     }
     public class NullAction : Action
     {
         public NullAction(string data="")
             : base(data)
         {
+        }
+        override public bool IsValid()
+        {
+            if (data == "")
+                return true;
+            else
+                return false;
         }
     }
 }

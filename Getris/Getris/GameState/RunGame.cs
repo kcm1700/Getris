@@ -32,7 +32,8 @@ namespace getris.GameState
                         if (!Core.Keyboard.IsEmpty())
                         // is not empty
                         {
-                            switch (Core.Keyboard.Peek().data)
+                            Core.Action a = Core.Keyboard.Peek();
+                            switch (a.data)
                             {
                                 case "down":
                                     if (MoveDown())

@@ -382,9 +382,22 @@ namespace getris.Core
             lock (thisLock)
             {
                 if (buffer.Count == 0)
+                {
                     return new NullAction();
+                }
                 else
-                    return buffer.Peek();
+                {
+                    Action a = buffer.Peek();
+                    if (a.IsValid())
+                    {
+                        return a;
+                    }
+                    else
+                    {
+                        buffer.Dequeue();
+                        return new NullAction();
+                    }
+                }
             }
         }
         static public Action Pop()
@@ -392,9 +405,17 @@ namespace getris.Core
             lock (thisLock)
             {
                 if (buffer.Count == 0)
+                {
                     return new NullAction();
+                }
                 else
-                    return buffer.Dequeue();
+                {
+                    Action a = buffer.Dequeue();
+                    if (a.IsValid())
+                        return a;
+                    else
+                        return new NullAction();
+                }
             }
         }
     }
