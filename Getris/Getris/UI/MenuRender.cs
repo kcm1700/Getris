@@ -150,26 +150,31 @@ namespace getris
         private void UpdateMenu(double timeDelta)
         {
             nextGameMode = GameMode.GameMenu;
-            Core.Action a = Core.Keyboard.Pop();
-            switch (a.data)
+            if (!Core.Keyboard.IsEmpty())
             {
-                case "up":
-                case "left":
-                    menuOriginAngle = menuCurAngle;
-                    menuSelection = (menuSelection + menuPositionAngle.Length - 1) % menuPositionAngle.Length;
-                    timeElapsedMenu = 0;
-                    break;
-                case "down":
-                case "right":
-                    menuOriginAngle = menuCurAngle;
-                    menuSelection = (menuSelection + 1) % menuPositionAngle.Length;
-                    timeElapsedMenu = 0;
-                    break;
-                case "":
-                    break;
-                default:
-                    MenuWork();
-                    break;
+                switch (Core.Keyboard.Peek().data)
+                {
+                    case "up":
+                    case "left":
+                        menuOriginAngle = menuCurAngle;
+                        menuSelection = (menuSelection + menuPositionAngle.Length - 1) % menuPositionAngle.Length;
+                        timeElapsedMenu = 0;
+                        Core.Keyboard.Pop();
+                        break;
+                    case "down":
+                    case "right":
+                        menuOriginAngle = menuCurAngle;
+                        menuSelection = (menuSelection + 1) % menuPositionAngle.Length;
+                        timeElapsedMenu = 0;
+                        Core.Keyboard.Pop();
+                        break;
+                    case "":
+                        break;
+                    default:
+                        Core.Keyboard.Pop();
+                        MenuWork();
+                        break;
+                }
             }
             UpdateMenuPosition(timeDelta);
             timeElapsedMenu += timeDelta;

@@ -490,6 +490,28 @@ namespace getris
 
 
 
+
+
+
+
+
+        // Score Renderer
+        // Score Renderer
+        // Score Renderer
+        // Score Renderer
+        // Score Renderer
+        // Score Renderer
+        // Score Renderer
+        // Score Renderer
+        // Score Renderer
+        // Score Renderer
+        // Score Renderer
+        // Score Renderer
+        // Score Renderer
+
+
+
+
         private void SetupLeftScoreRender()
         {
             //Setup Viewport
@@ -577,6 +599,7 @@ namespace getris
                 PrintDigit((int)((value % 10+10)%10),digitWidth,digitHeight);
                 value /= 10;
                 pos -= digitWidth;
+                GL.MatrixMode(MatrixMode.Projection);
                 GL.PopMatrix();
             }
         }

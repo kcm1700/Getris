@@ -29,50 +29,54 @@ namespace getris.GameState
                     //일단 lock 걸고 작업하고,
                     lock (thisLock)
                     {
-                        Core.Action a = Core.Keyboard.Peek();
-                        switch (a.data)
+                        if (!Core.Keyboard.IsEmpty())
+                        // is not empty
                         {
-                            case "down":
-                                if (MoveDown())
-                                {
-                                    Core.Keyboard.Pop();
-                                }
-                                break;
-                            case "left":
-                                if (MoveLeft())
-                                {
-                                    Core.Keyboard.Pop();
-                                }
-                                break;
-                            case "right":
-                                if (MoveRight())
-                                {
-                                    Core.Keyboard.Pop();
-                                }
-                                break;
-                            case "drop":
-                                if (Drop())
-                                {
-                                    Core.Keyboard.Pop();
-                                }
-                                break;
-                            case "cw":
-                                if (Rotate(true))
-                                {
-                                    Core.Keyboard.Pop();
-                                }
-                                break;
-                            case "ccw":
-                                if (Rotate(false))
-                                {
-                                    Core.Keyboard.Pop();
-                                }
-                                break;
-                            case "":
-                                break;
-                            default:
-                                throw new Exception("unknown action");
-                            //Action(Core.Keyboard.Pop());
+                            Core.Action a = Core.Keyboard.Peek();
+                            switch (a.data)
+                            {
+                                case "down":
+                                    if (MoveDown())
+                                    {
+                                        Core.Keyboard.Pop();
+                                    }
+                                    break;
+                                case "left":
+                                    if (MoveLeft())
+                                    {
+                                        Core.Keyboard.Pop();
+                                    }
+                                    break;
+                                case "right":
+                                    if (MoveRight())
+                                    {
+                                        Core.Keyboard.Pop();
+                                    }
+                                    break;
+                                case "drop":
+                                    if (Drop())
+                                    {
+                                        Core.Keyboard.Pop();
+                                    }
+                                    break;
+                                case "cw":
+                                    if (Rotate(true))
+                                    {
+                                        Core.Keyboard.Pop();
+                                    }
+                                    break;
+                                case "ccw":
+                                    if (Rotate(false))
+                                    {
+                                        Core.Keyboard.Pop();
+                                    }
+                                    break;
+                                case "":
+                                    break;
+                                default:
+                                    throw new Exception("unknown action");
+                                //Action(Core.Keyboard.Pop());
+                            }
                         }
                         now =sw.Elapsed.TotalMilliseconds;
                         TimeLimit(now, ref before, 700);

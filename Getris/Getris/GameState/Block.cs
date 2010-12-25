@@ -104,19 +104,35 @@ namespace getris.GameState
             int remain = blockCellCnt - 1;
 
             int numberOfColors = 2;
-            int blockCellColorOrigin = Core.Random.rand(1, 1 + colorCnt - (numberOfColors - 1));
+            CellColor[] blockColorCand = new CellColor[numberOfColors];
+            for (int i = 0; i < numberOfColors; i++)
+            {
+                bool dupFlg;
+                do
+                {
+                    dupFlg = false;
+                    blockColorCand[i] = (CellColor)Core.Random.rand(1, colorCnt + 1);
+                    for (int j = 0; j < i; j++)
+                    {
+                        if (blockColorCand[i] == blockColorCand[j])
+                        {
+                            dupFlg = true;
+                        }
+                    }
+                } while (dupFlg);
+            }
             for (int i = 0; i < ROW_SIZE; i++)
             {
                 for (int j = 0; j < COL_SIZE; j++)
                 {
                     if (i == ROW_SIZE / 2 && j == COL_SIZE / 2)
                     {
-                        cells[i, j] = new BlockCell((CellColor)Core.Random.rand(blockCellColorOrigin, blockCellColorOrigin + numberOfColors));
+                        cells[i, j] = new BlockCell(blockColorCand[Core.Random.rand(0, numberOfColors)]);
                         continue;
                     }
                     if (Core.Random.rand(cnt) < remain)
                     {
-                        cells[i, j] = new BlockCell((CellColor)Core.Random.rand(blockCellColorOrigin, blockCellColorOrigin + numberOfColors));
+                        cells[i, j] = new BlockCell(blockColorCand[Core.Random.rand(0, numberOfColors)]);
                         remain--;
                     }
                     else

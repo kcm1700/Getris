@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animation\Animator.cs" />
     <Compile Include="Core\Action.cs" />
     <Compile Include="Core\GraphicsUtil.cs" />
     <Compile Include="Core\KeySettings.cs" />
@@ -114,6 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="block1.bmp" />
+    <Content Include="chain.bmp" />
     <Content Include="menu5.bmp" />
     <Content Include="menu1.bmp" />
     <Content Include="menu2.bmp" />

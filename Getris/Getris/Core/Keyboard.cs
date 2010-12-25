@@ -370,6 +370,13 @@ namespace getris.Core
             }
         }
 
+        static public bool IsEmpty()
+        {
+            lock (thisLock)
+            {
+                return buffer.Count == 0;
+            }
+        }
         static public Action Peek()
         {
             lock (thisLock)
@@ -411,17 +418,11 @@ namespace getris.Core
                 }
             }
         }
-        static public int Flush()
+        static public void ClearBuffer()
         {
             lock (thisLock)
             {
-                int cnt = 0;
-                while (buffer.Count != 0)
-                {
-                    buffer.Dequeue();
-                    cnt++;
-                }
-                return cnt;
+                buffer.Clear();
             }
         }
     }

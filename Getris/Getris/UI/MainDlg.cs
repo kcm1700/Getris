@@ -22,8 +22,9 @@ namespace getris
         {
             CreatingGL = 0,
             GameMenu = 1,
-            Game = 2,
-            GameOver = 3,
+            GameSelect = 2,
+            Game = 3,
+            GameOver = 4,
             Exit = 99
         }
 
@@ -39,6 +40,8 @@ namespace getris
         private int TN_NUMBERS;
         private static readonly string[] menuImageFileName = { "menu1.bmp", "menu2.bmp", "menu3.bmp", "menu4.bmp", "menu5.bmp"};
         private int[] TN_MENU;
+        private const string chainfilename = "chain.bmp";
+        private int TN_CHAIN;
         private const int menuCnt = 5;
 
 
@@ -98,6 +101,13 @@ namespace getris
                 catch
                 {
                 }
+            }
+            try
+            {
+                TN_CHAIN = Core.GraphicsUtil.LoadTexture(chainfilename);
+            }
+            catch
+            {
             }
         }
 
@@ -296,7 +306,7 @@ namespace getris
                 glMain.SwapBuffers();
                 if (accumLeft > 2)
                 {
-                    Core.Keyboard.Flush();
+                    Core.Keyboard.ClearBuffer();
                     nextGameMode = GameMode.GameMenu;
                 }
                 else
