@@ -27,6 +27,13 @@ namespace getris.GameState
                 return blockColor;
             }
         }
+        public virtual bool IsEmpty
+        {
+            get
+            {
+                return Color == CellColor.transparent;
+            }
+        }
     }
 
     public class BlockCell : Cell

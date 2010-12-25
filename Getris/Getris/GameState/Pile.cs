@@ -40,12 +40,12 @@ namespace getris.GameState
 
         public bool IsCellEmpty(int row, int col)
         {
-            return board[row, col] is BlankCell;
+            return board[row, col].IsEmpty;
         }
 
         private bool isCellCollision(int row, int col, Cell cell)
         {
-            if (cell is BlankCell) return false; // always safe
+            if (cell.IsEmpty) return false; // always safe
             if (col < 0 || col >= COL_SIZE) return true; // should not happen
             if (row >= ROW_SIZE + 3) return true; // too high
             if (row < 0) return true; // too low
@@ -58,7 +58,7 @@ namespace getris.GameState
             {
                 for (int j = 0; j < Block.COL_SIZE; j++)
                 {
-                    if (!(block[i, j] is BlankCell)) // if not empty
+                    if (!(block[i, j].IsEmpty))
                     {
                         board[row + i, col + j] = block[i, j];
                     }
@@ -71,7 +71,7 @@ namespace getris.GameState
             {
                 for (int j = 0; j < Block.COL_SIZE; j++)
                 {
-                    if (!(block[i, j] is BlankCell)) // if not empty
+                    if (!(block[i, j].IsEmpty))
                     {
                         board[row + i, col + j] = new BlankCell();
                     }
@@ -116,7 +116,7 @@ namespace getris.GameState
             if (row < 0 || row >= ROW_SIZE + 3) return;
             if (col < 0 || col >= COL_SIZE) return;
             if (visit[row, col]) return;
-            if (board[row, col] is BlankCell) return;
+            if (board[row, col].IsEmpty) return;
 
             if (board[row, col].Color != par) return;
 
@@ -155,7 +155,7 @@ namespace getris.GameState
                 {
                     for (int j = 0; j < COL_SIZE; j++)
                     {
-                        if (visit[i, j] == false && ((board[i, j] is BlankCell) == false))
+                        if (visit[i, j] == false && ((board[i, j].IsEmpty) == false))
                         {
                             int k;
                             flgDown = true;

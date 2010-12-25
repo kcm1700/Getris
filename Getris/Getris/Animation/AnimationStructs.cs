@@ -166,7 +166,7 @@ namespace getris.Animation
                     {
                         for (int j = 0; j < aniBoard.GetLength(1); j++)
                         {
-                            if (!(tmpBoard[i, j] is BlankCell))
+                            if (!(tmpBoard[i, j].IsEmpty))
                             {
                                 //not blank cell
                                 aniBoard[i, j] = tmpBoard[i, j];
