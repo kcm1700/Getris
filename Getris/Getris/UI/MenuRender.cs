@@ -154,15 +154,15 @@ namespace getris
             {
                 switch (Core.Keyboard.Peek().data)
                 {
-                    case "down":
-                    case "right":
+                    case "up":
+                    case "left":
                         menuOriginAngle = menuCurAngle;
                         menuSelection = (menuSelection + menuPositionAngle.Length - 1) % menuPositionAngle.Length;
                         timeElapsedMenu = 0;
                         Core.Keyboard.Pop();
                         break;
-                    case "up":
-                    case "left":
+                    case "down":
+                    case "right":
                         menuOriginAngle = menuCurAngle;
                         menuSelection = (menuSelection + 1) % menuPositionAngle.Length;
                         timeElapsedMenu = 0;

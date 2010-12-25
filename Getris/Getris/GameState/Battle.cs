@@ -15,6 +15,23 @@ namespace getris.GameState
 
         public readonly static int colorCnt = 5;
 
+        private bool isFinished = false;
+        public bool Finished
+        {
+            get
+            {
+                if (leftGame.isGameOver || rightGame.isGameOver)
+                {
+                    isFinished = true;
+                }
+                return isFinished;
+            }
+            set
+            {
+                isFinished = value;
+            }
+        }
+
         public void MonEnter(bool isLeft){
             if(isLeft){
                 leftGame.Enter();

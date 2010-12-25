@@ -94,7 +94,7 @@ namespace getris
             }
             for (int i = 0; i < menuPositionAngle.Length; i++)
             {
-                menuPositionAngle[i] = OpenTK.MathHelper.TwoPi * i / menuPositionAngle.Length;
+                menuPositionAngle[i] = OpenTK.MathHelper.TwoPi * (-i) / menuPositionAngle.Length;
                 try
                 {
                     TN_MENU[i] = Core.GraphicsUtil.LoadTexture(menuImageFileName[i]);
@@ -169,6 +169,17 @@ namespace getris
             if (gameMode == GameMode.GameMenu)
             {
                 UpdateMenu(timeDelta);
+            }
+            if (gameMode == GameMode.Game)
+            {
+                nextGameMode = gameMode;
+                if (battle.Finished)
+                {
+                    nextGameMode = GameMode.GameMenu;
+                    battle.LeftThread.Abort();
+                    battle.RightThread.Abort();
+                    battle = null;
+                }
             }
         }
 

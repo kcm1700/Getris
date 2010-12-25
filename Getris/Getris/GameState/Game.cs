@@ -72,6 +72,13 @@ namespace getris.GameState
             gameOver = false;
             BlockRegen();
         }
+        ~Game()
+        {
+            if (this.thread.IsAlive)
+            {
+                this.thread.Abort();
+            }
+        }
 
         public virtual CellColor GetPileCellColor(int row, int col)
         {
