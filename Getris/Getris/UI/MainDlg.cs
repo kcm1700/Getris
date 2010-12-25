@@ -23,34 +23,23 @@ namespace getris
             CreatingGL = 0,
             GameMenu = 1,
             Game = 2,
+            GameOver = 3,
             Exit = 99
         }
 
         private GameMode gameMode;
         private GameMode nextGameMode;
         private bool glLoad;
-        private const int MaxFrameRate = 60;
+        public static int MaxFrameRate = 60;
         private Stopwatch sw;
-
-        private const int LeftGameWidth = 200;
-        private const int LeftGameHeight = 420;
-        private const int LeftGameLeft = 20;
-        private const int LeftGameBottom = 80;
-        private static readonly Rectangle LeftGameNext1 = new Rectangle(225, 380, 20 * 3, 20 * 3);
-        private static readonly Rectangle LeftGameNext2 = new Rectangle(225, 280, 20 * 3, 20 * 3);
-
-        private const int RightGameWidth = 200;
-        private const int RightGameHeight = 420;
-        private const int RightGameLeft = 20+200+20+100+20;
-        private const int RightGameBottom = 80;
-        private static readonly Rectangle RightGameNext1 = new Rectangle(295, 380, 20 * 3, 20 * 3);
-        private static readonly Rectangle RightGameNext2 = new Rectangle(295, 280, 20 * 3, 20 * 3);
 
         private const string blockimagefilename = "block1.bmp";
         private int TN_BLOCK;
-        private static readonly string[] menuImageFileName = { "menu1.bmp", "menu2.bmp", "menu3.bmp", "menu4.bmp" };
+        private const string numberimagefilename = "numbers.bmp";
+        private int TN_NUMBERS;
+        private static readonly string[] menuImageFileName = { "menu1.bmp", "menu2.bmp", "menu3.bmp", "menu4.bmp", "menu5.bmp"};
         private int[] TN_MENU;
-        private const int menuCnt = 4;
+        private const int menuCnt = 5;
 
 
         private GameState.Battle battle;
@@ -92,6 +81,13 @@ namespace getris
             catch
             {
             }
+            try
+            {
+                TN_NUMBERS = Core.GraphicsUtil.LoadTexture(numberimagefilename);
+            }
+            catch
+            {
+            }
             for (int i = 0; i < menuPositionAngle.Length; i++)
             {
                 menuPositionAngle[i] = OpenTK.MathHelper.TwoPi * (-i) / menuPositionAngle.Length;
@@ -120,6 +116,23 @@ namespace getris
                     TransitGameMode();
                     Update(timeDelta);
                     Render(timeDelta);
+                }
+                if (gameMode == GameMode.GameOver)
+                {
+                    try
+                    {
+                        battle.LeftThread.Abort();
+                    }
+                    catch
+                    {
+                    }
+                    try
+                    {
+                        battle.RightThread.Abort();
+                    }
+                    catch
+                    {
+                    }
                 }
                 if (gameMode == GameMode.Exit)
                 {
@@ -160,7 +173,12 @@ namespace getris
             else if (gameMode == GameMode.Game)
             {
                 Core.Keyboard.InputMode = Core.Keyboard.InputModes.Game;
+                gameMode = nextGameMode;
                 //Nothing to do
+            }
+            else if (gameMode == GameMode.GameOver)
+            {
+                gameMode = nextGameMode;
             }
         }
 
@@ -175,11 +193,14 @@ namespace getris
                 nextGameMode = gameMode;
                 if (battle.Finished)
                 {
-                    nextGameMode = GameMode.GameMenu;
-                    battle.LeftThread.Abort();
-                    battle.RightThread.Abort();
-                    battle = null;
+                    nextGameMode = GameMode.GameOver;
+                    accumLeft = 0;
+                    accumRight = 0;
                 }
+            }
+            if (gameMode == GameMode.GameOver)
+            {
+                nextGameMode = GameMode.GameMenu;
             }
         }
 
@@ -219,6 +240,7 @@ namespace getris
                 RenderNextBlock(true, 0);
                 SetupLeftNext2Render();
                 RenderNextBlock(true, 1);
+                LeftScoreRender();
 
                 battle.MonExit(true);
 
@@ -237,9 +259,51 @@ namespace getris
                 RenderNextBlock(false, 0);
                 SetupRightNext2Render();
                 RenderNextBlock(false, 1);
+                RightScoreRender();
+
                 battle.MonExit(false);
 
                 glMain.SwapBuffers();
+            }
+            else if (gameMode == GameMode.GameOver)
+            {
+                GL.Disable(EnableCap.DepthTest);
+                GL.Disable(EnableCap.AlphaTest);
+                GL.Disable(EnableCap.Blend);
+                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.AccumBufferBit | ClearBufferMask.StencilBufferBit);
+                RenderBackground(timeDelta);
+
+                //lock for the left
+                battle.MonEnter(true);
+                RenderLeftGameOver(timeDelta);
+                //draw next blocks
+                SetupLeftNext1Render();
+//                RenderNextBlock(true, 0);
+                SetupLeftNext2Render();
+//                RenderNextBlock(true, 1);
+
+                battle.MonExit(true);
+
+                battle.MonEnter(false);
+                RenderRightGameOver(timeDelta);
+                //draw next blocks
+                SetupRightNext1Render();
+//                RenderNextBlock(false, 0);
+                SetupRightNext2Render();
+//                RenderNextBlock(false, 1);
+                battle.MonExit(false);
+
+                glMain.SwapBuffers();
+                if (accumLeft > 2)
+                {
+                    while (!Core.Keyboard.IsEmpty())
+                        Core.Keyboard.Pop();
+                    nextGameMode = GameMode.GameMenu;
+                }
+                else
+                {
+                    nextGameMode = gameMode;
+                }
             }
         }
 
@@ -293,6 +357,12 @@ namespace getris
         private void MainDlg_Deactivate(object sender, EventArgs e)
         {
 //            Core.Keyboard.KeyReset();
+        }
+
+        private void btnColor_Click(object sender, EventArgs e)
+        {
+            UI.PreferencesDlg a = new UI.PreferencesDlg();
+            a.Show();
         }
     }
 }

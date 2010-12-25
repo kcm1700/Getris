@@ -32,6 +32,7 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.lblFPS = new System.Windows.Forms.Label();
+            this.btnPreference = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // glMain
@@ -76,11 +77,23 @@
             this.lblFPS.TabIndex = 4;
             this.lblFPS.Text = "FPS";
             // 
+            // btnPreference
+            // 
+            this.btnPreference.Location = new System.Drawing.Point(614, 325);
+            this.btnPreference.Name = "btnPreference";
+            this.btnPreference.Size = new System.Drawing.Size(108, 39);
+            this.btnPreference.TabIndex = 5;
+            this.btnPreference.Text = "OptionBox";
+            this.btnPreference.UseVisualStyleBackColor = true;
+            this.btnPreference.Click += new System.EventHandler(this.btnColor_Click);
+            // 
             // MainDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(832, 612);
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.ClientSize = new System.Drawing.Size(832, 568);
+            this.Controls.Add(this.btnPreference);
             this.Controls.Add(this.lblFPS);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
@@ -101,6 +114,7 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label lblFPS;
+        private System.Windows.Forms.Button btnPreference;
     }
 }
 

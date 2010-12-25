@@ -332,10 +332,10 @@ namespace getris.Core
         }
         static KeySettings()
         {
-            keyRotateCw1 = new KeySet(Keys.Z,500,100);
-            keyRotateCw2 = new KeySet(Keys.Enter,500,100);
-            keyRotateCcw1 = new KeySet(Keys.X,500,100);
-            keyRotateCcw2 = new KeySet(Keys.Up, 500, 100);
+            keyRotateCw1 = new KeySet(Keys.X,500,100);
+            keyRotateCw2 = new KeySet(Keys.Up,500,100);
+            keyRotateCcw1 = new KeySet(Keys.Z,500,100);
+            keyRotateCcw2 = new KeySet(Keys.Enter, 500, 100);
             keyMoveLeft = new KeySet(Keys.Left,200,50);
             keyMoveRight = new KeySet(Keys.Right, 200, 50);
             keyMoveDown = new KeySet(Keys.Down, 200, 50);

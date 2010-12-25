@@ -199,5 +199,29 @@ namespace getris.GameState
             }
             return nextBlock[i, j].Color;
         }
+
+        public bool isOver(bool isLeft)
+        {
+            if (isLeft)
+            {
+                return leftGame.isGameOver;
+            }
+            else
+            {
+                return rightGame.isGameOver;
+            }
+        }
+
+        public Decimal GetScore(bool isLeft)
+        {
+            if (isLeft)
+            {
+                return leftGame.Score;
+            }
+            else
+            {
+                return rightGame.Score;
+            }
+        }
     }
 }

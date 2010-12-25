@@ -66,6 +66,12 @@
     <Compile Include="GameState\Pile.cs" />
     <Compile Include="GameState\RunGame.cs" />
     <Compile Include="Animation\AnimationStructs.cs" />
+    <Compile Include="UI\PreferencesDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\PreferencesDlg.Designer.cs">
+      <DependentUpon>PreferencesDlg.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\MainDlg.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -80,6 +86,9 @@
     <Compile Include="UI\Renderer.cs">
       <SubType>Form</SubType>
     </Compile>
+    <EmbeddedResource Include="UI\PreferencesDlg.resx">
+      <DependentUpon>PreferencesDlg.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\MainDlg.resx">
       <DependentUpon>MainDlg.cs</DependentUpon>
     </EmbeddedResource>
@@ -105,6 +114,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="block1.bmp" />
+    <Content Include="menu5.bmp" />
+    <Content Include="menu1.bmp" />
+    <Content Include="menu2.bmp" />
+    <Content Include="menu3.bmp" />
+    <Content Include="menu4.bmp" />
+    <Content Include="numbers.bmp" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

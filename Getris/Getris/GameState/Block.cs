@@ -128,7 +128,7 @@ namespace getris.GameState
             }
         }
 
-        public void RotateCw()
+        public void RotateCcw()
         {
             Cell[,] tmp = new Cell[ROW_SIZE, COL_SIZE];
             for (int i = 0; i < ROW_SIZE; i++)
@@ -146,7 +146,7 @@ namespace getris.GameState
                 }
             }
         }
-        public void RotateCcw()
+        public void RotateCw()
         {
             Cell[,] tmp = new Cell[ROW_SIZE, COL_SIZE];
             for (int i = 0; i < ROW_SIZE; i++)

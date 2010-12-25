@@ -202,6 +202,10 @@ namespace getris
                 case 3: // 끝내기
                     nextGameMode = GameMode.Exit;
                     break;
+                case 4: // 환경설정
+                    btnPreference.PerformClick();
+                    Core.Keyboard.KeyReset();
+                    break;
             }
         }
         

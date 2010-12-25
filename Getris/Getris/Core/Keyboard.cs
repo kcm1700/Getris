@@ -79,18 +79,19 @@ namespace getris.Core
                     keyRotateCcw2 = new KeyState(KeySettings.InitTimeRotateCcw2, KeySettings.RepeatPeriodRotateCcw2);
 
                     isPressed.Clear();
-                    isPressed.Add(KeySettings.KeyDrop, false);
-                    isPressed.Add(KeySettings.KeyMoveDown, false);
-                    isPressed.Add(KeySettings.KeyMoveLeft, false);
-                    isPressed.Add(KeySettings.KeyMoveRight, false);
-                    isPressed.Add(KeySettings.KeyRotateCcw1, false);
-                    isPressed.Add(KeySettings.KeyRotateCw1, false);
+                    isPressed[KeySettings.KeyDrop] = false;
+                    isPressed[KeySettings.KeyMoveDown] = false;
+                    isPressed[KeySettings.KeyMoveLeft] = false;
+                    isPressed[KeySettings.KeyMoveRight] = false;
+                    isPressed[KeySettings.KeyRotateCcw1] = false;
+                    isPressed[KeySettings.KeyRotateCw1] = false;
 
                     //secondary key check
                     if (KeySettings.KeyRotateCcw2.HasValue)
-                        isPressed.Add(KeySettings.KeyRotateCcw2.Value, false);
+                        isPressed[KeySettings.KeyRotateCcw2.Value] = false;
                     if (KeySettings.KeyRotateCw2.HasValue)
-                        isPressed.Add(KeySettings.KeyRotateCw2.Value, false);
+                        isPressed[KeySettings.KeyRotateCw2.Value] = false;
+
                 }
             }
         }

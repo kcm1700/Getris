@@ -14,9 +14,30 @@ namespace getris.Core
 {
     static class GraphicsUtil
     {
+        static Dictionary<CellColor, Color> colorDictionary;
+
+        static GraphicsUtil()
+        {
+            colorDictionary = new Dictionary<CellColor,Color>();
+            colorDictionary[CellColor.dropped] = Color.White;
+            colorDictionary[CellColor.transparent] = Color.Transparent;
+            colorDictionary[CellColor.color1] = Color.Red;
+            colorDictionary[CellColor.color2] = Color.DeepSkyBlue;
+            colorDictionary[CellColor.color3] = Color.LimeGreen;
+            colorDictionary[CellColor.color4] = Color.Yellow;
+            colorDictionary[CellColor.color5] = Color.BlueViolet;
+        }
         static public Color CellColor2Color(CellColor color)
         {
-            switch (color)
+            try
+            {
+                return colorDictionary[color];
+            }
+            catch
+            {
+                return Color.Transparent;
+            }
+/*            switch (color)
             {
                 case CellColor.transparent:
                     return Color.Transparent;
@@ -34,8 +55,13 @@ namespace getris.Core
                     return Color.White;
                 default:
                     return Color.Transparent;
-            }
+            }*/
         }
+        static public void SetNewColor(CellColor cellColor, Color color)
+        {
+            colorDictionary[cellColor] = color;
+        }
+
         static public int LoadTexture(string filename)
         {
             if (String.IsNullOrEmpty(filename))
@@ -60,5 +86,6 @@ namespace getris.Core
 
             return id;
         }
+
     }
 }

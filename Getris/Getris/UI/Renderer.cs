@@ -20,6 +20,22 @@ namespace getris
     public partial class MainDlg
     {
 
+        private const int LeftGameWidth = 200;
+        private const int LeftGameHeight = 420;
+        private const int LeftGameLeft = 20;
+        private const int LeftGameBottom = 80;
+        private static readonly Rectangle LeftGameNext1 = new Rectangle(225, 380, 20 * 3, 20 * 3);
+        private static readonly Rectangle LeftGameNext2 = new Rectangle(225, 280, 20 * 3, 20 * 3);
+        private static readonly Rectangle LeftScore = new Rectangle(20, 20, 200, 40);
+
+        private const int RightGameWidth = 200;
+        private const int RightGameHeight = 420;
+        private const int RightGameLeft = 20 + 200 + 20 + 100 + 20;
+        private const int RightGameBottom = 80;
+        private static readonly Rectangle RightGameNext1 = new Rectangle(295, 380, 20 * 3, 20 * 3);
+        private static readonly Rectangle RightGameNext2 = new Rectangle(295, 280, 20 * 3, 20 * 3);
+        private static readonly Rectangle RightScore = new Rectangle(360, 20, 200, 40);
+
 
         void ConnectHorizontally(double row, double col, Color a, Color b)
         {
@@ -470,5 +486,246 @@ namespace getris
 
         }
 
+
+
+
+
+        private void SetupLeftScoreRender()
+        {
+            //Setup Viewport
+            int w = LeftScore.Width;
+            int h = LeftScore.Height;
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(0, w, 0, h, -1, 1);
+            GL.Viewport(LeftScore.X, LeftScore.Y, LeftScore.Width, LeftScore.Height);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+
+            //Set alpha blending
+            GL.ColorMask(true, true, true, true);
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+
+            //Draw Background
+            GL.Begin(BeginMode.Quads);
+            GL.Color4(Color.Black);
+            GL.Vertex2(0, 0);
+            GL.Vertex2(w, 0);
+            GL.Vertex2(w, h);
+            GL.Vertex2(0, h);
+            GL.End();
+        }
+        private void SetupRightScoreRender()
+        {
+            //Setup Viewport
+            int w = RightScore.Width;
+            int h = RightScore.Height;
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(0, w, 0, h, -1, 1);
+            GL.Viewport(RightScore.X, RightScore.Y, RightScore.Width, RightScore.Height);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+
+            //Set alpha blending
+            GL.ColorMask(true, true, true, true);
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+
+            //Draw Background
+            GL.Begin(BeginMode.Quads);
+            GL.Color4(Color.Black);
+            GL.Vertex2(0, 0);
+            GL.Vertex2(w, 0);
+            GL.Vertex2(w, h);
+            GL.Vertex2(0, h);
+            GL.End();
+        }
+
+        private void LeftScoreRender()
+        {
+            SetupLeftScoreRender();
+            PrintScore(battle.GetScore(true), LeftScore.Width, LeftScore.Height);
+        }
+
+        private void RightScoreRender()
+        {
+            SetupRightScoreRender();
+            PrintScore(battle.GetScore(false), LeftScore.Width, LeftScore.Height);
+        }
+
+
+        private void PrintScore(Decimal value,double w,double h)
+        {
+            double pos = w - h * 0.5;
+            double digitWidth = h * 0.5;
+            double digitHeight = h;
+            if (value == 0)
+            {
+                GL.MatrixMode(MatrixMode.Projection);
+                GL.PushMatrix();
+                GL.Translate(pos, 0, 0);
+                PrintDigit((int)((value % 10 + 10) % 10), digitWidth, digitHeight);
+                value /= 10;
+                pos -= digitWidth;
+                GL.PopMatrix();
+            }
+            while (value >= 1)
+            {
+                GL.MatrixMode(MatrixMode.Projection);
+                GL.PushMatrix();
+                GL.Translate(pos,0,0);
+                PrintDigit((int)((value % 10+10)%10),digitWidth,digitHeight);
+                value /= 10;
+                pos -= digitWidth;
+                GL.PopMatrix();
+            }
+        }
+
+        private void PrintDigit(int digitval, double digitWidth, double digitHeight)
+        {
+            GL.Enable(EnableCap.Texture2D);
+            GL.BindTexture(TextureTarget.Texture2D, TN_NUMBERS);
+            GL.Begin(BeginMode.Quads);{
+                GL.Color4(Color.White);
+                GL.TexCoord2((double)digitval / 10.0, 1);
+                GL.Vertex2(0, 0);
+                GL.TexCoord2((double)digitval / 10.0, 0);
+                GL.Vertex2(0, digitHeight);
+                GL.TexCoord2((double)(digitval+1) / 10.0, 0);
+                GL.Vertex2(digitWidth, digitHeight);
+                GL.TexCoord2((double)(digitval+1) / 10.0, 1);
+                GL.Vertex2(digitWidth, 0);
+            } GL.End();
+            GL.Disable(EnableCap.Texture2D);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // BELOW ARE
+        // GAME OVER RENDER
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+
+
+
+
+        private void SetupLeftGameOverRender(double timeElapsed)
+        {
+            //Setup Viewport
+            int w = LeftGameWidth;
+            int h = LeftGameHeight;
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(0, w, 0, h, -1, 1);
+            GL.Viewport(LeftGameLeft, LeftGameBottom, w, h);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+
+            //Set alpha blending
+            GL.ColorMask(true, true, true, true);
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+
+            //Draw Background
+            GL.Begin(BeginMode.Quads);
+            GL.Color4(Color.Black);
+            GL.Vertex2(0, 0);
+            GL.Vertex2(w, 0);
+            GL.Vertex2(w, h);
+            GL.Vertex2(0, h);
+            GL.End();
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(0 - timeElapsed * w, w + timeElapsed * w, 0 - timeElapsed * h, h + timeElapsed * h, -1, 1);
+            GL.Translate(w / 2, h / 2, 0);
+            GL.Rotate(timeElapsed * 360, 0, 0, 1);
+            GL.Translate(-w / 2, -h / 2, 0);
+        }
+
+        private void SetupRightGameOverRender(double timeElapsed)
+        {
+            //Setup Viewport
+            int w = RightGameWidth;
+            int h = RightGameHeight;
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(0, w, 0, h, -1, 1);
+            GL.Viewport(RightGameLeft, RightGameBottom, w, h);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+
+            //Set alpha blending
+            GL.ColorMask(true, true, true, true);
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+
+            //Draw Background
+            GL.Begin(BeginMode.Quads);
+            GL.Color4(Color.Black);
+            GL.Vertex2(0, 0);
+            GL.Vertex2(w, 0);
+            GL.Vertex2(w, h);
+            GL.Vertex2(0, h);
+            GL.End();
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(0 - timeElapsed * w, w + timeElapsed * w, 0 - timeElapsed * h, h + timeElapsed * h, -1, 1);
+            GL.Translate(w / 2, h / 2, 0);
+            GL.Rotate(timeElapsed * 360, 0, 0, 1);
+            GL.Translate(-w / 2, -h / 2, 0);
+
+        }
+        private void RenderLeftGameOver(double timeDelta)
+        {
+            if (battle.isOver(true))
+            {
+                SetupLeftGameOverRender(accumLeft);
+            }
+            else
+            {
+                SetupLeftGameRender();
+            }
+            RenderGame(true, accumLeft);
+            accumLeft += timeDelta;
+        }
+        private void RenderRightGameOver(double timeDelta)
+        {
+            if (battle.isOver(false))
+            {
+                SetupRightGameOverRender(accumRight);
+            }
+            else
+            {
+                SetupRightGameRender();
+            }
+            RenderGame(false, accumRight);
+            accumRight += timeDelta;
+        }
     }
 }
