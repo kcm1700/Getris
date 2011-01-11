@@ -29,46 +29,46 @@ namespace getris.GameState
                     //일단 lock 걸고 작업하고,
                     lock (thisLock)
                     {
-                        if (!Core.Keyboard.IsEmpty())
+                        if (!Core.Keyboard.Instance.IsEmpty())
                         // is not empty
                         {
-                            Core.Action a = Core.Keyboard.Peek();
+                            Core.Action a = Core.Keyboard.Instance.Peek();
                             switch (a.data)
                             {
                                 case "down":
                                     if (MoveDown())
                                     {
-                                        Core.Keyboard.Pop();
+                                        Core.Keyboard.Instance.Pop();
                                     }
                                     break;
                                 case "left":
                                     if (MoveLeft())
                                     {
-                                        Core.Keyboard.Pop();
+                                        Core.Keyboard.Instance.Pop();
                                     }
                                     break;
                                 case "right":
                                     if (MoveRight())
                                     {
-                                        Core.Keyboard.Pop();
+                                        Core.Keyboard.Instance.Pop();
                                     }
                                     break;
                                 case "drop":
                                     if (Drop())
                                     {
-                                        Core.Keyboard.Pop();
+                                        Core.Keyboard.Instance.Pop();
                                     }
                                     break;
                                 case "cw":
                                     if (Rotate(true))
                                     {
-                                        Core.Keyboard.Pop();
+                                        Core.Keyboard.Instance.Pop();
                                     }
                                     break;
                                 case "ccw":
                                     if (Rotate(false))
                                     {
-                                        Core.Keyboard.Pop();
+                                        Core.Keyboard.Instance.Pop();
                                     }
                                     break;
                                 case "":

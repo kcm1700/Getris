@@ -256,35 +256,35 @@ namespace getris.Core
 
             while (keyDrop.keyPress(tmspan))
             {
-                Add(new Move("drop"));
+                Keyboard.Instance.Add(new Move("drop"));
             }
             while (keyMoveDown.keyPress(tmspan))
             {
-                Add(new Move("down"));
+                Keyboard.Instance.Add(new Move("down"));
             }
             while (keyMoveLeft.keyPress(tmspan))
             {
-                Add(new Move("left"));
+                Keyboard.Instance.Add(new Move("left"));
             }
             while (keyMoveRight.keyPress(tmspan))
             {
-                Add(new Move("right"));
+                Keyboard.Instance.Add(new Move("right"));
             }
             while (keyRotateCw1.keyPress(tmspan))
             {
-                Add(new Rotate("cw"));
+                Keyboard.Instance.Add(new Rotate("cw"));
             }
             while (keyRotateCcw1.keyPress(tmspan))
             {
-                Add(new Rotate("ccw"));
+                Keyboard.Instance.Add(new Rotate("ccw"));
             }
             while (keyRotateCw2.keyPress(tmspan))
             {
-                Add(new Rotate("cw"));
+                Keyboard.Instance.Add(new Rotate("cw"));
             }
             while (keyRotateCcw2.keyPress(tmspan))
             {
-                Add(new Rotate("ccw"));
+                Keyboard.Instance.Add(new Rotate("ccw"));
             }
         }
 
@@ -313,35 +313,35 @@ namespace getris.Core
 
             while (keyDrop.keyPress(tmspan))
             {
-                Add(new Move("drop"));
+                Keyboard.Instance.Add(new Move("drop"));
             }
             while (keyMoveDown.keyPress(tmspan))
             {
-                Add(new Move("down"));
+                Keyboard.Instance.Add(new Move("down"));
             }
             while (keyMoveLeft.keyPress(tmspan))
             {
-                Add(new Move("left"));
+                Keyboard.Instance.Add(new Move("left"));
             }
             while (keyMoveRight.keyPress(tmspan))
             {
-                Add(new Move("right"));
+                Keyboard.Instance.Add(new Move("right"));
             }
             while (keyRotateCw1.keyPress(tmspan))
             {
-                Add(new Rotate("cw"));
+                Keyboard.Instance.Add(new Rotate("cw"));
             }
             while (keyRotateCcw1.keyPress(tmspan))
             {
-                Add(new Rotate("ccw"));
+                Keyboard.Instance.Add(new Rotate("ccw"));
             }
             while (keyRotateCw2.keyPress(tmspan))
             {
-                Add(new Rotate("cw"));
+                Keyboard.Instance.Add(new Rotate("cw"));
             }
             while (keyRotateCcw2.keyPress(tmspan))
             {
-                Add(new Rotate("ccw"));
+                Keyboard.Instance.Add(new Rotate("ccw"));
             }
         }
 
@@ -361,7 +361,7 @@ namespace getris.Core
             }
         }
 
-        static public void Add(Action action)
+        public void Add(Action action)
         {
             lock (thisLock)
             {
@@ -369,15 +369,14 @@ namespace getris.Core
                 buffer.Enqueue(action);
             }
         }
-
-        static public bool IsEmpty()
+        public bool IsEmpty()
         {
             lock (thisLock)
             {
                 return buffer.Count == 0;
             }
         }
-        static public Action Peek()
+        public Action Peek()
         {
             lock (thisLock)
             {
@@ -400,7 +399,7 @@ namespace getris.Core
                 }
             }
         }
-        static public Action Pop()
+        public Action Pop()
         {
             lock (thisLock)
             {
@@ -418,7 +417,7 @@ namespace getris.Core
                 }
             }
         }
-        static public void ClearBuffer()
+        public void ClearBuffer()
         {
             lock (thisLock)
             {

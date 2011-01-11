@@ -16,6 +16,11 @@ namespace getris.Core
         {
             return false;
         }
+        public Action What()
+        {
+            //TODO
+            return new Move("down");
+        }
     }
 
     public class Move : Action

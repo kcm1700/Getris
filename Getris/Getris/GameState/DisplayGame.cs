@@ -22,62 +22,43 @@ namespace getris.GameState
             {
                 while (true)
                 {
+                    //일단 lock 걸고 작업하고,
                     lock (thisLock)
                     {
-                    }
-                    Thread.Sleep(1);
-                }
-                //TODO:
-                /*
-                  while (true)
-                  {
-                    if (!Core.Keyboard.IsEmpty())
-                    {
-                        Core.Action a = Core.Network.BufferPop();
-                        if (a is Core.Move)
+                        if (!Core.Network.Instance.GameIsEmpty())
+                        // is not empty
                         {
-                            switch (a.data)
-                            {
-                                case "down":
-                                    MoveDown();
-                                    break;
-                                case "left":
-                                    MoveLeft();
-                                    break;
-                                case "right":
-                                    MoveRight();
-                                    break;
-                                case "drop":
-                                    Drop();
-                                    break;
-                                default:
-                                    throw new Exception("unknown move");
-                            }
-                        }
-                        else if (a is Core.GoTo)
-                        {
-                            String[] arr = a.data.Split(':');
-                            if (arr.Length != 2)
-                            {
-                            }
-                        }
-                        else if (a is Core.Rotate)
-                        {
+                            Core.Action a = Core.Network.Instance.PeekGame();
                             switch (a.data)
                             {
                                 case "cw":
-                                    Rotate(true);
+                                    if (Rotate(true))
+                                    {
+                                        Core.Keyboard.Instance.Pop();
+                                    }
                                     break;
                                 case "ccw":
-                                    Rotate(false);
+                                    if (Rotate(false))
+                                    {
+                                        Core.Keyboard.Instance.Pop();
+                                    }
+                                    break;
+                                case "":
                                     break;
                                 default:
-                                    throw new Exception("unknown rotation");
+                                    int row, col;
+                                    if (IsGoTo(a.data, out row, out col))
+                                        GoTo(row, col);
+                                    else
+                                        throw new Exception("unknown action");
+                                    break;
                             }
                         }
                     }
+                    // lock 풀고 Thread 양보하자.
+                    // TODO: 이거 안하면 thread양보 안하나?
                     Thread.Sleep(1);
-                }*/
+                }
             }
             catch/*(ThreadAbortException e)*/
             {
@@ -89,6 +70,25 @@ namespace getris.GameState
             if (gameOver) return false;
             this.row = row;
             this.col = col;
+            if(pile.IsBlockCollision(row,col,block))
+                return false;
+            pile.CalcGhost(ghostInfoRow, row, col, block);
+            return true;
+        }
+        protected override bool Rotate(bool isCw)
+        {
+            bool ret = base.Rotate(isCw);
+            return ret;
+        }
+        private bool IsGoTo(string data, out int row, out int col)
+        {
+            row=col=-1;
+            string[] row_col = data.Split(':');
+            if (row_col.Count() != 2)
+                return false;
+            row = Convert.ToInt32(row_col[0]);
+            col = Convert.ToInt32(row_col[1]);
+            //TODO: 그래픽 찍기전에 valid check를 하니 여기서 또 할 필요는 없을것 같음.
             return true;
         }
     }
