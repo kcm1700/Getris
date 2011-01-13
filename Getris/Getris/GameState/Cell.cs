@@ -45,7 +45,6 @@ namespace getris.GameState
         {
             blockColor = color;
         }
-
     }
 
     public class BlankCell : Cell
@@ -55,10 +54,11 @@ namespace getris.GameState
             //default: invisible color mask
             blockColor = CellColor.transparent;
         }
-        public BlankCell(CellColor color)
-        {
-            blockColor = color;
-        }
+        //TODO: BlankCell의 color지정 생성자가 있었던 이유가 뭐야?
+        //public BlankCell(CellColor color)
+        //{
+            //blockColor = color;
+        //}
 
     }
 }

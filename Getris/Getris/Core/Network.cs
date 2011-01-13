@@ -201,10 +201,10 @@ namespace getris.Core
         public bool Send(GoTo action)
         {
             byte[] message = new byte[4];
-
             string[] user_col_row = action.data.Split(':');
             if (user_col_row.Length != 3)
                 return false;
+
             message[0] = 3;
             message[1] = Convert.ToByte(user_col_row[0] == "left");
             message[2] = Convert.ToByte(user_col_row[1]);

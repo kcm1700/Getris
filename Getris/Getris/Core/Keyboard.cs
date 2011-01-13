@@ -105,6 +105,7 @@ namespace getris.Core
             iglock = new System.Object();
             sw = new System.Diagnostics.Stopwatch();
             keyboardThread = new Thread(new ThreadStart(threadLoop));
+            keyboardThread.Name = "KEYBOARD";
             isPressed = new Dictionary<System.Windows.Forms.Keys, bool>();
             KeyReset();
         }

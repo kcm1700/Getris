@@ -11,6 +11,7 @@ namespace getris.GameState
         public DisplayGame(bool isLeft = false) : base(isLeft)
         {
             thread = new Thread(new ThreadStart(ThreadWork));
+            thread.Name = "DISPLAY" + (isLeft ? ":left" : ":right");
         }
         public override void Start()
         {

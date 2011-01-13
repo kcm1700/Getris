@@ -11,6 +11,7 @@ namespace getris.GameState
         public RunGame(bool isLeft = true) : base(isLeft)
         {
             thread = new Thread(new ThreadStart(ThreadWork));
+            thread.Name = "RUN" + (isLeft ? ":left" : ":right");
         }
         public override void Start()
         {
@@ -50,6 +51,7 @@ namespace getris.GameState
                                         Drop();
                                         break;
                                     default:
+                                        Console.WriteLine("asdf");
                                         throw new Exception("unknown action");
                                 }
                             }
@@ -178,10 +180,10 @@ namespace getris.GameState
             }
             else
             {
+                this.SendMove();
                 //succeeded
             }
             CheckLockCnt();
-            this.SendMove();
             return true;
         }
         private bool MoveLeft()
@@ -195,11 +197,17 @@ namespace getris.GameState
             }
             else
             {
+                Console.WriteLine("A" + row);
+                Console.WriteLine("B" + col);
                 pile.CalcGhost(ghostInfoRow, row, col, block);
+                Console.WriteLine("C" + row);
+                Console.WriteLine("D" + col);
                 //succeeded
+
+                this.SendMove();
             }
             CheckLockCnt();
-            this.SendMove();
+
             return true;
         }
         private bool MoveRight()
@@ -215,9 +223,9 @@ namespace getris.GameState
             {
                 pile.CalcGhost(ghostInfoRow, row, col, block);
                 //succeeded
+                this.SendMove();
             }
             CheckLockCnt();
-            this.SendMove();
             return true;
         }
         private void SendMove()
