@@ -750,23 +750,5 @@ namespace getris
             RenderGame(false, accumRight);
             accumRight += timeDelta;
         }
-
-        private void InitializeComponent()
-        {
-            this.SuspendLayout();
-            // 
-            // MainDlg
-            // 
-            this.ClientSize = new System.Drawing.Size(284, 262);
-            this.Name = "MainDlg";
-            this.Load += new System.EventHandler(this.MainDlg_Load);
-            this.ResumeLayout(false);
-
-        }
-
-        private void MainDlg_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 }
