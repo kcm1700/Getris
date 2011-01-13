@@ -168,7 +168,7 @@ namespace getris.GameState
             }
 
             pile.CalcGhost(ghostInfoRow, row, col, block);
-            return true;
+            return flgOk;
         }
         protected virtual bool BlockRegen()
         {

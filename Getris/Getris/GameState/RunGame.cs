@@ -213,10 +213,11 @@ namespace getris.GameState
             if (ret == true)
             {
                 CheckLockCnt();
+                string str = isLeft ? "left:" : "right:";
+                str += isCw ? "cw" : "ccw";
+                Core.Network.Instance.Send(new Core.Rotate(str));
             }
-            string str = isLeft ? "left:" : "right:";
-            str += isCw ? "cw" : "ccw";
-            Core.Network.Instance.Send(new Core.Rotate(str));
+            
             return ret;
         }
 
