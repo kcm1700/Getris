@@ -102,9 +102,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="UI\Renderer.resx">
-      <DependentUpon>Renderer.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="Game.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

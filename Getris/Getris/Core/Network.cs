@@ -1,6 +1,7 @@
 ﻿using System.Net.Sockets;
 using System.Net;
 using System;
+using System.Threading;
 
 namespace getris.Core
 {
@@ -10,6 +11,7 @@ namespace getris.Core
     /// </summary>
     public sealed class Network
     {
+        static public Thread networkThread;
         static private Network instance = null;
         static private readonly System.Object thisLock;
         static private readonly System.Object gameLock;
@@ -17,11 +19,15 @@ namespace getris.Core
         private System.Collections.Generic.Queue<Chat> chatBuffer;
         private System.Collections.Generic.Queue<Action> gameBuffer;
         private Socket socket=null;
+
+        private int port;
+        private string ip;
         static Network()
         {
             thisLock = new System.Object();
             gameLock = new System.Object();
             chatLock = new System.Object();
+
         }
         static public Network Instance
         {
@@ -39,19 +45,37 @@ namespace getris.Core
             }
         }
 
-        public void Server(int port)
+        public void Server(string ip = "127.0.0.1" ,int port=10101)
         {
+            this.port = port;
+            this.ip = ip;
+            
+            networkThread = new Thread(new ThreadStart(serverLoop));
+        }
+        public void Client(string ip="127.0.0.1", int port=10101)
+        {
+            this.port = port;
+            this.ip = ip;
+            networkThread = new Thread(new ThreadStart(clientLoop));
+            
+        }
+        void serverLoop()
+        {
+            networkThread.Name = "NETWORK:SERVER";
+            
             Socket server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             //TODO: port 설정하기 추가
             IPEndPoint ipep = new IPEndPoint(IPAddress.Any, port);
             server.Bind(ipep);
             //TODO: 여기 Listen 몇으로 해야 하나?
             server.Listen(1);
-
             socket = server.Accept();
+            threadLoop();
         }
-        public void Client(string ip, int port)
+        void clientLoop()
         {
+            networkThread.Name = "NETWORK:CLIENT";
+
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             IPAddress serverIp = IPAddress.Parse(ip);
             IPEndPoint ipep = new IPEndPoint(serverIp, port);
@@ -64,6 +88,14 @@ namespace getris.Core
             {
                 //TODO 에러나면 어떻게해?
                 Logger.Write(e.Message);
+            }
+            threadLoop();
+        }
+        static void threadLoop()
+        {
+            while (true)
+            {
+                Network.Instance.Receive();
             }
         }
 
@@ -122,7 +154,7 @@ namespace getris.Core
                 }
             }
         }
-        public void AddGame(Action action)
+        private void AddGame(Action action)
         {
             lock (gameLock)
             {
@@ -185,7 +217,7 @@ namespace getris.Core
                 }
             }
         }
-        public void AddChat(Chat action)
+        private void AddChat(Chat action)
         {
             lock (chatLock)
             {
