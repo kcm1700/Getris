@@ -33,50 +33,41 @@ namespace getris.GameState
                         // is not empty
                         {
                             Core.Action a = Core.Keyboard.Instance.Peek();
-                            switch (a.data)
+                            if (a is Core.Move)
                             {
-                                case "down":
-                                    if (MoveDown())
-                                    {
-                                        Core.Keyboard.Instance.Pop();
-                                    }
-                                    break;
-                                case "left":
-                                    if (MoveLeft())
-                                    {
-                                        Core.Keyboard.Instance.Pop();
-                                    }
-                                    break;
-                                case "right":
-                                    if (MoveRight())
-                                    {
-                                        Core.Keyboard.Instance.Pop();
-                                    }
-                                    break;
-                                case "drop":
-                                    if (Drop())
-                                    {
-                                        Core.Keyboard.Instance.Pop();
-                                    }
-                                    break;
-                                case "cw":
-                                    if (Rotate(true))
-                                    {
-                                        Core.Keyboard.Instance.Pop();
-                                    }
-                                    break;
-                                case "ccw":
-                                    if (Rotate(false))
-                                    {
-                                        Core.Keyboard.Instance.Pop();
-                                    }
-                                    break;
-                                case "":
-                                    break;
-                                default:
-                                    throw new Exception("unknown action");
-                                //Action(Core.Keyboard.Pop());
+                                switch (a.data)
+                                {
+                                    case "down":
+                                        MoveDown();
+                                        break;
+                                    case "left":
+                                        MoveLeft();
+                                        break;
+                                    case "right":
+                                        MoveRight();
+                                        break;
+                                    case "drop":
+                                        Drop();
+                                        break;
+                                    default:
+                                        throw new Exception("unknown action");
+                                }
                             }
+                            else if (a is Core.Rotate)
+                            {
+                                switch (a.data)
+                                {
+                                    case "cw":
+                                        Rotate(true);
+                                        break;
+                                    case "ccw":
+                                        Rotate(false);
+                                        break;
+                                    default:
+                                        throw new Exception("unknown action");
+                                }
+                            }
+                            Core.Keyboard.Instance.Pop();
                         }
                         now =sw.Elapsed.TotalMilliseconds;
                         TimeLimit(now, ref before, 700);
@@ -108,52 +99,6 @@ namespace getris.GameState
                 return;
             before = now;
             MoveDown();
-        }
-        private void Action(Core.Move a)
-        {
-            switch (a.data)
-            {
-                case "down":
-                    MoveDown();
-                    break;
-                case "left":
-                    MoveLeft();
-                    break;
-                case "right":
-                    MoveRight();
-                    break;
-                case "drop":
-                    Drop();
-                    break;
-                default:
-                    throw new Exception("unknown move");
-            }
-        }
-        private void Action(Core.Rotate a)
-        {
-            switch (a.data)
-            {
-                case "cw":
-                    Rotate(true);
-                    break;
-                case "ccw":
-                    Rotate(false);
-                    break;
-                default:
-                    throw new Exception("unknown action");
-            }
-        }
-        private void Action(Core.Attack a)
-        {
-        }
-        private void Action(Core.Chat a)
-        {
-        }
-        private void Action(Core.GoTo a)
-        {
-        }
-        private void Action(Core.Turn a)
-        {
         }
 
         int lockCount = 25;

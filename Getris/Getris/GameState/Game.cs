@@ -145,7 +145,7 @@ namespace getris.GameState
             //SRS
             int[,] trylist = { { 0, 0 }, { 1, 0 }, { -1, 0 }, { 0, -1 }, { 0, 1 }, { 2, 0 }, { 0, 2 }, { 0, -2 } };
             bool flgOk = false;
-            for (int i = 0; i < trylist.GetLength(0); i++)
+            for (int i = 0; i < trylist.Length; i++)
             {
                 if (!pile.IsBlockCollision(row + trylist[i, 0], col + trylist[i, 1], block))
                 {
