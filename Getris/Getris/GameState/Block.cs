@@ -14,51 +14,6 @@ namespace getris.GameState
         public const int ROW_SIZE = 3;
         public const int COL_SIZE = 3;
         private Cell[,] cells;
-        /*
-        //TODO:어쩌피 색을 완전 random으로 할거라면 이게 필요없을듯
-        public CellColor BlockColor
-        {
-            get
-            {
-                return cells[1,1].maskColor;
-            }
-            set
-            {
-                //repaint all the block cells
-                for (int i = 0; i < ROW_SIZE; i++)
-                {
-                    for (int j = 0; j < COL_SIZE; j++)
-                    {
-                        if (!cells[i, j].IsEmpty())
-                        {
-                            cells[i, j].maskColor = value;
-                        }
-                    }
-                }
-            }
-        }
-        private Block()
-        {
-        }
-        public Block(CellColor color= CellColor.transparent)
-        {
-            cells = new Cell[ROW_SIZE, COL_SIZE];
-            for (int i = 0; i < ROW_SIZE; i++)
-            {
-                for (int j = 0; j < COL_SIZE; j++)
-                {
-                    if (i == 1 && j == 1)
-                    {
-                        cells[i, j] = new BlockCell(color);
-                    }
-                    else
-                    {
-                        cells[i, j] = new BlankCell();
-                    }
-                }
-            }
-        }
-         * */
 
         /// <summary>
         /// Copy Constructor
@@ -105,6 +60,7 @@ namespace getris.GameState
 
             int numberOfColors = 2;
             CellColor[] blockColorCand = new CellColor[numberOfColors];
+
             for (int i = 0; i < numberOfColors; i++)
             {
                 bool dupFlg;

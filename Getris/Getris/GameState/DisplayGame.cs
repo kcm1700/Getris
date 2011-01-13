@@ -29,29 +29,35 @@ namespace getris.GameState
                         // is not empty
                         {
                             Core.Action a = Core.Network.Instance.PeekGame();
-                            switch (a.data)
+                            if (a is Core.Turn)
                             {
-                                case "cw":
-                                    if (Rotate(true))
+                                bool isLeft = a.data == "left";
+                                if (isLeft == this.isLeft)
+                                {
+                                    base.Drop();
+                                    Core.Network.Instance.PopGame();
+                                }
+                            }
+                            else if (a is Core.Rotate)
+                            {
+                                string[] data = a.data.Split(':');
+                                bool isLeft = data[0] == "left";
+                                if (isLeft == this.isLeft)
+                                {
+                                    if(!Rotate(data[1]=="cw"))
                                     {
-                                        Core.Keyboard.Instance.Pop();
+                                        //돌릴 수 없는데 돌리라고 한 경우.
                                     }
-                                    break;
-                                case "ccw":
-                                    if (Rotate(false))
-                                    {
-                                        Core.Keyboard.Instance.Pop();
-                                    }
-                                    break;
-                                case "":
-                                    break;
-                                default:
-                                    int row, col;
-                                    if (IsGoTo(a.data, out row, out col))
-                                        GoTo(row, col);
-                                    else
-                                        throw new Exception("unknown action");
-                                    break;
+                                    Core.Network.Instance.PopGame();
+                                }
+                            }
+                            else if (a is Core.GoTo)
+                            {
+                                int row, col;
+                                if (IsGoTo(a.data, out row, out col))
+                                {
+                                    GoTo(row, col);
+                                }
                             }
                         }
                     }
@@ -83,11 +89,14 @@ namespace getris.GameState
         private bool IsGoTo(string data, out int row, out int col)
         {
             row=col=-1;
-            string[] row_col = data.Split(':');
-            if (row_col.Count() != 2)
+            string[] user_row_col = data.Split(':');
+            if (user_row_col.Count() != 3)
                 return false;
-            row = Convert.ToInt32(row_col[0]);
-            col = Convert.ToInt32(row_col[1]);
+            bool isLeft = user_row_col[0] == "left";
+            if (isLeft != this.isLeft)
+                return false;
+            row = Convert.ToInt32(user_row_col[1]);
+            col = Convert.ToInt32(user_row_col[2]);
             //TODO: 그래픽 찍기전에 valid check를 하니 여기서 또 할 필요는 없을것 같음.
             return true;
         }

@@ -16,7 +16,7 @@ namespace getris.Core
         static private readonly System.Object chatLock;
         private System.Collections.Generic.Queue<Chat> chatBuffer;
         private System.Collections.Generic.Queue<Action> gameBuffer;
-        private Socket socket;
+        private Socket socket=null;
         static Network()
         {
             thisLock = new System.Object();
@@ -202,19 +202,14 @@ namespace getris.Core
         {
             byte[] message = new byte[4];
 
-            string[] user_col_row = action.data.Split(';');
+            string[] user_col_row = action.data.Split(':');
+            if (user_col_row.Length != 3)
+                return false;
             message[0] = 3;
             message[1] = Convert.ToByte(user_col_row[0] == "left");
             message[2] = Convert.ToByte(user_col_row[1]);
             message[3] = Convert.ToByte(user_col_row[2]);
-
-            lock (thisLock)
-            {
-                NetworkStream stream = new NetworkStream(socket);
-                stream.Write(message, 0, message.Length);
-                stream.Flush();
-            }
-            return true;
+            return Send(message);
         }
         //2byte를 보낸다는 의미로 2를 보내고
         //left면 1, right면 0
@@ -225,16 +220,12 @@ namespace getris.Core
         {
             byte[] message = new byte[3];
             string[] user_rot = action.data.Split(':');
+            if (user_rot.Length != 2)
+                return false;
             message[0] = 2;
             message[1] = Convert.ToByte(user_rot[0] == "left");
             message[2] = Convert.ToByte(user_rot[1] == "cw");
-            lock (thisLock)
-            {
-                NetworkStream stream = new NetworkStream(socket);
-                stream.Write(message, 0, message.Length);
-                stream.Flush();
-            }
-            return true;
+            return Send(message);
         }
         //2byte를 보낸다는 의미로 2를 보내고
         //left면 3, right면 2
@@ -243,16 +234,12 @@ namespace getris.Core
         {
             byte[] message = new byte[3];
             string[] user_line = action.data.Split(':');
+            if (user_line.Length != 2)
+                return false;
             message[0] = 2;
             message[1] = Convert.ToByte(Convert.ToInt32(user_line[0] == "left") + 2);
             message[2] = Convert.ToByte(user_line[1]);
-            lock (thisLock)
-            {
-                NetworkStream stream = new NetworkStream(socket);
-                stream.Write(message, 0, message.Length);
-                stream.Flush();
-            }
-            return true;
+            return Send(message);
         }
         //nick + ':' + 대화내용 + '\00'을 합치면 최소 4byte.
         //전송할 byte수를 보내고
@@ -269,13 +256,7 @@ namespace getris.Core
             {
                 message[i + 1] = Convert.ToByte(data[i]);
             }
-            lock (thisLock)
-            {
-                NetworkStream stream = new NetworkStream(socket);
-                stream.Write(message, 0, message.Length);
-                stream.Flush();
-            }
-            return true;
+            return Send(message);
         }
         //1byte를 보낸다는 의미로 1을 보내고,
         //left면 1, right면 0
@@ -284,18 +265,18 @@ namespace getris.Core
             byte[] message = new byte[2];
             message[0] = 1;
             message[1] = Convert.ToByte(action.data == "left");
-            lock (thisLock)
-            {
-                NetworkStream stream = new NetworkStream(socket);
-                stream.Write(message, 0, message.Length);
-                stream.Flush();
-            }
-            return true;
+            return Send(message);
         }
         //이게 뭘 위해서 있었는지 까먹었다ㅠ}
         public bool Send(Status action)
         {
             byte[] message = new byte[0];
+            return Send(message);
+        }
+        private bool Send(byte[] message)
+        {
+            if (socket == null)
+                return false;
             lock (thisLock)
             {
                 NetworkStream stream = new NetworkStream(socket);
@@ -310,6 +291,8 @@ namespace getris.Core
             NetworkStream stream;
             byte[] length;
             byte[] data;
+            if (socket == null)
+                return;
             lock (thisLock)
             {
                 stream = new NetworkStream(socket);
@@ -341,7 +324,7 @@ namespace getris.Core
                     {
                         string str = (data[0]==3) ? "left" : "right";
                         str+=":";
-                        str+=Convert.ToString(data[1]);
+                        str+=data[1];
                         this.AddGame(new Attack(str));
                     }
                     break;
@@ -349,9 +332,9 @@ namespace getris.Core
                     {
                         string str = (data[0] == 1) ? "left" : "right";
                         str += ":";
-                        str += Convert.ToString(data[1]);
+                        str += data[1];
                         str += ":";
-                        str += Convert.ToString(data[2]);
+                        str += data[2];
                         this.AddGame(new GoTo(str));
                     }
                     break;

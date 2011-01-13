@@ -202,6 +202,8 @@ namespace getris.GameState
             //stop lock stopwatch
             swLock.Reset();
             lockCount = 25;
+            string str = isLeft ? "left" : "right";
+            Core.Network.Instance.Send(new Core.Turn(str));
             return base.Drop();
         }
 
@@ -212,6 +214,9 @@ namespace getris.GameState
             {
                 CheckLockCnt();
             }
+            string str = isLeft ? "left:" : "right:";
+            str += isCw ? "cw" : "ccw";
+            Core.Network.Instance.Send(new Core.Rotate(str));
             return ret;
         }
 
@@ -230,6 +235,7 @@ namespace getris.GameState
                 //succeeded
             }
             CheckLockCnt();
+            this.SendMove();
             return true;
         }
         private bool MoveLeft()
@@ -247,6 +253,7 @@ namespace getris.GameState
                 //succeeded
             }
             CheckLockCnt();
+            this.SendMove();
             return true;
         }
         private bool MoveRight()
@@ -264,7 +271,16 @@ namespace getris.GameState
                 //succeeded
             }
             CheckLockCnt();
+            this.SendMove();
             return true;
+        }
+        private void SendMove()
+        {
+            string str = isLeft ? "left:" : "right:";
+            str += row;
+            str += ":";
+            str += col;
+            Core.Network.Instance.Send(new Core.GoTo(str));
         }
     }
 }
