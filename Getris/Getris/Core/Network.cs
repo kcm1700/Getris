@@ -1,4 +1,8 @@
-﻿namespace getris.Core
+﻿using System.Net.Sockets;
+using System.Net;
+using System;
+
+namespace getris.Core
 {
     /// <summary>
     /// <para>chatBuffer</para>for receive chatting message
@@ -8,14 +12,16 @@
     {
         static private Network instance = null;
         static private readonly System.Object thisLock;
-        static private System.Object gameLock;
-        private System.Collections.Generic.Queue<Action> sendBuffer;
-        private System.Collections.Generic.Queue<Action> chatBuffer;
+        static private readonly System.Object gameLock;
+        static private readonly System.Object chatLock;
+        private System.Collections.Generic.Queue<Chat> chatBuffer;
         private System.Collections.Generic.Queue<Action> gameBuffer;
+        private Socket socket;
         static Network()
         {
             thisLock = new System.Object();
             gameLock = new System.Object();
+            chatLock = new System.Object();
         }
         static public Network Instance
         {
@@ -32,6 +38,35 @@
                 return instance;
             }
         }
+
+        public void Server(int port)
+        {
+            Socket server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            //TODO: port 설정하기 추가
+            IPEndPoint ipep = new IPEndPoint(IPAddress.Any, port);
+            server.Bind(ipep);
+            //TODO: 여기 Listen 몇으로 해야 하나?
+            server.Listen(1);
+
+            socket = server.Accept();
+        }
+        public void Client(string ip, int port)
+        {
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            IPAddress serverIp = IPAddress.Parse(ip);
+            IPEndPoint ipep = new IPEndPoint(serverIp, port);
+
+            try
+            {
+                socket.Connect(ipep);
+            }
+            catch (SocketException e)
+            {
+                //TODO 에러나면 어떻게해?
+                Logger.Write(e.Message);
+            }
+        }
+
         public bool GameIsEmpty()
         {
             lock (gameLock)
@@ -95,31 +130,31 @@
             }
         }
 
-        public bool SendIsEmpty()
+        public bool ChatIsEmpty()
         {
-            lock (thisLock)
+            lock (chatLock)
             {
-                return sendBuffer.Count == 0;
+                return chatBuffer.Count == 0;
             }
         }
-        public void ClearSend()
+        public void ClearChat()
         {
-            lock (thisLock)
+            lock (chatLock)
             {
-                sendBuffer.Clear();
+                chatBuffer.Clear();
             }
         }
-        public Action PopSend()
+        public Action PopChat()
         {
-            lock (thisLock)
+            lock (chatLock)
             {
-                if (sendBuffer.Count == 0)
+                if (chatBuffer.Count == 0)
                 {
                     return new NullAction();
                 }
                 else
                 {
-                    Action a = sendBuffer.Dequeue();
+                    Action a = chatBuffer.Dequeue();
                     if (a.IsValid())
                         return a;
                     else
@@ -127,34 +162,202 @@
                 }
             }
         }
-        public Action PeekSend()
+        public Action PeekChat()
         {
-            lock (thisLock)
+            lock (chatLock)
             {
-                if (sendBuffer.Count == 0)
+                if (chatBuffer.Count == 0)
                 {
                     return new NullAction();
                 }
                 else
                 {
-                    Action a = sendBuffer.Peek();
+                    Action a = chatBuffer.Peek();
                     if (a.IsValid())
                     {
                         return a;
                     }
                     else
                     {
-                        sendBuffer.Dequeue();
+                        chatBuffer.Dequeue();
                         return new NullAction();
                     }
                 }
             }
         }
-        public void AddSend(Action action)
+        public void AddChat(Chat action)
         {
+            lock (chatLock)
+            {
+                chatBuffer.Enqueue(action);
+            }
+        }
+
+
+        //3byte를 더 보낸다는 의미로 3을 보내고
+        //left면 1, right면 0
+        //col
+        //row
+        public bool Send(GoTo action)
+        {
+            byte[] message = new byte[4];
+
+            string[] user_col_row = action.data.Split(';');
+            message[0] = 3;
+            message[1] = Convert.ToByte(user_col_row[0] == "left");
+            message[2] = Convert.ToByte(user_col_row[1]);
+            message[3] = Convert.ToByte(user_col_row[2]);
+
             lock (thisLock)
             {
-                sendBuffer.Enqueue(action);
+                NetworkStream stream = new NetworkStream(socket);
+                stream.Write(message, 0, message.Length);
+                stream.Flush();
+            }
+            return true;
+        }
+        //2byte를 보낸다는 의미로 2를 보내고
+        //left면 1, right면 0
+        //cw 면 1, ccw면 0
+        //이렇게 하기 위해서 rotate의 data를 단순히 cw, ccw로 하는게 아니라 left:cw, left:ccw, right:cw, right:ccw로 해야 할듯.
+        //하지만 left, right정보는 network와 display game에서만 필요하니 RunGame에서는 쓰던대로 cw, ccw만 써도 될듯.
+        public bool Send(Rotate action)
+        {
+            byte[] message = new byte[3];
+            string[] user_rot = action.data.Split(':');
+            message[0] = 2;
+            message[1] = Convert.ToByte(user_rot[0] == "left");
+            message[2] = Convert.ToByte(user_rot[1] == "cw");
+            lock (thisLock)
+            {
+                NetworkStream stream = new NetworkStream(socket);
+                stream.Write(message, 0, message.Length);
+                stream.Flush();
+            }
+            return true;
+        }
+        //2byte를 보낸다는 의미로 2를 보내고
+        //left면 3, right면 2
+        //공격할 라인수
+        public bool Send(Attack action)
+        {
+            byte[] message = new byte[3];
+            string[] user_line = action.data.Split(':');
+            message[0] = 2;
+            message[1] = Convert.ToByte(Convert.ToInt32(user_line[0] == "left") + 2);
+            message[2] = Convert.ToByte(user_line[1]);
+            lock (thisLock)
+            {
+                NetworkStream stream = new NetworkStream(socket);
+                stream.Write(message, 0, message.Length);
+                stream.Flush();
+            }
+            return true;
+        }
+        //nick + ':' + 대화내용 + '\00'을 합치면 최소 4byte.
+        //전송할 byte수를 보내고
+        //전송할 내용을 보낸다.
+        //보내는 byte수를 byte로 보내므로, 채팅 내용을 100자 이상 입력 못하게 하는게 좋을듯.
+        public bool Send(Chat action)
+        {
+            byte[] message = new byte[action.data.Length + 1];
+            message[0] = Convert.ToByte(action.data.Length);
+            //TODO: 이렇게 하면 char가 2byte여서 문제가 생길듯.
+            //어쩌피 하직 채팅 구현 안됐으니 나중에 하자.
+            char[] data = action.data.ToCharArray();
+            for (int i = 0; i < action.data.Length; i++)
+            {
+                message[i + 1] = Convert.ToByte(data[i]);
+            }
+            lock (thisLock)
+            {
+                NetworkStream stream = new NetworkStream(socket);
+                stream.Write(message, 0, message.Length);
+                stream.Flush();
+            }
+            return true;
+        }
+        //1byte를 보낸다는 의미로 1을 보내고,
+        //left면 1, right면 0
+        public bool Send(Turn action)
+        {
+            byte[] message = new byte[2];
+            message[0] = 1;
+            message[1] = Convert.ToByte(action.data == "left");
+            lock (thisLock)
+            {
+                NetworkStream stream = new NetworkStream(socket);
+                stream.Write(message, 0, message.Length);
+                stream.Flush();
+            }
+            return true;
+        }
+        //이게 뭘 위해서 있었는지 까먹었다ㅠ}
+        public bool Send(Status action)
+        {
+            byte[] message = new byte[0];
+            lock (thisLock)
+            {
+                NetworkStream stream = new NetworkStream(socket);
+                stream.Write(message, 0, message.Length);
+                stream.Flush();
+            }
+            return true;
+        }
+
+        public void Receive()
+        {
+            NetworkStream stream;
+            byte[] length;
+            byte[] data;
+            lock (thisLock)
+            {
+                stream = new NetworkStream(socket);
+                length = new byte[1];
+                //TODO:여기서 Read할 수 없으면 기다리고 있는것 맞나? 나중에 확인해봐야지
+                stream.Read(length, 0, 1);
+                data = new byte[length[0]];
+                stream.Read(data, 0, length[0]);
+            }
+            switch (length[0])
+            {
+                case 0:
+                    break;
+                case 1:
+                    {
+                        string str = (data[0] == 1) ? "left" : "right";
+                        this.AddGame(new Turn(str));
+                        break;
+                    }
+                case 2:
+                    if (data[0] < 2)
+                    {
+                        string str = (data[0] == 1) ? "left" : "right";
+                        str += ":";
+                        str += (data[1] == 1) ? "cw" : "ccw";
+                        this.AddGame(new Rotate(str));
+                    }
+                    else
+                    {
+                        string str = (data[0]==3) ? "left" : "right";
+                        str+=":";
+                        str+=Convert.ToString(data[1]);
+                        this.AddGame(new Attack(str));
+                    }
+                    break;
+                case 3:
+                    {
+                        string str = (data[0] == 1) ? "left" : "right";
+                        str += ":";
+                        str += Convert.ToString(data[1]);
+                        str += ":";
+                        str += Convert.ToString(data[2]);
+                        this.AddGame(new GoTo(str));
+                    }
+                    break;
+                default:
+                    this.AddChat(new Chat(data.ToString()));
+                    break;
             }
         }
     }
