@@ -246,9 +246,9 @@ namespace getris
                     accumLeft = 0; // reset time accumulator
                 }
                 //draw next blocks
-                SetupLeftNext1Render();
+                SetupNextRender(true, 1);
                 RenderNextBlock(true, 0);
-                SetupLeftNext2Render();
+                SetupNextRender(true, 2);
                 RenderNextBlock(true, 1);
                 LeftScoreRender();
 
@@ -265,9 +265,9 @@ namespace getris
                     accumRight = 0; // reset time accumulator
                 }
                 //draw next blocks
-                SetupRightNext1Render();
+                SetupNextRender(false, 1);
                 RenderNextBlock(false, 0);
-                SetupRightNext2Render();
+                SetupNextRender(false, 2);
                 RenderNextBlock(false, 1);
                 RightScoreRender();
 
@@ -287,9 +287,9 @@ namespace getris
                 battle.MonEnter(true);
                 RenderLeftGameOver(timeDelta);
                 //draw next blocks
-                SetupLeftNext1Render();
+                SetupNextRender(true, 1);
 //                RenderNextBlock(true, 0);
-                SetupLeftNext2Render();
+                SetupNextRender(true, 2);
 //                RenderNextBlock(true, 1);
 
                 battle.MonExit(true);
@@ -297,9 +297,9 @@ namespace getris
                 battle.MonEnter(false);
                 RenderRightGameOver(timeDelta);
                 //draw next blocks
-                SetupRightNext1Render();
+                SetupNextRender(false, 1);
 //                RenderNextBlock(false, 0);
-                SetupRightNext2Render();
+                SetupNextRender(false, 2);
 //                RenderNextBlock(false, 1);
                 battle.MonExit(false);
 

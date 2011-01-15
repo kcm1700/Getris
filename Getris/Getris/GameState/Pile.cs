@@ -45,11 +45,11 @@ namespace getris.GameState
 
         private bool isCellCollision(int row, int col, Cell cell)
         {
-            if (cell.IsEmpty) return false; // always safe
             if (col < 0) return true; // should not happen
+            if (row < 0) return true; // too low
+            if (cell.IsEmpty) return false; // always safe
             if (col >= COL_SIZE) return true; // should not happen
             if (row >= ROW_SIZE + 3) return true; // too high
-            if (row < 0) return true; // too low
             if (!IsCellEmpty(row,col)) return true; // if board cell is not empty, it collides
             return false;
         }
@@ -82,6 +82,7 @@ namespace getris.GameState
 
         public bool IsBlockCollision(int row, int col, Block block)
         {
+            Console.WriteLine(row+":"+col);
             for (int i = 0; i < Block.ROW_SIZE; i++)
             {
                 for (int j = 0; j < Block.COL_SIZE; j++)

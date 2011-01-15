@@ -37,25 +37,6 @@ namespace getris.Core
             {
                 return Color.Transparent;
             }
-/*            switch (color)
-            {
-                case CellColor.transparent:
-                    return Color.Transparent;
-                case CellColor.color1:
-                    return Color.Red;
-                case CellColor.color2:
-                    return Color.DeepSkyBlue;
-                case CellColor.color3:
-                    return Color.LimeGreen;
-                case CellColor.color4:
-                    return Color.Yellow;
-                case CellColor.color5:
-                    return Color.BlueViolet;
-                case CellColor.dropped:
-                    return Color.White;
-                default:
-                    return Color.Transparent;
-            }*/
         }
         static public void SetNewColor(CellColor cellColor, Color color)
         {

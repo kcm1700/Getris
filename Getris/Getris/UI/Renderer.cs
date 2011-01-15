@@ -37,12 +37,12 @@ namespace getris
         private static readonly Rectangle RightScore = new Rectangle(360, 20, 200, 40);
 
 
-        void ConnectHorizontally(double row, double col, Color a, Color b)
+        void ConnectHorizontally(double row, double col, CellColor a, CellColor b, Color color)
         {
-            if (a.Equals(b))
+            if (a==b)
             {
                 GL.Disable(EnableCap.Texture2D);
-                GL.Color4(a);
+                GL.Color4(color);
                 GL.Vertex2(20 * (col + 1) - 1, 20 * (row) + 1);
                 GL.Vertex2(20 * (col + 1) + 1, 20 * (row) + 1);
                 GL.Vertex2(20 * (col + 1) + 1, 20 * (row + 1) - 1);
@@ -50,12 +50,12 @@ namespace getris
                 GL.Enable(EnableCap.Texture2D);
             }
         }
-        void ConnectVertically(double row, double col, Color a, Color b)
+        void ConnectVertically(double row, double col, CellColor a, CellColor b, Color color)
         {
-            if (a.Equals(b))
+            if (a==b)
             {
                 GL.Disable(EnableCap.Texture2D);
-                GL.Color4(a);
+                GL.Color4(color);
                 GL.Vertex2(20 * (col) + 1, 20 * (row + 1) - 1);
                 GL.Vertex2(20 * (col + 1) - 1, 20 * (row + 1) - 1);
                 GL.Vertex2(20 * (col + 1) - 1, 20 * (row + 1) + 1);
@@ -63,7 +63,6 @@ namespace getris
                 GL.Enable(EnableCap.Texture2D);
             }
         }
-
 
         private void RenderAnimation(bool isLeft, double timeElapsed)
         {
@@ -88,14 +87,14 @@ namespace getris
                     {
                         if (Math.Abs(row - aResult.getAniRow(i, j + 1)) < 1e-9)
                         {
-                            ConnectHorizontally(row, col, color, Core.GraphicsUtil.CellColor2Color(aResult.getAniCellColor(i, j + 1)));
+                            ConnectHorizontally(row, col,aResult.getAniCellColor(i, j), aResult.getAniCellColor(i, j + 1), color);
                         }
                     }
                     if (i + 1 < Pile.ROW_SIZE)
                     {
                         if (Math.Abs(col - aResult.getAniCol(i + 1, j)) < 1e-9)
                         {
-                            ConnectVertically(row, col, color, Core.GraphicsUtil.CellColor2Color(aResult.getAniCellColor(i + 1, j)));
+                            ConnectVertically(row, col, aResult.getAniCellColor(i, j), aResult.getAniCellColor(i + 1, j), color);
                         }
                     }
                     GL.Color4(color);
@@ -119,7 +118,7 @@ namespace getris
         double accumRight = 0;
         private void RenderLeftAnimation(double timeDelta)
         {
-            SetupLeftGameRender();
+            SetupGameRender(true);
             RenderAnimation(true, accumLeft);
 
             accumLeft += timeDelta;
@@ -127,7 +126,7 @@ namespace getris
 
         private void RenderRightAnimation(double timeDelta)
         {
-            SetupRightGameRender();
+            SetupGameRender(false);
             RenderAnimation(false, accumRight);
 
             accumRight += timeDelta;
@@ -145,25 +144,26 @@ namespace getris
             {
                 for (int j = 0; j < Pile.COL_SIZE; j++)
                 {
-                    Color color = Core.GraphicsUtil.CellColor2Color(battle.GetPileCellColor(isLeft, i, j));
-
-                    if (j + 1 < Pile.COL_SIZE)
+                    int row = i;
+                    int col = j;
+                    Color color = Core.GraphicsUtil.CellColor2Color(battle.GetPileCellColor(isLeft, row, col));
+                    if (col + 1 < Pile.COL_SIZE)
                     {
-                        ConnectHorizontally(i, j, color, Core.GraphicsUtil.CellColor2Color(battle.GetPileCellColor(isLeft, i, j + 1)));
+                        ConnectHorizontally(row, col, battle.GetPileCellColor(isLeft, row, col),  battle.GetPileCellColor(isLeft, row, col + 1), color);
                     }
-                    if (i + 1 < Pile.ROW_SIZE)
+                    if (row + 1 < Pile.ROW_SIZE)
                     {
-                        ConnectVertically(i, j, color, Core.GraphicsUtil.CellColor2Color(battle.GetPileCellColor(isLeft, i + 1, j)));
+                        ConnectVertically(row, col, battle.GetPileCellColor(isLeft, row, col), battle.GetPileCellColor(isLeft, row + 1, col), color);
                     }
                     GL.Color4(color);
                     GL.TexCoord2(0, 1);
-                    GL.Vertex2(20 * j + 1, 20 * i + 1);
+                    GL.Vertex2(20 * col + 1, 20 * row + 1);
                     GL.TexCoord2(1, 1);
-                    GL.Vertex2(20 * (j + 1) - 1, 20 * i + 1);
+                    GL.Vertex2(20 * (col + 1) - 1, 20 * row + 1);
                     GL.TexCoord2(1, 0);
-                    GL.Vertex2(20 * (j + 1) - 1, 20 * (i + 1) - 1);
+                    GL.Vertex2(20 * (col + 1) - 1, 20 * (row + 1) - 1);
                     GL.TexCoord2(0, 0);
-                    GL.Vertex2(20 * j + 1, 20 * (i + 1) - 1);
+                    GL.Vertex2(20 * col + 1, 20 * (row + 1) - 1);
                 }
             }
             GL.End();
@@ -193,6 +193,16 @@ namespace getris
                             color = Color.FromArgb(color.A, color.R / 2 + 128, color.G / 2 + 128, color.B / 2 + 128);
                         }
                     }
+
+                    if (i + 1 < Block.ROW_SIZE)
+                    {
+                        ConnectVertically(row, col, battle.GetBlockCellColor(isLeft, i, j), battle.GetBlockCellColor(isLeft, i + 1, j), color);
+                    }
+                    if (j + 1 < Block.COL_SIZE)
+                    {
+                        ConnectHorizontally(row, col, battle.GetBlockCellColor(isLeft, i, j), battle.GetBlockCellColor(isLeft, i, j + 1), color);
+                    }
+
                     GL.Color4(color);
                     GL.TexCoord2(0, 1);
                     GL.Vertex2(20 * col + 1, 20 * row + 1);
@@ -225,6 +235,7 @@ namespace getris
 
                     Color colorOriginal = Core.GraphicsUtil.CellColor2Color(battle.GetBlockCellColor(isLeft, i, j));
                     Color color = System.Drawing.Color.FromArgb(colorOriginal.A / 3, colorOriginal.R, colorOriginal.G, colorOriginal.B);
+
                     GL.Color4(color);
                     GL.TexCoord2(0, 1);
                     GL.Vertex2(20 * col + 1, 20 * row + 1);
@@ -249,15 +260,18 @@ namespace getris
             RenderGhost(isLeft);
         }
 
-        private void SetupLeftGameRender()
+        private void SetupGameRender(bool isLeft)
         {
             //Setup Viewport
-            int w = LeftGameWidth;
-            int h = LeftGameHeight;
+            int w= isLeft?LeftGameWidth:RightGameWidth;
+            int h = isLeft ? LeftGameHeight : RightGameHeight;
+            int gameLeft = isLeft ? LeftGameLeft : RightGameLeft;
+            int gameBottom = isLeft ? LeftGameBottom : RightGameBottom;
+            
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             GL.Ortho(0, w, 0, h, -1, 1);
-            GL.Viewport(LeftGameLeft, LeftGameBottom, w, h);
+            GL.Viewport(gameLeft, gameBottom, w, h);
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 
             //Set alpha blending
@@ -274,7 +288,6 @@ namespace getris
             GL.Vertex2(0, h);
             GL.End();
         }
-
 
         private void RenderNextBlock(bool isLeft, int howmany)
         {
@@ -291,6 +304,16 @@ namespace getris
                 {
                     int row = i, col = j;
                     Color color = Core.GraphicsUtil.CellColor2Color(battle.GetNextBlockCellColor(isLeft, howmany, i, j));
+                    
+                    if (row + 1 < Block.ROW_SIZE)
+                    {
+                        ConnectVertically(row, col, battle.GetNextBlockCellColor(isLeft, howmany, row, col), battle.GetNextBlockCellColor(isLeft, howmany, row + 1, col), color);
+                    }
+                    if (col + 1 < Block.COL_SIZE)
+                    {
+                        ConnectHorizontally(row, col, battle.GetNextBlockCellColor(isLeft, howmany, row, col), battle.GetNextBlockCellColor(isLeft, howmany, row, col + 1), color);
+                    }
+
                     GL.Color4(color);
                     GL.TexCoord2(0, 1);
                     GL.Vertex2(20 * col + 1, 20 * row + 1);
@@ -306,90 +329,30 @@ namespace getris
             //Disable Texture
             GL.Disable(EnableCap.Texture2D);
         }
-        private void SetupLeftNext1Render()
+        private void SetupNextRender(bool isLeft,int howmany)
         {
+            Rectangle next;
+            if (isLeft)
+            {
+                if (howmany == 1)
+                    next = LeftGameNext1;
+                else
+                    next = LeftGameNext2;
+            }
+            else
+            {
+                if (howmany == 1)
+                    next = RightGameNext1;
+                else
+                    next = RightGameNext2;
+            }
             //Setup Viewport
-            int w = LeftGameNext1.Width;
-            int h = LeftGameNext1.Height;
+            int w = next.Width;
+            int h = next.Height;
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             GL.Ortho(0, w, 0, h, -1, 1);
-            GL.Viewport(LeftGameNext1);
-            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-
-            //Set alpha blending
-            GL.ColorMask(true, true, true, true);
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-
-            //Draw Background
-            GL.Begin(BeginMode.Quads);
-            GL.Color4(Color.Black);
-            GL.Vertex2(0, 0);
-            GL.Vertex2(w, 0);
-            GL.Vertex2(w, h);
-            GL.Vertex2(0, h);
-            GL.End();
-        }
-        private void SetupLeftNext2Render()
-        {
-            //Setup Viewport
-            int w = LeftGameNext2.Width;
-            int h = LeftGameNext2.Height;
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(0, w, 0, h, -1, 1);
-            GL.Viewport(LeftGameNext2);
-            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-
-            //Set alpha blending
-            GL.ColorMask(true, true, true, true);
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-
-            //Draw Background
-            GL.Begin(BeginMode.Quads);
-            GL.Color4(Color.Black);
-            GL.Vertex2(0, 0);
-            GL.Vertex2(w, 0);
-            GL.Vertex2(w, h);
-            GL.Vertex2(0, h);
-            GL.End();
-        }
-        private void SetupRightNext1Render()
-        {
-            //Setup Viewport
-            int w = RightGameNext1.Width;
-            int h = RightGameNext1.Height;
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(0, w, 0, h, -1, 1);
-            GL.Viewport(RightGameNext1);
-            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-
-            //Set alpha blending
-            GL.ColorMask(true, true, true, true);
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-
-            //Draw Background
-            GL.Begin(BeginMode.Quads);
-            GL.Color4(Color.Black);
-            GL.Vertex2(0, 0);
-            GL.Vertex2(w, 0);
-            GL.Vertex2(w, h);
-            GL.Vertex2(0, h);
-            GL.End();
-        }
-        private void SetupRightNext2Render()
-        {
-            //Setup Viewport
-            int w = RightGameNext2.Width;
-            int h = RightGameNext2.Height;
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(0, w, 0, h, -1, 1);
-            GL.Viewport(RightGameNext2);
+            GL.Viewport(next);
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 
             //Set alpha blending
@@ -411,38 +374,13 @@ namespace getris
         double timeElapsedRight = 0;
         private void RenderLeftGame(double timeDelta)
         {
-            SetupLeftGameRender();
+            SetupGameRender(true);
             RenderGame(true, timeElapsedLeft);
             timeElapsedLeft += timeDelta;
         }
-        private void SetupRightGameRender()
-        {
-            //Setup Viewport
-            int w = RightGameWidth;
-            int h = RightGameHeight;
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(0, w, 0, h, -1, 1);
-            GL.Viewport(RightGameLeft, RightGameBottom, w, h);
-            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-
-            //Set alpha blending
-            GL.ColorMask(true, true, true, true);
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-
-            //Draw Background
-            GL.Begin(BeginMode.Quads);
-            GL.Color4(Color.Black);
-            GL.Vertex2(0, 0);
-            GL.Vertex2(w, 0);
-            GL.Vertex2(w, h);
-            GL.Vertex2(0, h);
-            GL.End();
-        }
         private void RenderRightGame(double timeDelta)
         {
-            SetupRightGameRender();
+            SetupGameRender(false);
             RenderGame(false, timeElapsedRight);
             timeElapsedRight += timeDelta;
         }
@@ -732,7 +670,7 @@ namespace getris
             }
             else
             {
-                SetupLeftGameRender();
+                SetupGameRender(true);
             }
             RenderGame(true, accumLeft);
             accumLeft += timeDelta;
@@ -745,7 +683,7 @@ namespace getris
             }
             else
             {
-                SetupRightGameRender();
+                SetupGameRender(false);
             }
             RenderGame(false, accumRight);
             accumRight += timeDelta;
