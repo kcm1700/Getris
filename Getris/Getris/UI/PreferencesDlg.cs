@@ -18,11 +18,11 @@ namespace getris.UI
 
         private void setBtnColor()
         {
-            button1.BackColor = Core.GraphicsUtil.CellColor2Color(GameState.CellColor.color1);
-            button2.BackColor = Core.GraphicsUtil.CellColor2Color(GameState.CellColor.color2);
-            button3.BackColor = Core.GraphicsUtil.CellColor2Color(GameState.CellColor.color3);
-            button4.BackColor = Core.GraphicsUtil.CellColor2Color(GameState.CellColor.color4);
-            button5.BackColor = Core.GraphicsUtil.CellColor2Color(GameState.CellColor.color5);
+            colorButton1.BackColor = Core.GraphicsUtil.CellColor2Color(GameState.CellColor.color1);
+            colorButton2.BackColor = Core.GraphicsUtil.CellColor2Color(GameState.CellColor.color2);
+            colorButton3.BackColor = Core.GraphicsUtil.CellColor2Color(GameState.CellColor.color3);
+            colorButton4.BackColor = Core.GraphicsUtil.CellColor2Color(GameState.CellColor.color4);
+            colorButton5.BackColor = Core.GraphicsUtil.CellColor2Color(GameState.CellColor.color5);
         }
 
         private void setRotation()
@@ -38,11 +38,18 @@ namespace getris.UI
                 this.rdoCw.Checked = true;
             }
         }
-
+        private void setNetworkMode()
+        {
+            this.rdoGuest.Checked = !Core.Network.Instance.IsHost;
+            this.rdoHost.Checked = Core.Network.Instance.IsHost;
+            this.ipText.Text = Core.Network.Instance.IP;
+            this.portText.Text = Core.Network.Instance.Port;
+        }
         private void ColorPicker_Load(object sender, EventArgs e)
         {
             setBtnColor();
             setRotation();
+            setNetworkMode();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -107,8 +114,18 @@ namespace getris.UI
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
-            MainDlg.MaxFrameRate = trackBar1.Value;
+            MainDlg.MaxFrameRate = fpsBar.Value;
         }
 
+        private void save_Click(object sender, EventArgs e)
+        {
+            Core.Network.Instance.IP = this.ipText.Text;
+            Core.Network.Instance.Port = this.portText.Text;
+            Core.Network.Instance.IsHost = this.rdoHost.Checked;
+        }
+        private void reset_Click(object sender, EventArgs e)
+        {
+            setNetworkMode();
+        }
     }
 }

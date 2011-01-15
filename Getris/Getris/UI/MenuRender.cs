@@ -200,6 +200,7 @@ namespace getris
                     nextGameMode = GameMode.Game;
                     battle = new Battle();
                     Core.Keyboard.InputMode = Core.Keyboard.InputModes.Game;
+                    Core.Network.Instance.Open();
                     break;
                 case 3: // 끝내기
                     nextGameMode = GameMode.Exit;

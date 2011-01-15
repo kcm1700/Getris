@@ -51,7 +51,6 @@ namespace getris.GameState
                                         Drop();
                                         break;
                                     default:
-                                        Console.WriteLine("asdf");
                                         throw new Exception("unknown action");
                                 }
                             }
@@ -197,11 +196,7 @@ namespace getris.GameState
             }
             else
             {
-                Console.WriteLine("A" + row);
-                Console.WriteLine("B" + col);
                 pile.CalcGhost(ghostInfoRow, row, col, block);
-                Console.WriteLine("C" + row);
-                Console.WriteLine("D" + col);
                 //succeeded
 
                 this.SendMove();

@@ -87,7 +87,7 @@ namespace getris.GameState
             }
         }
 
-        public Battle(bool isLeftRun=true, bool isRightRun=false, bool isHost =true)
+        public Battle(bool isLeftRun=true, bool isRightRun=false)
         {
             if (isLeftRun && isRightRun)
                 throw new Exception("둘다 run일리가 없다.");
@@ -106,14 +106,6 @@ namespace getris.GameState
             else
             {
                 rightGame = new DisplayGame(false);
-            }
-            if (isHost)
-            {
-                Core.Network.Instance.Server();
-            }
-            else
-            {
-                Core.Network.Instance.Client();
             }
             LeftThread = leftGame.thread;
             RightThread = rightGame.thread;

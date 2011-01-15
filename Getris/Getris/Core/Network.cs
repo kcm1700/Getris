@@ -5,21 +5,27 @@ using System.Threading;
 
 namespace getris.Core
 {
+    enum NetworkMode
+    {
+        HOST, GUEST
+    }
     /// <summary>
     /// <para>chatBuffer</para>for receive chatting message
     /// <para>gameBuffer</para>for receive display game
     /// </summary>
     public sealed class Network
     {
-        static public Thread networkThread;
+        public Thread networkThread;
         static private Network instance = null;
         static private readonly System.Object thisLock;
         static private readonly System.Object gameLock;
         static private readonly System.Object chatLock;
         private System.Collections.Generic.Queue<Chat> chatBuffer;
         private System.Collections.Generic.Queue<Action> gameBuffer;
-        private Socket socket=null;
+        private NetworkMode mode;
 
+        private Socket socket=null;
+        
         private int port;
         private string ip;
         static Network()
@@ -27,7 +33,14 @@ namespace getris.Core
             thisLock = new System.Object();
             gameLock = new System.Object();
             chatLock = new System.Object();
-
+            }
+        Network()
+        {
+            mode = NetworkMode.HOST;
+            chatBuffer = new System.Collections.Generic.Queue<Chat>();
+            gameBuffer = new System.Collections.Generic.Queue<Action>();
+            ip = "127.0.0.1";
+            port = 10101;
         }
         static public Network Instance
         {
@@ -44,32 +57,76 @@ namespace getris.Core
                 return instance;
             }
         }
-
-        public void Server(string ip = "127.0.0.1" ,int port=10101)
+        public bool IsHost
         {
-            this.port = port;
-            this.ip = ip;
-            
-            networkThread = new Thread(new ThreadStart(serverLoop));
+            get
+            {
+                lock (thisLock)
+                {
+                    if (this.mode == NetworkMode.HOST)
+                        return true;
+                    else
+                        return false;
+                }
+            }
+            set
+            {
+                lock (thisLock)
+                {
+                    if (value)
+                        mode = NetworkMode.HOST;
+                    else
+                        mode = NetworkMode.GUEST;
+                }
+            }
         }
-        public void Client(string ip="127.0.0.1", int port=10101)
+        public string IP
         {
-            this.port = port;
-            this.ip = ip;
-            networkThread = new Thread(new ThreadStart(clientLoop));
-            
+            get
+            {
+                return this.ip;
+            }
+            set
+            {
+                ip = value;
+            }
+        }
+        public string Port
+        {
+            get
+            {
+                return Convert.ToString(this.port);
+            }
+            set
+            {
+                port = Convert.ToInt32(value);                
+            }
+        }
+
+        public void Open()
+        {
+            if (mode == NetworkMode.HOST)
+            {
+                networkThread = new Thread(new ThreadStart(serverLoop));
+            }
+            else
+            {
+                networkThread = new Thread(new ThreadStart(clientLoop));
+            }
         }
         void serverLoop()
         {
             networkThread.Name = "NETWORK:SERVER";
-            
+
             Socket server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
             //TODO: port 설정하기 추가
             IPEndPoint ipep = new IPEndPoint(IPAddress.Any, port);
             server.Bind(ipep);
             //TODO: 여기 Listen 몇으로 해야 하나?
             server.Listen(1);
             socket = server.Accept();
+
             threadLoop();
         }
         void clientLoop()
@@ -89,6 +146,7 @@ namespace getris.Core
                 //TODO 에러나면 어떻게해?
                 Logger.Write(e.Message);
             }
+
             threadLoop();
         }
         static void threadLoop()
