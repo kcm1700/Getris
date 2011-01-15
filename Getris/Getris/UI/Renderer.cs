@@ -332,20 +332,11 @@ namespace getris
         private void SetupNextRender(bool isLeft,int howmany)
         {
             Rectangle next;
-            if (isLeft)
-            {
-                if (howmany == 1)
-                    next = LeftGameNext1;
-                else
-                    next = LeftGameNext2;
-            }
+            if(howmany==1)
+                next= isLeft? LeftGameNext1:RightGameNext1;
             else
-            {
-                if (howmany == 1)
-                    next = RightGameNext1;
-                else
-                    next = RightGameNext2;
-            }
+                next = isLeft ? LeftGameNext2 : RightGameNext2;
+            
             //Setup Viewport
             int w = next.Width;
             int h = next.Height;
@@ -562,49 +553,23 @@ namespace getris
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
         // BELOW ARE
         // GAME OVER RENDER
         //
         //
         //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-
-
-
-
-        private void SetupLeftGameOverRender(double timeElapsed)
-        {
+        private void SetupGameOverRender(bool isLeft, double timeElapsed)
+          {
             //Setup Viewport
-            int w = LeftGameWidth;
-            int h = LeftGameHeight;
+            int w = isLeft ? LeftGameWidth : RightGameWidth;
+            int h = isLeft ? LeftGameHeight : RightGameHeight;
+            int gameLeft = isLeft ? LeftGameLeft : RightGameLeft;
+            int gameBottom = isLeft ? LeftGameBottom : RightGameBottom;
+
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             GL.Ortho(0, w, 0, h, -1, 1);
-            GL.Viewport(LeftGameLeft, LeftGameBottom, w, h);
+            GL.Viewport(gameLeft, gameBottom, w, h);
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 
             //Set alpha blending
@@ -629,64 +594,22 @@ namespace getris
             GL.Translate(-w / 2, -h / 2, 0);
         }
 
-        private void SetupRightGameOverRender(double timeElapsed)
+        private void RenderGameOver(bool isLeft, double timeDelta)
         {
-            //Setup Viewport
-            int w = RightGameWidth;
-            int h = RightGameHeight;
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(0, w, 0, h, -1, 1);
-            GL.Viewport(RightGameLeft, RightGameBottom, w, h);
-            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-
-            //Set alpha blending
-            GL.ColorMask(true, true, true, true);
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-
-            //Draw Background
-            GL.Begin(BeginMode.Quads);
-            GL.Color4(Color.Black);
-            GL.Vertex2(0, 0);
-            GL.Vertex2(w, 0);
-            GL.Vertex2(w, h);
-            GL.Vertex2(0, h);
-            GL.End();
-
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(0 - timeElapsed * w, w + timeElapsed * w, 0 - timeElapsed * h, h + timeElapsed * h, -1, 1);
-            GL.Translate(w / 2, h / 2, 0);
-            GL.Rotate(timeElapsed * 360, 0, 0, 1);
-            GL.Translate(-w / 2, -h / 2, 0);
-
-        }
-        private void RenderLeftGameOver(double timeDelta)
-        {
-            if (battle.isOver(true))
+            double accum= isLeft? accumLeft:accumRight;
+            if (battle.isOver(isLeft))
             {
-                SetupLeftGameOverRender(accumLeft);
+                SetupGameOverRender(isLeft,accum);
             }
             else
             {
-                SetupGameRender(true);
+                SetupGameRender(isLeft);
             }
-            RenderGame(true, accumLeft);
-            accumLeft += timeDelta;
-        }
-        private void RenderRightGameOver(double timeDelta)
-        {
-            if (battle.isOver(false))
-            {
-                SetupRightGameOverRender(accumRight);
-            }
+            RenderGame(false, accum);
+            if(isLeft)
+                accumLeft += timeDelta;
             else
-            {
-                SetupGameRender(false);
-            }
-            RenderGame(false, accumRight);
-            accumRight += timeDelta;
+                accumRight += timeDelta;
         }
     }
 }

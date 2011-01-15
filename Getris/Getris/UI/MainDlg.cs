@@ -285,7 +285,7 @@ namespace getris
 
                 //lock for the left
                 battle.MonEnter(true);
-                RenderLeftGameOver(timeDelta);
+                RenderGameOver(true, timeDelta);
                 //draw next blocks
                 SetupNextRender(true, 1);
 //                RenderNextBlock(true, 0);
@@ -295,7 +295,7 @@ namespace getris
                 battle.MonExit(true);
 
                 battle.MonEnter(false);
-                RenderRightGameOver(timeDelta);
+                RenderGameOver(false, timeDelta);
                 //draw next blocks
                 SetupNextRender(false, 1);
 //                RenderNextBlock(false, 0);
