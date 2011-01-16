@@ -204,8 +204,8 @@ namespace getris
                 if (battle.Finished)
                 {
                     nextGameMode = GameMode.GameOver;
-                    accumLeft = 0;
-                    accumRight = 0;
+                    ResetAccum(true);
+                    ResetAccum(false);
                 }
             }
             if (gameMode == GameMode.GameOver)
@@ -235,44 +235,29 @@ namespace getris
                 RenderBackground(timeDelta);
 
                 //lock for the left
-                battle.MonEnter(true);
-                if (battle.isAnimationMode(true))
+                bool [] users = {true, false};
+                foreach (bool user in users)
                 {
-                    RenderLeftAnimation(timeDelta);
-                }
-                else
-                {
-                    RenderLeftGame(timeDelta);
-                    accumLeft = 0; // reset time accumulator
-                }
-                //draw next blocks
-                SetupNextRender(true, 1);
-                RenderNextBlock(true, 0);
-                SetupNextRender(true, 2);
-                RenderNextBlock(true, 1);
-                LeftScoreRender();
+                    battle.MonEnter(user);
+                    if (battle.isAnimationMode(user))
+                    {
+                        RenderUserAnimation(user, timeDelta);
+                    }
+                    else
+                    {
+                        RenderUserGame(user, timeDelta);
+                        ResetAccum(user);// reset time accumulator
+                    }
+                    //draw next blocks
+                    SetupNextRender(user, 1);
+                    RenderNextBlock(user, 0);
+                    SetupNextRender(user, 2);
+                    RenderNextBlock(user, 1);
+                    ScoreRender(user);
 
-                battle.MonExit(true);
+                    battle.MonExit(user);
 
-                battle.MonEnter(false);
-                if (battle.isAnimationMode(false))
-                {
-                    RenderRightAnimation(timeDelta);
                 }
-                else
-                {
-                    RenderRightGame(timeDelta);
-                    accumRight = 0; // reset time accumulator
-                }
-                //draw next blocks
-                SetupNextRender(false, 1);
-                RenderNextBlock(false, 0);
-                SetupNextRender(false, 2);
-                RenderNextBlock(false, 1);
-                RightScoreRender();
-
-                battle.MonExit(false);
-
                 glMain.SwapBuffers();
             }
             else if (gameMode == GameMode.GameOver)
@@ -284,25 +269,17 @@ namespace getris
                 RenderBackground(timeDelta);
 
                 //lock for the left
-                battle.MonEnter(true);
-                RenderGameOver(true, timeDelta);
-                //draw next blocks
-                SetupNextRender(true, 1);
-//                RenderNextBlock(true, 0);
-                SetupNextRender(true, 2);
-//                RenderNextBlock(true, 1);
+                bool []users = { true, false };
+                foreach (bool user in users)
+                {
+                    battle.MonEnter(user);
+                    RenderGameOver(user, timeDelta);
+                    //draw next blocks
+                    SetupNextRender(user, 1);
+                    SetupNextRender(user, 2);
 
-                battle.MonExit(true);
-
-                battle.MonEnter(false);
-                RenderGameOver(false, timeDelta);
-                //draw next blocks
-                SetupNextRender(false, 1);
-//                RenderNextBlock(false, 0);
-                SetupNextRender(false, 2);
-//                RenderNextBlock(false, 1);
-                battle.MonExit(false);
-
+                    battle.MonExit(user);
+                }
                 glMain.SwapBuffers();
                 if (accumLeft > 2)
                 {
