@@ -297,8 +297,8 @@ namespace getris.Core
 
             message[0] = 3;
             message[1] = Convert.ToByte(user_col_row[0] == "left");
-            message[2] = Convert.ToByte(user_col_row[1]);
-            message[3] = Convert.ToByte(user_col_row[2]);
+            message[2] = Convert.ToByte(Convert.ToInt32(user_col_row[1])+1);
+            message[3] = Convert.ToByte(Convert.ToInt32(user_col_row[2]) + 1);
             return Send(message);
         }
         //2byte를 보낸다는 의미로 2를 보내고

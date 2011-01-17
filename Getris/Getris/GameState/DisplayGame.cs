@@ -96,8 +96,8 @@ namespace getris.GameState
             bool isLeft = user_row_col[0] == "left";
             if (isLeft != this.isLeft)
                 return false;
-            row = Convert.ToInt32(user_row_col[1]);
-            col = Convert.ToInt32(user_row_col[2]);
+            row = Convert.ToInt32(user_row_col[1])-1;
+            col = Convert.ToInt32(user_row_col[2])-1;
             //TODO: 그래픽 찍기전에 valid check를 하니 여기서 또 할 필요는 없을것 같음.
             return true;
         }
