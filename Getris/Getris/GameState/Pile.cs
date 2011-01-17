@@ -45,9 +45,10 @@ namespace getris.GameState
 
         private bool isCellCollision(int row, int col, Cell cell)
         {
+            // 빈 칸이면 무조건 안전합니다. 항상 맨 처음 비교합니다.
+            if (cell.IsEmpty) return false; // always safe
             if (col < 0) return true; // should not happen
             if (row < 0) return true; // too low
-            if (cell.IsEmpty) return false; // always safe
             if (col >= COL_SIZE) return true; // should not happen
             if (row >= ROW_SIZE + 3) return true; // too high
             if (!IsCellEmpty(row,col)) return true; // if board cell is not empty, it collides
