@@ -28,6 +28,29 @@ namespace getris.GameState
 
         protected int[,] ghostInfoRow;
 
+        private System.Diagnostics.Stopwatch swDrop;
+
+        public Game(bool isLeft = true)
+        {
+            this.isLeft = isLeft;
+            animationMode = false;
+            score = 0;
+
+            pile = new Pile();
+            gameOver = false;
+
+            swDrop = new System.Diagnostics.Stopwatch();
+
+            ghostInfoRow = new int[Block.ROW_SIZE, Block.COL_SIZE];
+            BlockRegen();
+        }
+        ~Game()
+        {
+            if (this.thread.IsAlive)
+                this.thread.Abort();
+        }
+
+
         //모니터 lock 관련 함수. 그릴 때는 통제해야한다.
         public void Enter()
         {
@@ -38,6 +61,38 @@ namespace getris.GameState
             System.Threading.Monitor.Exit(thisLock);
         }
 
+        public virtual int Row
+        {
+            get
+            {
+                return this.row;
+            }
+        }
+        public virtual int Col
+        {
+            get
+            {
+                return this.col;
+            }
+        }
+
+        public int GetGhostRow(int rowInBlock, int colInBlock)
+        {
+            return ghostInfoRow[rowInBlock, colInBlock];
+        }
+        public int GetGhostCol(int rowInBlock, int colInBlock)
+        {
+            return this.col + colInBlock;
+        }
+
+        public virtual decimal Score
+        {
+            get
+            {
+                return score;
+            }
+        }
+
         public bool isGameOver
         {
             get
@@ -45,6 +100,7 @@ namespace getris.GameState
                 return gameOver;
             }
         }
+
         public bool isAnimationMode
         {
             get
@@ -62,74 +118,13 @@ namespace getris.GameState
                 }
             }
         }
-        public Game(bool isLeft=true)
-        {
-            this.isLeft = isLeft;
-            animationMode = false;
-            score = 0;
-            pile = new Pile();
-            ghostInfoRow = new int[Block.ROW_SIZE, Block.COL_SIZE];
-            gameOver = false;
-            BlockRegen();
-        }
-        ~Game()
-        {
-            if (this.thread.IsAlive)
-            {
-                this.thread.Abort();
-            }
-        }
 
-        public virtual CellColor GetPileCellColor(int row, int col)
-        {
-            return pile.GetCellColor(row,col);
-        }
-        public Pile Pile
-        {
-            get
-            {
-                return pile;
-            }
-        }
-        public Block Block
-        {
-            get
-            {
-                return block;
-            }
-        }
-
-        private System.Diagnostics.Stopwatch swDrop = new System.Diagnostics.Stopwatch();
-        
 
         public virtual CellColor GetBlockCellColor(int row, int col)
         {
-            return block[row, col].Color;
+            return block.GetCellColor(row,col);
         }
 
-        public virtual decimal Score
-        {
-            get
-            {
-                return score;
-            }
-        }
-
-        public virtual int Row
-        {
-            get
-            {
-                return this.row;
-            }
-        }
-        public virtual int Col
-        {
-            get
-            {
-                return this.col;
-            }
-        }
-        
         protected virtual bool Rotate(bool isCw)
         {
             if (isAnimationMode) return false;
@@ -170,6 +165,26 @@ namespace getris.GameState
             pile.CalcGhost(ghostInfoRow, row, col, block);
             return flgOk;
         }
+
+        protected virtual bool Drop()
+        {
+            if (isAnimationMode) return false;
+            if (gameOver) return false;
+            try
+            {
+                pile.DropBlock(row, col, block);
+                //TODO: SimulateChain의 결과 처리하기
+                chainResult = pile.SimulateChain();
+                score += chainResult.Score;
+            }
+            finally
+            {
+                //                swDrop.Restart();
+                animationMode = true;
+            }
+            return true;
+        }
+
         protected virtual bool BlockRegen()
         {
             if (isAnimationMode) return false;
@@ -191,36 +206,9 @@ namespace getris.GameState
             return true;
         }
 
-
-        protected virtual bool Drop()
+        public CellColor GetPileCellColor(int row, int col)
         {
-            if (isAnimationMode) return false;
-            if (gameOver) return false;
-            try
-            {
-                pile.DropBlock(row, col, block);
-                //TODO: SimulateChain의 결과 처리하기
-                chainResult = pile.SimulateChain();
-                score += chainResult.Score;
-            }
-            finally
-            {
-//                swDrop.Restart();
-                animationMode = true;
-            }
-            return true;
-        }
-
-        
-
-        public int GetGhostRow(int rowInBlock, int colInBlock)
-        {
-            return ghostInfoRow[rowInBlock, colInBlock];
-        }
-
-        public int GetGhostCol(int rowInBlock, int colInBlock)
-        {
-            return this.col + colInBlock;
+            return pile[row, col].Color;
         }
     }
 }

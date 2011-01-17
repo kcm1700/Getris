@@ -40,10 +40,14 @@ namespace getris.GameState
                 blocks[i] = new Block(4, colorCnt);
             }
         }
+        public void Reset(int size)
+        {
+            blocks = new Block[size];
+        }
 
         private uint leftPivot;
         private uint rightPivot;
-        private readonly Block[] blocks;
+        private Block[] blocks;
         public void NextBlock(bool isLeft)
         {
             if (isLeft)
@@ -141,6 +145,16 @@ namespace getris.GameState
                         return new Block();
                 }
             }
+        }
+
+        public void Set(int index, int block)
+        {
+            blocks[index] = new Block(block);
+        }
+        public int Get(int index)
+        {
+            Block block = blocks[index];
+            return block.GetMask();
         }
     }
 }

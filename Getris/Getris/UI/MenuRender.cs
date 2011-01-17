@@ -186,7 +186,7 @@ namespace getris
             {
                 case 0: // 혼자하기
                     nextGameMode = GameMode.Game;
-                    battle = new Battle();
+                    battle = new Battle(true, false);
                     Core.Keyboard.InputMode = Core.Keyboard.InputModes.Game;
                     break;
                 case 1: // 둘이하기
@@ -198,7 +198,7 @@ namespace getris
                     break;
                 case 2: // 네트워크플레이
                     nextGameMode = GameMode.Game;
-                    battle = new Battle();
+                    battle = new Battle(true, false);
                     Core.Keyboard.InputMode = Core.Keyboard.InputModes.Game;
                     Core.Network.Instance.Open();
                     break;

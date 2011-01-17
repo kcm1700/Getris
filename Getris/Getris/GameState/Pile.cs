@@ -30,12 +30,18 @@ namespace getris.GameState
                 }
             }
         }
+
         public Cell this[int row, int col]
         {
             get
             {
                 return board[row, col];
             }
+        }
+
+        internal CellColor GetCellColor(int row, int col)
+        {
+            return board[row, col].Color;
         }
 
         public bool IsCellEmpty(int row, int col)
@@ -54,13 +60,26 @@ namespace getris.GameState
             if (!IsCellEmpty(row,col)) return true; // if board cell is not empty, it collides
             return false;
         }
+        public bool IsBlockCollision(int row, int col, Block block)
+        {
+            for (int i = 0; i < Block.ROW_SIZE; i++)
+            {
+                for (int j = 0; j < Block.COL_SIZE; j++)
+                {
+                    if (isCellCollision(row + i, col + j, block[i, j]))
+                        return true;
+                }
+            }
+            return false;
+        }
+
         private void PutBlock(int row, int col, Block block, Cell[,] board)
         {
             for (int i = 0; i < Block.ROW_SIZE; i++)
             {
                 for (int j = 0; j < Block.COL_SIZE; j++)
                 {
-                    if (!(block[i, j].IsEmpty))
+                    if (!(block.IsEmpty(i,j)))
                     {
                         board[row + i, col + j] = block[i, j];
                     }
@@ -73,28 +92,13 @@ namespace getris.GameState
             {
                 for (int j = 0; j < Block.COL_SIZE; j++)
                 {
-                    if (!(block[i, j].IsEmpty))
+                    if (!(block.IsEmpty(i,j)))
                     {
                         board[row + i, col + j] = new BlankCell();
                     }
                 }
             }
         }
-
-        public bool IsBlockCollision(int row, int col, Block block)
-        {
-            Console.WriteLine(row+":"+col);
-            for (int i = 0; i < Block.ROW_SIZE; i++)
-            {
-                for (int j = 0; j < Block.COL_SIZE; j++)
-                {
-                    if (isCellCollision(row + i, col + j, block[i, j]))
-                        return true;
-                }
-            }
-            return false;
-        }
-
         /// <summary> Drop <param name="block">block</param> at somewhere. It doesn't simulate any removal of lines nor gravity drop.
         /// <param name="row">row</param>(bottom of the field: 0) &amp; <param name="col">col</param>(left of the field: 0)
         /// </summary>
@@ -113,7 +117,6 @@ namespace getris.GameState
             PutBlock(lastRow, col, block, board);
         }
 
-        
         private void FloodFill(int row, int col, bool[,] visit, CellColor par, Cell[,] board)
         {
             if (row < 0 || row >= ROW_SIZE + 3) return;
@@ -132,7 +135,53 @@ namespace getris.GameState
             FloodFill(row, col - 1, visit, par, board);
         }
 
-        private bool calculateDrop(List<Animation.Drop> dropCells, Cell[,] board)
+        public ChainResult SimulateChain()
+        {
+            ChainResult chainResult = new ChainResult();
+            //initialize
+            chainResult.SetOriginalBoard(board);
+            chainResult.score = 0;
+
+            bool flgContinue = false;
+            do
+            {
+                List<int> removedLines = new List<int>();
+                List<Animation.Drop> dropCells = new List<Animation.Drop>();
+
+                flgContinue = CalcDrop(dropCells, board);
+                //DONE : move all blocks down & add it to drop cells list
+
+
+                //(2) clear full line
+                for (int i = 0; i < ROW_SIZE + 3; i++)
+                {
+                    int cnt = 0;
+
+                    for (int j = 0; j < COL_SIZE; j++)
+                        if (IsCellEmpty(i, j))
+                            cnt++;
+
+                    if (cnt == 0)
+                    {
+                        for (int j = 0; j < COL_SIZE; j++)
+                            board[i, j] = new BlankCell();
+                        removedLines.Add(i);
+                        flgContinue = true;
+                    }
+                }
+
+                chainResult.Add(new Animation.EraseDropPair(removedLines, dropCells));
+                //DONE : combine removedLines & drop cells list to make EraseDropPair
+                //DONE : chainResult.animation 에 EraseDropPair 추가하기.
+
+                chainResult.GetScore(removedLines.Count);
+                //DONE : calculate score
+            } while (flgContinue);
+
+            return chainResult;
+        }
+
+        private bool CalcDrop(List<Animation.Drop> dropCells, Cell[,] board)
         {
             //(1) calculate drops
             bool retVal = false;
@@ -195,53 +244,6 @@ namespace getris.GameState
             } while (flgDown);
             return retVal;
         }
-
-        public ChainResult SimulateChain()
-        {
-            ChainResult chainResult = new ChainResult();
-            //initialize
-            chainResult.SetOriginalBoard(board);
-            chainResult.score = 0;
-
-            bool flgContinue = false;
-            do
-            {
-                List<int> removedLines = new List<int>();
-                List<Animation.Drop> dropCells = new List<Animation.Drop>();
-
-                flgContinue = calculateDrop(dropCells,board);
-                //DONE : move all blocks down & add it to drop cells list
-
-
-                //(2) clear full line
-                for (int i = 0; i < ROW_SIZE + 3; i++)
-                {
-                    int cnt = 0;
-
-                    for (int j = 0; j < COL_SIZE; j++)
-                        if (IsCellEmpty(i, j))
-                            cnt++;
-
-                    if (cnt == 0)
-                    {
-                        for (int j = 0; j < COL_SIZE; j++)
-                            board[i, j] = new BlankCell();
-                        removedLines.Add(i);
-                        flgContinue = true;
-                    }
-                }
-
-                chainResult.Add(new Animation.EraseDropPair(removedLines, dropCells));
-                //DONE : combine removedLines & drop cells list to make EraseDropPair
-                //DONE : chainResult.animation 에 EraseDropPair 추가하기.
-
-                chainResult.GetScore(removedLines.Count);
-                //DONE : calculate score
-            } while (flgContinue);
-
-            return chainResult;
-        }
-
         public void CalcGhost(int[,] ghostInfoRow, int row, int col, Block block)
         {
             if (IsBlockCollision(row, col, block))
@@ -259,7 +261,7 @@ namespace getris.GameState
             PutBlock(lastRow, col, block, copiedBoard);
 
             List<Animation.Drop> dropCells = new List<Animation.Drop>();
-            calculateDrop(dropCells, copiedBoard);
+            CalcDrop(dropCells, copiedBoard);
 
             for (int i = 0; i < Block.ROW_SIZE; i++)
             {
@@ -276,11 +278,6 @@ namespace getris.GameState
                     }
                 }
             }
-        }
-
-        internal CellColor GetCellColor(int row, int col)
-        {
-            return board[row,col].Color;
         }
     }
 }
