@@ -84,8 +84,5 @@ namespace getris.GameState
                 chainCnt++;
             }
         }
-
-
-
     }
 }

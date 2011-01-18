@@ -107,10 +107,35 @@ namespace getris.Core
         {
             if (mode == NetworkMode.HOST)
             {
+                Socket server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+                //TODO: port 설정하기 추가
+                IPEndPoint ipep = new IPEndPoint(IPAddress.Any, port);
+                server.Bind(ipep);
+                //TODO: 여기 Listen 몇으로 해야 하나?
+                server.Listen(1);
+                socket = server.Accept();
+                SendBlocks();
+
                 networkThread = new Thread(new ThreadStart(serverLoop));
             }
             else
             {
+                socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                IPAddress serverIp = IPAddress.Parse(ip);
+                IPEndPoint ipep = new IPEndPoint(serverIp, port);
+
+                try
+                {
+                    socket.Connect(ipep);
+                    ReceiveBlocks();
+                }
+                catch (SocketException e)
+                {
+                    //TODO 에러나면 어떻게해?
+                    Logger.Write(e.Message);
+                }
+
                 networkThread = new Thread(new ThreadStart(clientLoop));
             }
         }
@@ -118,36 +143,37 @@ namespace getris.Core
         {
             networkThread.Name = "NETWORK:SERVER";
 
-            Socket server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-            //TODO: port 설정하기 추가
-            IPEndPoint ipep = new IPEndPoint(IPAddress.Any, port);
-            server.Bind(ipep);
-            //TODO: 여기 Listen 몇으로 해야 하나?
-            server.Listen(1);
-            socket = server.Accept();
-
             threadLoop();
         }
         void clientLoop()
         {
             networkThread.Name = "NETWORK:CLIENT";
 
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPAddress serverIp = IPAddress.Parse(ip);
-            IPEndPoint ipep = new IPEndPoint(serverIp, port);
-
-            try
-            {
-                socket.Connect(ipep);
-            }
-            catch (SocketException e)
-            {
-                //TODO 에러나면 어떻게해?
-                Logger.Write(e.Message);
-            }
-
             threadLoop();
+        }
+        private void SendBlocks()
+        {
+            int size =GameState.BlockList.Instance.Size;
+            byte[] send = BitConverter.GetBytes(size);
+            NetworkStream stream = new NetworkStream(socket);
+            stream.Write(send, 0, send.Length);
+            for (int i = 0; i < size; i++)
+            {
+                send = BitConverter.GetBytes(GameState.BlockList.Instance.Get(i));
+            }
+        }
+        private void ReceiveBlocks()
+        {
+            byte[] receive = new byte[4];
+            NetworkStream stream = new NetworkStream(socket);
+            stream.Read(receive, 0, 4);
+            //TODO: 여기 endian에 따라 차이 생기지 않는지 확인하기.
+            int size = BitConverter.ToInt32(receive,0);
+            GameState.BlockList.Instance.Size =  size;
+            for (int i = 0; i < size; i++)
+            {
+                GameState.BlockList.Instance.Set(i, BitConverter.ToInt32(receive, 0));
+            }
         }
         static void threadLoop()
         {

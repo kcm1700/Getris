@@ -220,7 +220,7 @@ namespace getris.Core
             set
             {
                 keyRotateCw1.assigned = value;
-                Keyboard.KeyReset();
+                Keyboard.Instance.KeyReset();
             }
         }
         public static Keys? KeyRotateCw2
@@ -232,7 +232,7 @@ namespace getris.Core
             set
             {
                 keyRotateCw2.assigned = value;
-                Keyboard.KeyReset();
+                Keyboard.Instance.KeyReset();
             }
         }
         public static Keys KeyRotateCcw1
@@ -244,7 +244,7 @@ namespace getris.Core
             set
             {
                 keyRotateCcw1.assigned = value;
-                Keyboard.KeyReset();
+                Keyboard.Instance.KeyReset();
             }
         }
         public static Keys? KeyRotateCcw2
@@ -256,7 +256,7 @@ namespace getris.Core
             set
             {
                 keyRotateCcw2.assigned = value;
-                Keyboard.KeyReset();
+                Keyboard.Instance.KeyReset();
             }
         }
         public static Keys KeyMoveLeft
@@ -268,7 +268,7 @@ namespace getris.Core
             set
             {
                 keyMoveLeft.assigned = value;
-                Keyboard.KeyReset();
+                Keyboard.Instance.KeyReset();
             }
         }
         public static Keys KeyMoveRight
@@ -280,7 +280,7 @@ namespace getris.Core
             set
             {
                 keyMoveRight.assigned = value;
-                Keyboard.KeyReset();
+                Keyboard.Instance.KeyReset();
             }
         }
         public static Keys KeyMoveDown
@@ -292,7 +292,7 @@ namespace getris.Core
             set
             {
                 keyMoveDown.assigned = value;
-                Keyboard.KeyReset();
+                Keyboard.Instance.KeyReset();
             }
         }
         public static Keys KeyDrop
@@ -304,7 +304,7 @@ namespace getris.Core
             set
             {
                 keyDrop.assigned = value;
-                Keyboard.KeyReset();
+                Keyboard.Instance.KeyReset();
             }
         }
 

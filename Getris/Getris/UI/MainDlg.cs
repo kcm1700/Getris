@@ -74,7 +74,7 @@ namespace getris
         {
             glLoad = true;
             Application.Idle += new EventHandler(IdleGameLoop);
-            Core.Keyboard.Start();
+            Core.Keyboard.Instance.Start();
 
             //Load Textures
             try
@@ -177,12 +177,12 @@ namespace getris
                 }
             }
             else if(gameMode == GameMode.GameMenu){
-                Core.Keyboard.InputMode = Core.Keyboard.InputModes.Menu;
+                Core.Keyboard.Instance.InputMode = Core.Keyboard.InputModes.Menu;
                 gameMode = nextGameMode;
             }
             else if (gameMode == GameMode.Game)
             {
-                Core.Keyboard.InputMode = Core.Keyboard.InputModes.Game;
+                Core.Keyboard.Instance.InputMode = Core.Keyboard.InputModes.Game;
                 gameMode = nextGameMode;
                 //Nothing to do
             }
@@ -296,22 +296,22 @@ namespace getris
 
         private void glMain_Enter(object sender, EventArgs e)
         {
-            Core.Keyboard.Enabled = true;
+            Core.Keyboard.Instance.Enabled = true;
         }
 
         private void glMain_Leave(object sender, EventArgs e)
         {
-            Core.Keyboard.Enabled = false;
+            Core.Keyboard.Instance.Enabled = false;
         }
 
         private void glMain_KeyDown(object sender, KeyEventArgs e)
         {
-            Core.Keyboard.KeyDown(e.KeyCode);
+            Core.Keyboard.Instance.KeyDown(e.KeyCode);
         }
 
         private void glMain_KeyUp(object sender, KeyEventArgs e)
         {
-            Core.Keyboard.KeyUp(e.KeyCode);
+            Core.Keyboard.Instance.KeyUp(e.KeyCode);
         }
 
         private void MainDlg_FormClosing(object sender, FormClosingEventArgs e)

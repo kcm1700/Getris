@@ -21,9 +21,9 @@ namespace getris.Core
             Menu
         }
 
-        static private InputModes inputMode;
+        private InputModes inputMode;
 
-        static public InputModes InputMode {
+        public InputModes InputMode {
             get
             {
                 lock (iglock)
@@ -44,7 +44,7 @@ namespace getris.Core
 
         static public Thread keyboardThread;
 
-        static public bool Enabled
+        public bool Enabled
         {
             get
             {
@@ -63,7 +63,7 @@ namespace getris.Core
         }
 
 
-        static public void KeyReset()
+        public void KeyReset()
         {
             lock (keymapLock)
             {
@@ -95,7 +95,12 @@ namespace getris.Core
                 }
             }
         }
-
+        Keyboard()
+        {
+            KeyReset();
+            keyboardThread = new Thread(new ThreadStart(threadLoop));
+            keyboardThread.Name = "KEYBOARD";
+        }
         static Keyboard()
         {
             instance = null;
@@ -104,13 +109,10 @@ namespace getris.Core
             buffer = new Queue<Action>();
             iglock = new System.Object();
             sw = new System.Diagnostics.Stopwatch();
-            keyboardThread = new Thread(new ThreadStart(threadLoop));
-            keyboardThread.Name = "KEYBOARD";
             isPressed = new Dictionary<System.Windows.Forms.Keys, bool>();
-            KeyReset();
         }
 
-        static public void Start()
+        public void Start()
         {
             //stopwatch
             sw.Start();
@@ -184,14 +186,14 @@ namespace getris.Core
         static Object keymapLock;
         static System.Collections.Generic.Dictionary<System.Windows.Forms.Keys,bool> isPressed;
 
-        static public void KeyDown(System.Windows.Forms.Keys key)
+        public void KeyDown(System.Windows.Forms.Keys key)
         {
             lock (keymapLock)
             {
                 isPressed[key] = true;
             }
         }
-        static public void KeyUp(System.Windows.Forms.Keys key)
+        public void KeyUp(System.Windows.Forms.Keys key)
         {
             lock (keymapLock)
             {
@@ -200,7 +202,7 @@ namespace getris.Core
         }
 
         static private KeyState keyDrop, keyMoveDown, keyMoveLeft, keyMoveRight, keyRotateCw1, keyRotateCcw1, keyRotateCw2, keyRotateCcw2;
-        static void threadLoop()
+        void threadLoop()
         {
             try
             {
@@ -233,7 +235,7 @@ namespace getris.Core
             }
         }
 
-        static void DoMenuInput(ref double beforeElapsed)
+        void DoMenuInput(ref double beforeElapsed)
         {
             lock (keymapLock)
             {
@@ -289,7 +291,7 @@ namespace getris.Core
             }
         }
 
-        static void DoGameInput(ref double beforeElapsed)
+        void DoGameInput(ref double beforeElapsed)
         {
             lock (keymapLock)
             {

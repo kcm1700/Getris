@@ -40,10 +40,6 @@ namespace getris.GameState
                 blocks[i] = new Block(4, colorCnt);
             }
         }
-        public void Reset(int size)
-        {
-            blocks = new Block[size];
-        }
 
         private uint leftPivot;
         private uint rightPivot;
@@ -149,12 +145,35 @@ namespace getris.GameState
 
         public void Set(int index, int block)
         {
-            blocks[index] = new Block(block);
+            lock (thisLock)
+            {
+                blocks[index] = new Block(block);
+            }
         }
         public int Get(int index)
         {
-            Block block = blocks[index];
-            return block.GetMask();
+            lock (thisLock)
+            {
+                Block block = blocks[index];
+                return block.GetMask();
+            }
+        }
+        public int Size
+        {
+            get
+            {
+                lock (thisLock)
+                {
+                    return blocks.Length;
+                }
+            }
+            set
+            {
+                lock (thisLock)
+                {
+                    blocks = new Block[value];
+                }
+            }
         }
     }
 }
