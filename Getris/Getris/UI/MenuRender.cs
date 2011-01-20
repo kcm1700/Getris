@@ -198,9 +198,9 @@ namespace getris
                     break;
                 case 2: // 네트워크플레이
                     nextGameMode = GameMode.Game;
-                    battle = new Battle(true, false);
-                    Core.Keyboard.Instance.InputMode = Core.Keyboard.InputModes.Game;
                     Core.Network.Instance.Open();
+                    Core.Keyboard.Instance.InputMode = Core.Keyboard.InputModes.Game;
+                    battle = new Battle(Core.Network.Instance.IsHost, !Core.Network.Instance.IsHost);
                     break;
                 case 3: // 끝내기
                     nextGameMode = GameMode.Exit;

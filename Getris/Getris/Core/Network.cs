@@ -159,8 +159,13 @@ namespace getris.Core
             stream.Write(send, 0, send.Length);
             for (int i = 0; i < size; i++)
             {
+                int x =GameState.BlockList.Instance.Get(i);
                 send = BitConverter.GetBytes(GameState.BlockList.Instance.Get(i));
+                stream.Write(send,0,send.Length);
             }
+            send = new byte[4];
+            stream.Read(send, 0, 4);
+            Keyboard.Instance.ClearBuffer();
         }
         private void ReceiveBlocks()
         {
@@ -172,8 +177,12 @@ namespace getris.Core
             GameState.BlockList.Instance.Size =  size;
             for (int i = 0; i < size; i++)
             {
-                GameState.BlockList.Instance.Set(i, BitConverter.ToInt32(receive, 0));
+                stream.Read(receive, 0, 4);
+                int x = BitConverter.ToInt32(receive, 0);
+                GameState.BlockList.Instance.Set(i, x);
             }
+            stream.Write(receive, 0, 4);
+            Keyboard.Instance.ClearBuffer();
         }
         static void threadLoop()
         {
