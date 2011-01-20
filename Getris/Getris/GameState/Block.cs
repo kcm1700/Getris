@@ -49,9 +49,9 @@ namespace getris.GameState
         {
             cells = new Cell[ROW_SIZE, COL_SIZE];
             int mask = block;
-            for (int j = ROW_SIZE - 1; j >= 0; j--)
+            for (int i = COL_SIZE - 1; i >= 0; i--)
             {
-                for (int i = COL_SIZE - 1; i >= 0; i--)
+                for (int j = ROW_SIZE - 1; j >= 0; j--)
                 {
                     cells[i, j] = new BlockCell((CellColor)(mask & 7));
                     mask >>= 3;
