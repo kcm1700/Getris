@@ -138,6 +138,7 @@ namespace getris.Core
 
                 networkThread = new Thread(new ThreadStart(clientLoop));
             }
+            networkThread.Start();
         }
         void serverLoop()
         {
@@ -188,6 +189,7 @@ namespace getris.Core
         {
             while (true)
             {
+                Thread.Sleep(1);
                 Network.Instance.Receive();
             }
         }
@@ -425,6 +427,7 @@ namespace getris.Core
                 //TODO:여기서 Read할 수 없으면 기다리고 있는것 맞나? 나중에 확인해봐야지
                 stream.Read(length, 0, 1);
                 data = new byte[length[0]];
+
                 stream.Read(data, 0, length[0]);
             }
             switch (length[0])
@@ -467,6 +470,7 @@ namespace getris.Core
                     this.AddChat(new Chat(data.ToString()));
                     break;
             }
+            Thread.Sleep(1);
         }
     }
 }
