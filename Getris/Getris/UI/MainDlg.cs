@@ -143,6 +143,7 @@ namespace getris
                     catch
                     {
                     }
+                    Core.Network.Instance.Abort();
                 }
                 if (gameMode == GameMode.Exit)
                 {
@@ -322,6 +323,7 @@ namespace getris
                 battle.LeftThread.Abort();
                 battle.RightThread.Abort();
             }
+            Core.Network.Instance.Abort();
         }
 
         private void MainDlg_Load(object sender, EventArgs e)

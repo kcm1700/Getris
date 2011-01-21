@@ -15,7 +15,7 @@ namespace getris.Core
     /// </summary>
     public sealed class Network
     {
-        public Thread networkThread;
+        private Thread networkThread;
         static private Network instance = null;
         static private readonly System.Object thisLock;
         static private readonly System.Object gameLock;
@@ -24,7 +24,8 @@ namespace getris.Core
         private System.Collections.Generic.Queue<Action> gameBuffer;
         private NetworkMode mode;
 
-        private Socket socket=null;
+
+        private NetworkStream stream;
         
         private int port;
         private string ip;
@@ -36,11 +37,13 @@ namespace getris.Core
             }
         Network()
         {
+            networkThread = null;
             mode = NetworkMode.HOST;
             chatBuffer = new System.Collections.Generic.Queue<Chat>();
             gameBuffer = new System.Collections.Generic.Queue<Action>();
             ip = "127.0.0.1";
             port = 10101;
+            stream = null;
         }
         static public Network Instance
         {
@@ -55,6 +58,16 @@ namespace getris.Core
                     }
                 }
                 return instance;
+            }
+        }
+        public void Abort()
+        {
+            lock (thisLock)
+            {
+                if (networkThread != null)
+                {
+                    networkThread.Abort();
+                }
             }
         }
         public bool IsHost
@@ -114,20 +127,24 @@ namespace getris.Core
                 server.Bind(ipep);
                 //TODO: 여기 Listen 몇으로 해야 하나?
                 server.Listen(1);
-                socket = server.Accept();
+                Socket socket = server.Accept();
+
+                stream = new NetworkStream(socket);
                 SendBlocks();
 
-                networkThread = new Thread(new ThreadStart(serverLoop));
+                networkThread = new Thread(new ThreadStart(threadLoop));
+                networkThread.Name = "NETWORK:SERVER";
             }
             else
             {
-                socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 IPAddress serverIp = IPAddress.Parse(ip);
                 IPEndPoint ipep = new IPEndPoint(serverIp, port);
 
                 try
                 {
                     socket.Connect(ipep);
+                    stream = new NetworkStream(socket);
                     ReceiveBlocks();
                 }
                 catch (SocketException e)
@@ -136,27 +153,16 @@ namespace getris.Core
                     Logger.Write(e.Message);
                 }
 
-                networkThread = new Thread(new ThreadStart(clientLoop));
+                networkThread = new Thread(new ThreadStart(threadLoop));
+                networkThread.Name = "NETWORK:CLIENT";
             }
             networkThread.Start();
-        }
-        void serverLoop()
-        {
-            networkThread.Name = "NETWORK:SERVER";
-
-            threadLoop();
-        }
-        void clientLoop()
-        {
-            networkThread.Name = "NETWORK:CLIENT";
-
-            threadLoop();
         }
         private void SendBlocks()
         {
             int size =GameState.BlockList.Instance.Size;
             byte[] send = BitConverter.GetBytes(size);
-            NetworkStream stream = new NetworkStream(socket);
+            
             stream.Write(send, 0, send.Length);
             for (int i = 0; i < size; i++)
             {
@@ -171,7 +177,7 @@ namespace getris.Core
         private void ReceiveBlocks()
         {
             byte[] receive = new byte[4];
-            NetworkStream stream = new NetworkStream(socket);
+            
             stream.Read(receive, 0, 4);
             //TODO: 여기 endian에 따라 차이 생기지 않는지 확인하기.
             int size = BitConverter.ToInt32(receive,0);
@@ -185,12 +191,21 @@ namespace getris.Core
             stream.Write(receive, 0, 4);
             Keyboard.Instance.ClearBuffer();
         }
-        static void threadLoop()
+        void threadLoop()
         {
-            while (true)
+            byte[] tmp = new byte[1];
+            tmp[0]=0;
+            stream.Write(tmp, 0, 1);
+            try
             {
-                Thread.Sleep(1);
-                Network.Instance.Receive();
+                while (true)
+                {
+                    Thread.Sleep(1);
+                    Receive();
+                }
+            }
+            catch (System.IO.IOException e)
+            {
             }
         }
 
@@ -402,11 +417,11 @@ namespace getris.Core
         }
         private bool Send(byte[] message)
         {
-            if (socket == null)
+            if (stream == null)
                 return false;
             lock (thisLock)
             {
-                NetworkStream stream = new NetworkStream(socket);
+                
                 stream.Write(message, 0, message.Length);
                 stream.Flush();
             }
@@ -415,24 +430,23 @@ namespace getris.Core
 
         public void Receive()
         {
-            NetworkStream stream;
+
             byte[] length;
             byte[] data;
-            if (socket == null)
+            if (stream == null)
                 return;
             lock (thisLock)
             {
-                stream = new NetworkStream(socket);
+
                 length = new byte[1];
                 //TODO:여기서 Read할 수 없으면 기다리고 있는것 맞나? 나중에 확인해봐야지
                 stream.Read(length, 0, 1);
                 data = new byte[length[0]];
-
-                stream.Read(data, 0, length[0]);
             }
             switch (length[0])
             {
                 case 0:
+                    stream.Write(length, 0, 1);
                     break;
                 case 1:
                     {
@@ -470,7 +484,6 @@ namespace getris.Core
                     this.AddChat(new Chat(data.ToString()));
                     break;
             }
-            Thread.Sleep(1);
         }
     }
 }
