@@ -10,8 +10,8 @@ namespace getris.GameState
         private Game leftGame;
         private Game rightGame;
 
-        public System.Threading.Thread LeftThread;
-        public System.Threading.Thread RightThread;
+        private System.Threading.Thread leftThread;
+        private System.Threading.Thread rightThread;
 
         private readonly int colorCnt;
         private bool isFinished;
@@ -35,12 +35,28 @@ namespace getris.GameState
             else
                 rightGame = new DisplayGame(false);
 
-            LeftThread = leftGame.thread;
-            RightThread = rightGame.thread;
+            leftThread = leftGame.thread;
+            rightThread = rightGame.thread;
             leftGame.Start();
             rightGame.Start();
         }
-
+        public void Abort()
+        {
+            try
+            {
+                leftThread.Abort();
+            }
+            catch
+            {
+            }
+            try
+            {
+                rightThread.Abort();
+            }
+            catch
+            {
+            }
+        }
         public void MonEnter(bool isLeft){
             if(isLeft)
                 leftGame.Enter();

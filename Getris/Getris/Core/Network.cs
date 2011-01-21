@@ -66,7 +66,13 @@ namespace getris.Core
             {
                 if (networkThread != null)
                 {
-                    networkThread.Abort();
+                    try
+                    {
+                        networkThread.Abort();
+                    }
+                    catch
+                    {
+                    }
                 }
             }
         }

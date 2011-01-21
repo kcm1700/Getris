@@ -42,7 +42,17 @@ namespace getris.Core
 
         static private System.Object iglock;
 
-        static public Thread keyboardThread;
+        private Thread keyboardThread;
+        public void Abort()
+        {
+            try
+            {
+                keyboardThread.Abort();
+            }
+            catch
+            {
+            }
+        }
 
         public bool Enabled
         {

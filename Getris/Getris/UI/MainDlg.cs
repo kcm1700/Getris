@@ -129,20 +129,7 @@ namespace getris
                 }
                 if (gameMode == GameMode.GameOver)
                 {
-                    try
-                    {
-                        battle.LeftThread.Abort();
-                    }
-                    catch
-                    {
-                    }
-                    try
-                    {
-                        battle.RightThread.Abort();
-                    }
-                    catch
-                    {
-                    }
+                    battle.Abort();
                     Core.Network.Instance.Abort();
                 }
                 if (gameMode == GameMode.Exit)
@@ -317,11 +304,10 @@ namespace getris
 
         private void MainDlg_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Core.Keyboard.keyboardThread.Abort();
+            Core.Keyboard.Instance.Abort();
             if (battle != null)
             {
-                battle.LeftThread.Abort();
-                battle.RightThread.Abort();
+                battle.Abort();
             }
             Core.Network.Instance.Abort();
         }
