@@ -51,11 +51,15 @@
             this.portText = new System.Windows.Forms.TextBox();
             this.saveButton = new System.Windows.Forms.Button();
             this.resetButton = new System.Windows.Forms.Button();
+            this.logBox = new System.Windows.Forms.GroupBox();
+            this.logLabel = new System.Windows.Forms.Label();
+            this.logText = new System.Windows.Forms.TextBox();
             this.colorBox.SuspendLayout();
             this.rotateBox.SuspendLayout();
             this.qualityBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fpsBar)).BeginInit();
             this.networkBox.SuspendLayout();
+            this.logBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // colorBox
@@ -215,7 +219,7 @@
             this.networkBox.Controls.Add(this.resetButton);
             this.networkBox.Location = new System.Drawing.Point(294, 12);
             this.networkBox.Name = "networkBox";
-            this.networkBox.Size = new System.Drawing.Size(115, 187);
+            this.networkBox.Size = new System.Drawing.Size(161, 121);
             this.networkBox.TabIndex = 2;
             this.networkBox.TabStop = false;
             this.networkBox.Text = "Network";
@@ -234,7 +238,7 @@
             // rdoGuest
             // 
             this.rdoGuest.AutoSize = true;
-            this.rdoGuest.Location = new System.Drawing.Point(5, 41);
+            this.rdoGuest.Location = new System.Drawing.Point(74, 20);
             this.rdoGuest.Name = "rdoGuest";
             this.rdoGuest.Size = new System.Drawing.Size(56, 16);
             this.rdoGuest.TabIndex = 1;
@@ -245,23 +249,23 @@
             // ipLabel
             // 
             this.ipLabel.AutoSize = true;
-            this.ipLabel.Location = new System.Drawing.Point(6, 74);
+            this.ipLabel.Location = new System.Drawing.Point(4, 45);
             this.ipLabel.Name = "ipLabel";
-            this.ipLabel.Size = new System.Drawing.Size(16, 12);
+            this.ipLabel.Size = new System.Drawing.Size(15, 12);
             this.ipLabel.TabIndex = 2;
-            this.ipLabel.Text = "IP";
+            this.ipLabel.Text = "ip";
             // 
             // ipText
             // 
-            this.ipText.Location = new System.Drawing.Point(33, 113);
+            this.ipText.Location = new System.Drawing.Point(25, 42);
             this.ipText.Name = "ipText";
-            this.ipText.Size = new System.Drawing.Size(73, 21);
+            this.ipText.Size = new System.Drawing.Size(130, 21);
             this.ipText.TabIndex = 3;
             // 
             // portLabel
             // 
             this.portLabel.AutoSize = true;
-            this.portLabel.Location = new System.Drawing.Point(4, 116);
+            this.portLabel.Location = new System.Drawing.Point(6, 69);
             this.portLabel.Name = "portLabel";
             this.portLabel.Size = new System.Drawing.Size(26, 12);
             this.portLabel.TabIndex = 4;
@@ -269,28 +273,55 @@
             // 
             // portText
             // 
-            this.portText.Location = new System.Drawing.Point(6, 88);
+            this.portText.Location = new System.Drawing.Point(33, 64);
             this.portText.Name = "portText";
-            this.portText.Size = new System.Drawing.Size(100, 21);
+            this.portText.Size = new System.Drawing.Size(122, 21);
             this.portText.TabIndex = 5;
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(6, 140);
+            this.saveButton.Location = new System.Drawing.Point(8, 91);
             this.saveButton.Name = "saveButton";
-            this.saveButton.Size = new System.Drawing.Size(50, 23);
+            this.saveButton.Size = new System.Drawing.Size(60, 23);
             this.saveButton.TabIndex = 6;
             this.saveButton.Text = "Save";
             this.saveButton.Click += new System.EventHandler(this.save_Click);
             // 
             // resetButton
             // 
-            this.resetButton.Location = new System.Drawing.Point(56, 140);
+            this.resetButton.Location = new System.Drawing.Point(74, 91);
             this.resetButton.Name = "resetButton";
-            this.resetButton.Size = new System.Drawing.Size(50, 23);
+            this.resetButton.Size = new System.Drawing.Size(60, 23);
             this.resetButton.TabIndex = 7;
             this.resetButton.Text = "Reset";
             this.resetButton.Click += new System.EventHandler(this.reset_Click);
+            // 
+            // logBox
+            // 
+            this.logBox.Controls.Add(this.logLabel);
+            this.logBox.Controls.Add(this.logText);
+            this.logBox.Location = new System.Drawing.Point(300, 139);
+            this.logBox.Name = "logBox";
+            this.logBox.Size = new System.Drawing.Size(155, 60);
+            this.logBox.TabIndex = 0;
+            this.logBox.TabStop = false;
+            this.logBox.Text = "Log";
+            // 
+            // logLabel
+            // 
+            this.logLabel.Location = new System.Drawing.Point(6, 17);
+            this.logLabel.Name = "logLabel";
+            this.logLabel.Size = new System.Drawing.Size(32, 13);
+            this.logLabel.TabIndex = 0;
+            this.logLabel.Text = "경로";
+            // 
+            // logText
+            // 
+            this.logText.Location = new System.Drawing.Point(8, 33);
+            this.logText.Name = "logText";
+            this.logText.Size = new System.Drawing.Size(141, 21);
+            this.logText.TabIndex = 0;
+            this.logText.TextChanged += new System.EventHandler(this.logText_TextChanged);
             // 
             // PreferencesDlg
             // 
@@ -301,6 +332,7 @@
             this.Controls.Add(this.qualityBox);
             this.Controls.Add(this.rotateBox);
             this.Controls.Add(this.colorBox);
+            this.Controls.Add(this.logBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -315,6 +347,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.fpsBar)).EndInit();
             this.networkBox.ResumeLayout(false);
             this.networkBox.PerformLayout();
+            this.logBox.ResumeLayout(false);
+            this.logBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -344,5 +378,8 @@
         private System.Windows.Forms.TextBox portText;
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.Button resetButton;
+        private System.Windows.Forms.GroupBox logBox;
+        private System.Windows.Forms.Label logLabel;
+        private System.Windows.Forms.TextBox logText;
     }
 }

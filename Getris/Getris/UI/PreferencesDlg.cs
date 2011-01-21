@@ -45,11 +45,16 @@ namespace getris.UI
             this.ipText.Text = Core.Network.Instance.IP;
             this.portText.Text = Core.Network.Instance.Port;
         }
+        private void setLog()
+        {
+            this.logText.Text = Core.Logger.File;
+        }
         private void ColorPicker_Load(object sender, EventArgs e)
         {
             setBtnColor();
             setRotation();
             setNetworkMode();
+            setLog();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -126,6 +131,11 @@ namespace getris.UI
         private void reset_Click(object sender, EventArgs e)
         {
             setNetworkMode();
+        }
+
+        private void logText_TextChanged(object sender, EventArgs e)
+        {
+            Core.Logger.File = logText.Text;
         }
     }
 }

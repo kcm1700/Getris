@@ -26,41 +26,43 @@ namespace getris.GameState
                     //일단 lock 걸고 작업하고,
                     lock (thisLock)
                     {
-                            Core.Action a = Core.Network.Instance.NextGame();
-                            if (a is Core.Turn)
+                        Core.Action a = Core.Network.Instance.NextGame();
+                        if(!( a is Core.NullAction))
+                            Core.Logger.WriteLine("LOG:"+a.data);
+                        if (a is Core.Turn)
+                        {
+                            bool isLeft = a.data == "left";
+                            if (isLeft == this.isLeft)
                             {
-                                bool isLeft = a.data == "left";
-                                if (isLeft == this.isLeft)
+                                base.Drop();
+                                Core.Logger.WriteLine("TURNEND");
+                            }
+                        }
+                        else if (a is Core.Rotate)
+                        {
+                            string[] data = a.data.Split(':');
+                            bool isLeft = data[0] == "left";
+                            if (isLeft == this.isLeft)
+                            {
+                                if (!Rotate(data[1] == "cw"))
                                 {
-                                    base.Drop();
-                                    Core.Logger.WriteLine("TURNEND");
+                                    //돌릴 수 없는데 돌리라고 한 경우.
+                                }
+                                else
+                                {
+                                    Core.Logger.WriteLine(((data[0] == "left") ? "CW" : "CCW"));
                                 }
                             }
-                            else if (a is Core.Rotate)
+                        }
+                        else if (a is Core.GoTo)
+                        {
+                            int row, col;
+                            if (IsGoTo(a.data, out row, out col))
                             {
-                                string[] data = a.data.Split(':');
-                                bool isLeft = data[0] == "left";
-                                if (isLeft == this.isLeft)
-                                {
-                                    if (!Rotate(data[1] == "cw"))
-                                    {
-                                        //돌릴 수 없는데 돌리라고 한 경우.
-                                    }
-                                    else
-                                    {
-                                        Core.Logger.WriteLine(((data[0] == "left") ? "CW" : "CCW"));
-                                    }
-                                }
+                                GoTo(row, col);
+                                Core.Logger.WriteLine("GOTO:" + row + ":" + col);
                             }
-                            else if (a is Core.GoTo)
-                            {
-                                int row, col;
-                                if (IsGoTo(a.data, out row, out col))
-                                {
-                                    GoTo(row, col);
-                                    Core.Logger.WriteLine("GOTO:" + row + ":" + col);
-                                }
-                            }
+                        }
                     }
                     // lock 풀고 Thread 양보하자.
                     // TODO: 이거 안하면 thread양보 안하나?

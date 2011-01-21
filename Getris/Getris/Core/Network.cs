@@ -343,6 +343,7 @@ namespace getris.Core
             message[0] = 2;
             message[1] = Convert.ToByte(user_rot[0] == "left");
             message[2] = Convert.ToByte(user_rot[1] == "cw");
+            Logger.WriteLine("SEND:" + message[1] + ":" + message[2]);
             return Send(message);
         }
         //2byte를 보낸다는 의미로 2를 보내고
