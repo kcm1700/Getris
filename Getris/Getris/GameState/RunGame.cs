@@ -30,50 +30,45 @@ namespace getris.GameState
                     //일단 lock 걸고 작업하고,
                     lock (thisLock)
                     {
-                        if (!Core.Keyboard.Instance.IsEmpty())
-                        // is not empty
+                        Core.Action a = Core.Keyboard.Instance.Next();
+                        if (a is Core.Move)
                         {
-                            Core.Action a = Core.Keyboard.Instance.Peek();
-                            if (a is Core.Move)
+                            switch (a.data)
                             {
-                                switch (a.data)
-                                {
-                                    case "down":
-                                        MoveDown();
-                                        break;
-                                    case "left":
-                                        MoveLeft();
-                                        break;
-                                    case "right":
-                                        MoveRight();
-                                        break;
-                                    case "drop":
-                                        Drop();
-                                        break;
-                                    default:
-                                        throw new Exception("unknown action");
-                                }
+                                case "down":
+                                    MoveDown();
+                                    break;
+                                case "left":
+                                    MoveLeft();
+                                    break;
+                                case "right":
+                                    MoveRight();
+                                    break;
+                                case "drop":
+                                    Drop();
+                                    break;
+                                default:
+                                    throw new Exception("unknown action");
                             }
-                            else if (a is Core.Rotate)
-                            {
-                                switch (a.data)
-                                {
-                                    case "cw":
-                                        Rotate(true);
-                                        break;
-                                    case "ccw":
-                                        Rotate(false);
-                                        break;
-                                    default:
-                                        throw new Exception("unknown action");
-                                }
-                            }
-                            Core.Keyboard.Instance.Pop();
                         }
-                        now =sw.Elapsed.TotalMilliseconds;
-                        TimeLimit(now, ref before, 700);
-                        LockTimeLimit(5000);
+                        else if (a is Core.Rotate)
+                        {
+                            switch (a.data)
+                            {
+                                case "cw":
+                                    Rotate(true);
+                                    break;
+                                case "ccw":
+                                    Rotate(false);
+                                    break;
+                                default:
+                                    throw new Exception("unknown action");
+                            }
+                        }
                     }
+                    now =sw.Elapsed.TotalMilliseconds;
+                    TimeLimit(now, ref before, 700);
+                    LockTimeLimit(5000);
                     // lock 풀고 Thread 양보하자.
                     Thread.Sleep(1);
                 }

@@ -156,7 +156,7 @@ namespace getris.Core
                 catch (SocketException e)
                 {
                     //TODO 에러나면 어떻게해?
-                    Logger.Write(e.Message);
+                    Logger.WriteLine(e.Message);
                 }
 
                 networkThread = new Thread(new ThreadStart(threadLoop));
@@ -178,7 +178,7 @@ namespace getris.Core
             }
             send = new byte[4];
             stream.Read(send, 0, 4);
-            Keyboard.Instance.ClearBuffer();
+            Keyboard.Instance.Clear();
         }
         private void ReceiveBlocks()
         {
@@ -195,7 +195,7 @@ namespace getris.Core
                 GameState.BlockList.Instance.Set(i, x);
             }
             stream.Write(receive, 0, 4);
-            Keyboard.Instance.ClearBuffer();
+            Keyboard.Instance.Clear();
         }
         void threadLoop()
         {
@@ -215,13 +215,6 @@ namespace getris.Core
             }
         }
 
-        public bool GameIsEmpty()
-        {
-            lock (gameLock)
-            {
-                return gameBuffer.Count == 0;
-            }
-        }
         public void ClearGame()
         {
             lock (gameLock)
@@ -229,7 +222,7 @@ namespace getris.Core
                 gameBuffer.Clear();
             }
         }
-        public Action PopGame()
+        public Action NextGame()
         {
             lock (gameLock)
             {
@@ -244,29 +237,6 @@ namespace getris.Core
                         return a;
                     else
                         return new NullAction();
-                }
-            }
-        }
-        public Action PeekGame()
-        {
-            lock (gameLock)
-            {
-                if (gameBuffer.Count == 0)
-                {
-                    return new NullAction();
-                }
-                else
-                {
-                    Action a = gameBuffer.Peek();
-                    if (a.IsValid())
-                    {
-                        return a;
-                    }
-                    else
-                    {
-                        gameBuffer.Dequeue();
-                        return new NullAction();
-                    }
                 }
             }
         }
@@ -448,6 +418,8 @@ namespace getris.Core
                 //TODO:여기서 Read할 수 없으면 기다리고 있는것 맞나? 나중에 확인해봐야지
                 stream.Read(length, 0, 1);
                 data = new byte[length[0]];
+                if(length[0]!=0)
+                    stream.Read(data, 0, length[0]);
             }
             switch (length[0])
             {

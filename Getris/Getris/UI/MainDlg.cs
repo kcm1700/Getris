@@ -271,7 +271,7 @@ namespace getris
                 glMain.SwapBuffers();
                 if (accumLeft > 2)
                 {
-                    Core.Keyboard.Instance.ClearBuffer();
+                    Core.Keyboard.Instance.Clear();
                     nextGameMode = GameMode.GameMenu;
                 }
                 else

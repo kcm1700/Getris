@@ -13,7 +13,7 @@ namespace getris.Core
             thisLock = new System.Object();
         }
 
-        static public void Write(string msg) 
+        static public void WriteLine(string msg) 
         {
             lock (thisLock)
             {
@@ -22,6 +22,18 @@ namespace getris.Core
                 {
                     fs.Write(new System.Text.ASCIIEncoding().GetBytes(msg), 0, msg.Length);
                     fs.Write(new System.Text.UTF8Encoding().GetBytes("\r\n"), 0, "\r\n".Length);
+                }
+                fs.Close();
+            }
+        }
+        static public void Write(string msg)
+        {
+            lock (thisLock)
+            {
+                System.IO.FileStream fs = System.IO.File.Open("C:\\Temp\\asdf.txt", System.IO.FileMode.Append);
+                if (fs.CanWrite)
+                {
+                    fs.Write(new System.Text.ASCIIEncoding().GetBytes(msg), 0, msg.Length);
                 }
                 fs.Close();
             }

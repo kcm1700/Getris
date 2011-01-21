@@ -150,31 +150,26 @@ namespace getris
         private void UpdateMenu(double timeDelta)
         {
             nextGameMode = GameMode.GameMenu;
-            if (!Core.Keyboard.Instance.IsEmpty())
+            Core.Action action = Core.Keyboard.Instance.Next();
+            switch (action.data)
             {
-                switch (Core.Keyboard.Instance.Peek().data)
-                {
-                    case "up":
-                    case "left":
-                        menuOriginAngle = menuCurAngle;
-                        menuSelection = (menuSelection + menuPositionAngle.Length - 1) % menuPositionAngle.Length;
-                        timeElapsedMenu = 0;
-                        Core.Keyboard.Instance.Pop();
-                        break;
-                    case "down":
-                    case "right":
-                        menuOriginAngle = menuCurAngle;
-                        menuSelection = (menuSelection + 1) % menuPositionAngle.Length;
-                        timeElapsedMenu = 0;
-                        Core.Keyboard.Instance.Pop();
-                        break;
-                    case "":
-                        break;
-                    default:
-                        Core.Keyboard.Instance.Pop();
-                        MenuWork();
-                        break;
-                }
+                case "up":
+                case "left":
+                    menuOriginAngle = menuCurAngle;
+                    menuSelection = (menuSelection + menuPositionAngle.Length - 1) % menuPositionAngle.Length;
+                    timeElapsedMenu = 0;
+                    break;
+                case "down":
+                case "right":
+                    menuOriginAngle = menuCurAngle;
+                    menuSelection = (menuSelection + 1) % menuPositionAngle.Length;
+                    timeElapsedMenu = 0;
+                    break;
+                case "":
+                    break;
+                default:
+                    MenuWork();
+                    break;
             }
             UpdateMenuPosition(timeDelta);
             timeElapsedMenu += timeDelta;

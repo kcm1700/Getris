@@ -382,37 +382,7 @@ namespace getris.Core
                 buffer.Enqueue(action);
             }
         }
-        public bool IsEmpty()
-        {
-            lock (thisLock)
-            {
-                return buffer.Count == 0;
-            }
-        }
-        public Action Peek()
-        {
-            lock (thisLock)
-            {
-                if (buffer.Count == 0)
-                {
-                    return new NullAction();
-                }
-                else
-                {
-                    Action a = buffer.Peek();
-                    if (a.IsValid())
-                    {
-                        return a;
-                    }
-                    else
-                    {
-                        buffer.Dequeue();
-                        return new NullAction();
-                    }
-                }
-            }
-        }
-        public Action Pop()
+        public Action Next()
         {
             lock (thisLock)
             {
@@ -430,7 +400,7 @@ namespace getris.Core
                 }
             }
         }
-        public void ClearBuffer()
+        public void Clear()
         {
             lock (thisLock)
             {

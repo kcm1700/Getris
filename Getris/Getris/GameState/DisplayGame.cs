@@ -26,17 +26,14 @@ namespace getris.GameState
                     //일단 lock 걸고 작업하고,
                     lock (thisLock)
                     {
-                        if (!Core.Network.Instance.GameIsEmpty())
-                        // is not empty
-                        {
-                            Core.Action a = Core.Network.Instance.PeekGame();
+                            Core.Action a = Core.Network.Instance.NextGame();
                             if (a is Core.Turn)
                             {
                                 bool isLeft = a.data == "left";
                                 if (isLeft == this.isLeft)
                                 {
                                     base.Drop();
-                                    Core.Network.Instance.PopGame();
+                                    Core.Logger.WriteLine("TURNEND");
                                 }
                             }
                             else if (a is Core.Rotate)
@@ -45,11 +42,14 @@ namespace getris.GameState
                                 bool isLeft = data[0] == "left";
                                 if (isLeft == this.isLeft)
                                 {
-                                    if(!Rotate(data[1]=="cw"))
+                                    if (!Rotate(data[1] == "cw"))
                                     {
                                         //돌릴 수 없는데 돌리라고 한 경우.
                                     }
-                                    Core.Network.Instance.PopGame();
+                                    else
+                                    {
+                                        Core.Logger.WriteLine(((data[0] == "left") ? "CW" : "CCW"));
+                                    }
                                 }
                             }
                             else if (a is Core.GoTo)
@@ -58,9 +58,9 @@ namespace getris.GameState
                                 if (IsGoTo(a.data, out row, out col))
                                 {
                                     GoTo(row, col);
+                                    Core.Logger.WriteLine("GOTO:" + row + ":" + col);
                                 }
                             }
-                        }
                     }
                     // lock 풀고 Thread 양보하자.
                     // TODO: 이거 안하면 thread양보 안하나?
