@@ -34,14 +34,12 @@ namespace getris.GameState
                         Core.Action a = Core.Network.Instance.NextGame();
                         if (a is Core.NullAction)
                             continue;
-                        Core.Logger.WriteLine("LOG:"+a.data);
                         if (a is Core.Turn)
                         {
                             bool isLeft = a.data == "left";
                             if (isLeft == this.isLeft)
                             {
                                 base.Drop();
-                                Core.Logger.WriteLine("TURNEND");
                             }
                         }
                         else if (a is Core.Rotate)
@@ -56,7 +54,6 @@ namespace getris.GameState
                                 }
                                 else
                                 {
-                                    Core.Logger.WriteLine(((data[0] == "left") ? "CW" : "CCW"));
                                 }
                             }
                         }
@@ -68,7 +65,6 @@ namespace getris.GameState
                                 if (old_row == row && old_col == col)
                                     continue;
                                 GoTo(row, col);
-                                Core.Logger.WriteLine("GOTO:" + row + ":" + col);
                             }
                         }
                     }

@@ -45,6 +45,13 @@ namespace getris.Core
             port = 10101;
             stream = null;
         }
+        public bool IsOnline
+        {
+            get
+            {
+                return stream != null;
+            }
+        }
         static public Network Instance
         {
             get
@@ -234,10 +241,10 @@ namespace getris.Core
                 else
                 {
                     Action a = gameBuffer.Dequeue();
-                    //if (a.IsValid())
+                    if (a.IsValid())
                         return a;
-                    //else
-                        //return new NullAction();
+                    else
+                        return new NullAction();
                 }
             }
         }
@@ -344,7 +351,6 @@ namespace getris.Core
             message[0] = 2;
             message[1] = Convert.ToByte(user_rot[0] == "left");
             message[2] = Convert.ToByte(user_rot[1] == "cw");
-            Logger.WriteLine("SEND:" + message[1] + ":" + message[2]);
             return Send(message);
         }
         //2byte를 보낸다는 의미로 2를 보내고

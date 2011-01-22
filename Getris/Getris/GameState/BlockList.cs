@@ -94,7 +94,7 @@ namespace getris.GameState
             {
                 lock (leftLock)
                 {
-                    if (rightPivot >= leftPivot  || true)
+                    if (rightPivot >= leftPivot || !Core.Network.Instance.IsOnline)
                         return new Block(blocks[(leftPivot + 1) % blocks.Length]);
                     else
                         //TODO: 
@@ -105,7 +105,7 @@ namespace getris.GameState
             {
                 lock (rightLock)
                 {
-                    if (leftPivot >= rightPivot  || true)
+                    if (leftPivot >= rightPivot || !Core.Network.Instance.IsOnline)
                         return new Block(blocks[(rightPivot + 1) % blocks.Length]);
                     else
                         return new Block();
@@ -123,7 +123,7 @@ namespace getris.GameState
             {
                 lock (leftLock)
                 {
-                    if (rightPivot >= leftPivot + 2 || true)
+                    if (rightPivot >= leftPivot + 2 || !Core.Network.Instance.IsOnline)
                         return new Block(blocks[(leftPivot + 2) % blocks.Length]);
                     else
                         //Block()을 기본적으로 완전 BlankCell로 채워진 놈으로 출력하게 수정했고, 결과적으로 여기서도 BlankCell로 채워진 block을 return할 것임
@@ -134,7 +134,7 @@ namespace getris.GameState
             {
                 lock (rightLock)
                 {
-                    if (leftPivot >= rightPivot + 2 || true)
+                    if (leftPivot >= rightPivot + 2 || !Core.Network.Instance.IsOnline)
                         return new Block(blocks[(rightPivot + 2) % blocks.Length]);
                     else
                         //Block()을 기본적으로 완전 BlankCell로 채워진 놈으로 출력하게 수정했고, 결과적으로 여기서도 BlankCell로 채워진 block을 return할 것임

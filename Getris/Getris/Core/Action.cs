@@ -16,11 +16,6 @@ namespace getris.Core
         {
             return false;
         }
-        public Action What()
-        {
-            //TODO
-            return new Move("down");
-        }
     }
 
     public class Move : Action
@@ -51,6 +46,15 @@ namespace getris.Core
         }
         override public bool IsValid()
         {
+            string[] str = data.Split(':');
+            if (str.Length != 3)
+                return false;
+            if (str[0] != "left" && str[0] != "right")
+                return false;
+            if (str[1] != Convert.ToString(Convert.ToByte(str[1])))
+                return false;
+            if (str[2] != Convert.ToString(Convert.ToByte(str[2])))
+                return false;
             return true;
         }
 
@@ -96,7 +100,14 @@ namespace getris.Core
         }
         override public bool IsValid()
         {
-            return true;
+            switch (data)
+            {
+                case "left":
+                case "right":
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
     public class Status : Action
