@@ -48,6 +48,7 @@ namespace getris.UI
         private void setLog()
         {
             this.logText.Text = Core.Logger.File;
+            this.logText.ReadOnly = !this.logCheck.Checked;
         }
         private void ColorPicker_Load(object sender, EventArgs e)
         {
@@ -136,6 +137,12 @@ namespace getris.UI
         private void logText_TextChanged(object sender, EventArgs e)
         {
             Core.Logger.File = logText.Text;
+        }
+
+        private void logCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            this.logText.ReadOnly = !this.logCheck.Checked;
+            Core.Logger.On = this.logCheck.Checked;
         }
     }
 }

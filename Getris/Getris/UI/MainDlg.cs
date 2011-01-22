@@ -49,6 +49,11 @@ namespace getris
 
         public MainDlg()
         {
+            Reset();
+            InitializeComponent();
+        }
+        private void Reset()
+        {
             sw = new Stopwatch();
             sw.Start();
             glLoad = false;
@@ -57,8 +62,6 @@ namespace getris
 
             menuPositionAngle = new double[menuCnt];
             TN_MENU = new int[menuCnt];
-
-            InitializeComponent();
         }
 
         public bool isGLReady
@@ -337,6 +340,17 @@ namespace getris
         {
             UI.PreferencesDlg a = new UI.PreferencesDlg();
             a.Show();
+        }
+
+        private void btnRegame_Click(object sender, EventArgs e)
+        {
+            //Reset();
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine(textBox2.Text);
+
         }
     }
 }

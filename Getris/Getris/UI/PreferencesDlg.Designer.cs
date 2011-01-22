@@ -52,8 +52,8 @@
             this.saveButton = new System.Windows.Forms.Button();
             this.resetButton = new System.Windows.Forms.Button();
             this.logBox = new System.Windows.Forms.GroupBox();
-            this.logLabel = new System.Windows.Forms.Label();
             this.logText = new System.Windows.Forms.TextBox();
+            this.logCheck = new System.Windows.Forms.CheckBox();
             this.colorBox.SuspendLayout();
             this.rotateBox.SuspendLayout();
             this.qualityBox.SuspendLayout();
@@ -298,30 +298,30 @@
             // 
             // logBox
             // 
-            this.logBox.Controls.Add(this.logLabel);
             this.logBox.Controls.Add(this.logText);
-            this.logBox.Location = new System.Drawing.Point(300, 139);
+            this.logBox.Controls.Add(this.logCheck);
+            this.logBox.Location = new System.Drawing.Point(294, 148);
             this.logBox.Name = "logBox";
-            this.logBox.Size = new System.Drawing.Size(155, 60);
+            this.logBox.Size = new System.Drawing.Size(161, 50);
             this.logBox.TabIndex = 0;
             this.logBox.TabStop = false;
             this.logBox.Text = "Log";
             // 
-            // logLabel
-            // 
-            this.logLabel.Location = new System.Drawing.Point(6, 17);
-            this.logLabel.Name = "logLabel";
-            this.logLabel.Size = new System.Drawing.Size(32, 13);
-            this.logLabel.TabIndex = 0;
-            this.logLabel.Text = "경로";
-            // 
             // logText
             // 
-            this.logText.Location = new System.Drawing.Point(8, 33);
+            this.logText.Location = new System.Drawing.Point(27, 21);
             this.logText.Name = "logText";
-            this.logText.Size = new System.Drawing.Size(141, 21);
+            this.logText.Size = new System.Drawing.Size(122, 21);
             this.logText.TabIndex = 0;
             this.logText.TextChanged += new System.EventHandler(this.logText_TextChanged);
+            // 
+            // logCheck
+            // 
+            this.logCheck.Location = new System.Drawing.Point(6, 18);
+            this.logCheck.Name = "logCheck";
+            this.logCheck.Size = new System.Drawing.Size(15, 24);
+            this.logCheck.TabIndex = 1;
+            this.logCheck.CheckedChanged += new System.EventHandler(this.logCheck_CheckedChanged);
             // 
             // PreferencesDlg
             // 
@@ -379,7 +379,7 @@
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.Button resetButton;
         private System.Windows.Forms.GroupBox logBox;
-        private System.Windows.Forms.Label logLabel;
+        private System.Windows.Forms.CheckBox logCheck;
         private System.Windows.Forms.TextBox logText;
     }
 }
