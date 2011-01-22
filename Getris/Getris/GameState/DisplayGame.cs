@@ -8,10 +8,14 @@ namespace getris.GameState
 {
     class DisplayGame : Game
     {
+        private int old_row;
+        private int old_col;
         public DisplayGame(bool isLeft = false) : base(isLeft)
         {
             thread = new Thread(new ThreadStart(ThreadWork));
             thread.Name = "DISPLAY" + (isLeft ? ":left" : ":right");
+            old_row = -1;
+            old_col = -1;
         }
         public override void Start()
         {
@@ -23,12 +27,14 @@ namespace getris.GameState
             {
                 while (true)
                 {
+                    Thread.Sleep(1);
                     //일단 lock 걸고 작업하고,
                     lock (thisLock)
                     {
                         Core.Action a = Core.Network.Instance.NextGame();
-                        if(!( a is Core.NullAction))
-                            Core.Logger.WriteLine("LOG:"+a.data);
+                        if (a is Core.NullAction)
+                            continue;
+                        Core.Logger.WriteLine("LOG:"+a.data);
                         if (a is Core.Turn)
                         {
                             bool isLeft = a.data == "left";
@@ -59,6 +65,8 @@ namespace getris.GameState
                             int row, col;
                             if (IsGoTo(a.data, out row, out col))
                             {
+                                if (old_row == row && old_col == col)
+                                    continue;
                                 GoTo(row, col);
                                 Core.Logger.WriteLine("GOTO:" + row + ":" + col);
                             }
@@ -66,7 +74,6 @@ namespace getris.GameState
                     }
                     // lock 풀고 Thread 양보하자.
                     // TODO: 이거 안하면 thread양보 안하나?
-                    Thread.Sleep(1);
                 }
             }
             catch/*(ThreadAbortException e)*/

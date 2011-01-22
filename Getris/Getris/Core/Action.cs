@@ -67,6 +67,10 @@ namespace getris.Core
             {
                 case "cw":
                 case "ccw":
+                case "left:cw":
+                case "left:ccw":
+                case "right:cw":
+                case "right:ccw":
                     return true;
                 default:
                     return false;
