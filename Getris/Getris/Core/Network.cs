@@ -202,6 +202,7 @@ namespace getris.Core
             byte[] tmp = new byte[1];
             tmp[0]=0;
             stream.Write(tmp, 0, 1);
+            Keyboard.Instance.Clear();
             try
             {
                 while (true)
@@ -233,10 +234,10 @@ namespace getris.Core
                 else
                 {
                     Action a = gameBuffer.Dequeue();
-                    if (a.IsValid())
+                    //if (a.IsValid())
                         return a;
-                    else
-                        return new NullAction();
+                    //else
+                        //return new NullAction();
                 }
             }
         }

@@ -180,9 +180,9 @@ namespace getris
             switch (menuSelection)
             {
                 case 0: // 혼자하기
-                    nextGameMode = GameMode.Game;
                     battle = new Battle(true, false);
                     Core.Keyboard.Instance.InputMode = Core.Keyboard.InputModes.Game;
+                    nextGameMode = GameMode.Game;
                     break;
                 case 1: // 둘이하기
                     /*
@@ -195,6 +195,7 @@ namespace getris
                     nextGameMode = GameMode.Game;
                     Core.Network.Instance.Open();
                     Core.Keyboard.Instance.InputMode = Core.Keyboard.InputModes.Game;
+                    Core.Keyboard.Instance.Clear();
                     battle = new Battle(Core.Network.Instance.IsHost, !Core.Network.Instance.IsHost);
                     break;
                 case 3: // 끝내기
@@ -203,6 +204,7 @@ namespace getris
                 case 4: // 환경설정
                     btnPreference.PerformClick();
                     Core.Keyboard.Instance.KeyReset();
+                    Core.Keyboard.Instance.Clear();
                     break;
             }
         }

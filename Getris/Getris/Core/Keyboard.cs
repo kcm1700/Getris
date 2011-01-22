@@ -393,10 +393,10 @@ namespace getris.Core
                 else
                 {
                     Action a = buffer.Dequeue();
-                    if (a.IsValid())
+                    //if (a.IsValid())
                         return a;
-                    else
-                        return new NullAction();
+                    //else
+                        //return new NullAction();
                 }
             }
         }
