@@ -373,14 +373,15 @@ namespace getris.Core
         //보내는 byte수를 byte로 보내므로, 채팅 내용을 100자 이상 입력 못하게 하는게 좋을듯.
         public bool Send(Chat action)
         {
-            byte[] message = new byte[action.data.Length + 1];
-            message[0] = Convert.ToByte(action.data.Length);
+            byte[] message = new byte[action.data.Length*2 + 1];
+            message[0] = Convert.ToByte(action.data.Length*2);
             //TODO: 이렇게 하면 char가 2byte여서 문제가 생길듯.
             //어쩌피 하직 채팅 구현 안됐으니 나중에 하자.
             char[] data = action.data.ToCharArray();
             for (int i = 0; i < action.data.Length; i++)
             {
-                message[i + 1] = Convert.ToByte(data[i]);
+                message[i*2 + 1] = (Byte)(Convert.ToUInt16(data[i]) % 256);
+                message[i*2 + 2] = (Byte)(Convert.ToUInt16(data[i]) / 256);
             }
             return Send(message);
         }
@@ -467,9 +468,19 @@ namespace getris.Core
                     }
                     break;
                 default:
-                    this.AddChat(new Chat(data.ToString()));
+                    this.AddChat(new Chat(FromByteStreamToString(data)));
                     break;
             }
+        }
+
+        private string FromByteStreamToString(byte[] data)
+        {
+            string retstr = new string(' ', 0);
+            for (int i = 0; i < data.Length; i+=2)
+            {
+                retstr += Convert.ToChar(data[i] + 256 * data[i + 1]);
+            }
+            return retstr;
         }
     }
 }

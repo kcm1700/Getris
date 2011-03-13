@@ -149,7 +149,7 @@ namespace getris.GameState
         }
 
         protected override bool Rotate(bool isCw)
-        {
+        { 
             bool ret = base.Rotate(isCw);
             if (ret == true)
             {

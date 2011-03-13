@@ -15,6 +15,7 @@ using Microsoft.Win32;
 using System.Runtime.InteropServices;
 
 using getris.GameState;
+using getris.UI;
 
 namespace getris
 {
@@ -95,6 +96,7 @@ namespace getris
         private double menuCurAngle;
         private double menuOriginAngle;
         private int menuSelection;
+        private ChatForm myChatWindow;
 
         private void RenderMenuBoard(double timeDelta)
         {
@@ -197,6 +199,11 @@ namespace getris
                     Core.Keyboard.Instance.InputMode = Core.Keyboard.InputModes.Game;
                     Core.Keyboard.Instance.Clear();
                     battle = new Battle(Core.Network.Instance.IsHost, !Core.Network.Instance.IsHost);
+                    if (this.myChatWindow == null)
+                    {
+                        this.myChatWindow = new ChatForm();
+                    }
+                    myChatWindow.Show();
                     break;
                 case 3: // 끝내기
                     nextGameMode = GameMode.Exit;
