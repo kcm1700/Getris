@@ -1,0 +1,13 @@
+Getris README
+~~~~~~~~~~~~~
+
+1) Licensing
+------------
+* See the LICENSE file.
+
+2) Build Instructions
+---------------------
+* You'll need OpenTK library 1.0 in order to compile this project.
+- OpenTK library is available at http://www.opentk.com/
+
+* At this time, only Visual Studio 2010 is supported.
